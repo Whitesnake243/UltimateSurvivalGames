@@ -17,8 +17,8 @@ public class ResetPhase {
 		game.kickall();
 		game.setState(GameState.RESET);
 		String name = game.getName();
-			SurvivalGames.gameManager.unload(game);
-			SurvivalGames.gameManager.load(name);
-			SurvivalGames.signManager.updateSigns();
-		}
+		SurvivalGames.gameManager.unload(game);
+		SurvivalGames.gameManager.load(name);
+		SurvivalGames.signManager.updateSigns();
+	}
 }
