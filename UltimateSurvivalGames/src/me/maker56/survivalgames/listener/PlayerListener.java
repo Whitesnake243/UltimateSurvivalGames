@@ -96,14 +96,14 @@ public class PlayerListener implements Listener {
 					if(a != null) {
 						p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 4.0F, 2.0F);
 					} else {
-						p.sendMessage(MessageHandler.getMessage("prefix") + "§cAn interal error occured!");
+						p.sendMessage(MessageHandler.getMessage("prefix") + "Â§cAn interal error occured!");
 					}
 				}
 			}
 		} else {
 			SpectatorUser su = um.getSpectator(p.getName());
 			if(su != null) {
-				if(is.getType() == Material.SKULL_ITEM && name.startsWith("§e")) {
+				if(is.getType() == Material.SKULL_ITEM && name.startsWith("Â§e")) {
 					String pname = name.substring(2, name.length());
 					event.setCancelled(true);
 					Game g = su.getGame();
@@ -151,7 +151,7 @@ public class PlayerListener implements Listener {
 				
 				if(hand.equals(VotingPhase.getVotingOpenItemStack())) {
 					if(g.getState() != GameState.VOTING) {
-						p.sendMessage(MessageHandler.getMessage("prefix") + "§cVoting isn't active right now!");
+						p.sendMessage(MessageHandler.getMessage("prefix") + "Â§cVoting isn't active right now!");
 						return;
 					}
 					if(!g.getVotingPhrase().canVote(p.getName())) {
@@ -286,8 +286,8 @@ public class PlayerListener implements Listener {
 			GameState gs = u.getGame().getState();
 			if(gs == GameState.WAITING || gs == GameState.VOTING || gs == GameState.COOLDOWN || u.getGame().isFinishing())
 				event.setCancelled(true);
-		}
-	}
+		        }
+	        }
 	}
 	
 	@EventHandler
