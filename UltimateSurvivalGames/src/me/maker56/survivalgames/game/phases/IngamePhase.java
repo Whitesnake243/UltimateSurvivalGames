@@ -77,7 +77,7 @@ public class IngamePhase {
 					if(time >= 18000 && time <= 18200) {
 						for(Chest c : game.getRegisteredChests()) {
 							c.getLocation().getWorld().playEffect(c.getLocation(), Effect.MOBSPAWNER_FLAMES, 1);
-							c.getLocation().getWorld().playSound(c.getLocation(), Sound.LEVEL_UP, 4.0F, 1.0F);
+							c.getLocation().getWorld().playSound(c.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 4.0F, 1.0F);
 						}
 						game.getRegisteredChests().clear();
 						game.sendMessage(MessageHandler.getMessage("game-chestrefill"));

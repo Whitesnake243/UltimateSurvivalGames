@@ -15,7 +15,6 @@ import me.maker56.survivalgames.game.phases.CooldownPhase;
 import me.maker56.survivalgames.game.phases.DeathmatchPhase;
 import me.maker56.survivalgames.game.phases.IngamePhase;
 import me.maker56.survivalgames.game.phases.VotingPhase;
-import me.maker56.survivalgames.reset.Reset;
 
 public class GameManager {
 	
@@ -131,21 +130,7 @@ public class GameManager {
 			System.out.println("[SurvivalGames] Lobby " + name + " has no arenas!");
 			return false;
 		}
-
-		boolean reset = false;		
-		if(SurvivalGames.reset.contains("Startup-Reset." + name)) {
-			for(String key : SurvivalGames.reset.getConfigurationSection("Startup-Reset." + name + ".").getKeys(false)) {
-				reset = true;
-				new Reset(Util.parseLocation(cfg.getString(path + "Arenas." + key + ".Min")).getWorld(), name, key, SurvivalGames.reset.getStringList("Startup-Reset." + name + "." + key)).start();
-			}
-		}
 		
-		if(reset) {
-			System.out.println("[SurvivalGames] Lobby " + name + " does not exist!");
-			return false;
-		}
-		
-
 		List<Arena> arenas = new ArrayList<>();
 		
 		for(String key : cfg.getConfigurationSection(path + "Arenas.").getKeys(false)) {

@@ -11,7 +11,6 @@ import me.maker56.survivalgames.commands.messages.MessageHandler;
 import me.maker56.survivalgames.game.Game;
 import me.maker56.survivalgames.listener.DomeListener;
 import me.maker56.survivalgames.listener.SelectionListener;
-import me.maker56.survivalgames.reset.Save;
 import me.maker56.survivalgames.reset.Selection;
 
 import org.bukkit.Location;
@@ -69,12 +68,7 @@ public class ArenaManager {
 		if(min == null || max == null) {
 			p.sendMessage(MessageHandler.getMessage("prefix") + "The arena isn't defined yet.");
 			return;
-		}
-		
-		Selection sel = new Selection(min, max);
-		
-		p.sendMessage(MessageHandler.getMessage("prefix") + "Saveing arena... This may take a while. Laggs can occure. You'll get a message, when the save is completed.");
-		new Save(gamename, arenaname, sel, p.getName()).start();
+		}		
 	}
 	
 	// ARENA LÖSCHEN
@@ -397,7 +391,7 @@ public class ArenaManager {
 	}
 	
 	
-	// ARENA AUSWÃ„HLEN
+	// ARENA AUSW�?„HLEN
 	
 	public void selectArena(Player p, String arenaname, String gamename) {
 		if(!cfg.contains("Games." + gamename)) {
