@@ -54,7 +54,7 @@ public class ChestListener implements Listener {
 						b.getState().update(true);
 						
 						p.openInventory(chest.getInventory());
-						loc.getWorld().playSound(loc, Sound.CHEST_OPEN, 1.0F, 1.0F);
+						loc.getWorld().playSound(loc, Sound.BLOCK_CHEST_OPEN, 1.0F, 1.0F);
 					}
 				}
 			}
