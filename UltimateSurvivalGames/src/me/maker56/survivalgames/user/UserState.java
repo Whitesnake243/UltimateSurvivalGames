@@ -1,6 +1,5 @@
 package me.maker56.survivalgames.user;
 
-import java.util.Collection;
 import java.util.Iterator;
 
 import me.maker56.survivalgames.game.Game;
@@ -10,7 +9,6 @@ import net.md_5.bungee.api.chat.BaseComponent;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -18,15 +16,11 @@ import org.bukkit.potion.PotionEffect;
 public abstract class UserState {
 	
 	protected Player player;
-	private double health, maxhealth;
-	private float walk, fly;
-	private int food, level, fireticks, heldslot;
+	private int food, level, fireticks;
 	private float exp;
-	private ItemStack[][] inventory;
 	private Location loc;
 	private GameMode gamemode;
 	private boolean allowFlying, flying;
-	private Collection<PotionEffect> ape;
 	private float fall;
 	
 	private long joinTime = System.currentTimeMillis();
@@ -35,37 +29,19 @@ public abstract class UserState {
 	public UserState(Player p, Game game) {
 		this.game = game;
 		this.player = p;
-		this.maxhealth = ((Damageable) p).getMaxHealth();
-		this.health = ((Damageable) p).getHealth();
 		this.food = p.getFoodLevel();
 		this.exp = p.getExp();
 		this.level = p.getLevel();
-		this.fireticks = p.getFireTicks();
 		this.loc = p.getLocation();
+		this.fall = p.getFallDistance();
 		this.gamemode = p.getGameMode();
 		this.allowFlying = p.getAllowFlight();
 		this.flying = p.isFlying();
-		this.ape = p.getActivePotionEffects();
-		this.fall = p.getFallDistance();
-		this.walk = p.getWalkSpeed();
-		this.fly = p.getFlySpeed();
-		this.heldslot = p.getInventory().getHeldItemSlot();
-
-		ItemStack[][] store = new ItemStack[2][1];
-		store[0] = p.getInventory().getContents();
-		store[1] = p.getInventory().getArmorContents();
-		this.inventory = store;
+		this.fireticks = p.getFireTicks();
 		
 		StatisticLoader.load(this);
 	}
 	
-	public double getMaxHealth() {
-		return maxhealth;
-	}
-	
-	public int getHeldItemSlot() {
-		return heldslot;
-	}
 	
 	public Game getGame() {
 		return game;
@@ -74,29 +50,9 @@ public abstract class UserState {
 	public long getJoinTime() {
 		return joinTime;
 	}
-
+	
 	public float getFallDistance() {
 		return fall;
-	}
-	
-	public float getWalkSpeed() {
-		return walk;
-	}
-	
-	public float getFlySpeed() {
-		return fly;
-	}
-
-	public ItemStack[] getContents() {
-		return inventory[0];
-	}
-
-	public ItemStack[] getArmorContents() {
-		return inventory[1];
-	}
-
-	public Collection<PotionEffect> getActivePotionEffects() {
-		return ape;
 	}
 
 	public GameMode getGameMode() {
@@ -110,18 +66,19 @@ public abstract class UserState {
 	public boolean isFlying() {
 		return flying;
 	}
+	
+	public int getFireTicks() {
+		return this.fireticks;
+	}
 
 	public Location getLocation() {
 		return this.loc;
 	}
-
-	public double getHealth() {
-		return this.health;
-	}
-
+	
 	public int getFoodLevel() {
 		return this.food;
 	}
+	
 
 	public float getExp() {
 		return this.exp;
@@ -129,14 +86,6 @@ public abstract class UserState {
 
 	public int getLevel() {
 		return this.level;
-	}
-
-	public int getFireTicks() {
-		return this.fireticks;
-	}
-
-	public ItemStack[][] getInventory() {
-		return this.inventory;
 	}
 
 	public void clear() {

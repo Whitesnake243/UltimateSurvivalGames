@@ -69,11 +69,11 @@ public class CooldownPhase {
 				
 				if(time <= 5 && time > 0) {
 					for(User user : game.getUsers()) {
-						user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.NOTE_STICKS, 8.0F, 1.0F);
+						user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.BLOCK_NOTE_PLING, 8.0F, 1.0F);
 					}
 				} else if(time == 0) {
 					for(User user : game.getUsers()) {
-						user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.NOTE_PLING, 8.0F, 1.0F);
+						user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.BLOCK_NOTE_SNARE, 8.0F, 1.0F);
 						user.clearInventory();
 					}
 					task.cancel();

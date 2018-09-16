@@ -1,7 +1,5 @@
 package me.maker56.survivalgames.user;
 
-import java.util.Iterator;
-
 import me.maker56.survivalgames.SurvivalGames;
 import me.maker56.survivalgames.commands.messages.MessageHandler;
 import me.maker56.survivalgames.commands.permission.Permission;
@@ -13,8 +11,6 @@ import me.maker56.survivalgames.game.GameState;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.IllegalPluginAccessException;
-import org.bukkit.potion.PotionEffect;
 
 public class UserManager {
 	
@@ -85,6 +81,15 @@ public class UserManager {
 		if(!PermissionHandler.hasPermission(p, Permission.JOIN)) {
 			p.sendMessage(MessageHandler.getMessage("no-permission"));
 			return;
+		}
+		
+		for(ItemStack item : p.getInventory().getContents())
+		{
+		    if(item != null)
+		    {
+		      p.sendMessage("§cCsak üres táskával lehet belépni a játékba.");
+		      return;
+		    }
 		}
 		
 		if(isPlaying(p.getName())) {
@@ -181,47 +186,15 @@ public class UserManager {
 	
 	public void setState(Player p, UserState state) {
 		p.teleport(state.getLocation());
-		p.setFallDistance(state.getFallDistance());
+		p.setFoodLevel(state.getFoodLevel());
 		p.setGameMode(state.getGameMode());
 		p.setAllowFlight(state.getAllowFlight());
 		p.setFlying(state.isFlying());
 		p.setLevel(state.getLevel());
 		p.setExp(state.getExp());
+		p.setFallDistance(state.getFallDistance());
 		p.setFireTicks(state.getFireTicks());
-		p.setMaxHealth(state.getMaxHealth());
-		p.setHealth(state.getHealth());
-		p.setFoodLevel(state.getFoodLevel());
-		p.setWalkSpeed(state.getWalkSpeed());
-		p.setFlySpeed(state.getFlySpeed());
-		
-		for (Iterator<PotionEffect> i = p.getActivePotionEffects().iterator(); i.hasNext();) {
-			p.removePotionEffect(i.next().getType());
 		}
-		p.addPotionEffects(state.getActivePotionEffects());
-		p.getInventory().setHeldItemSlot(state.getHeldItemSlot());
-		
-		final String name = p.getName();
-		final ItemStack[] contents = state.getContents();
-		final ItemStack[] armorcontents = state.getArmorContents();
-		
-		try {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(SurvivalGames.instance, new Runnable() {
-				public void run() {
-					Player fp = Bukkit.getPlayer(name);
-					
-					if(fp != null) {
-						fp.getInventory().setContents(contents);
-						fp.getInventory().setArmorContents(armorcontents);
-						fp.updateInventory();
-					}
-				}
-			}, 2L);
-		} catch(IllegalPluginAccessException e) {
-			p.getInventory().setContents(contents);
-			p.getInventory().setArmorContents(armorcontents);
-			p.updateInventory();
-		}
-	}
 	
 	public boolean isSpectator(String name) {
 		return getSpectator(name) != null;

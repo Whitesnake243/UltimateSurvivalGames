@@ -31,6 +31,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
@@ -44,7 +45,6 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
@@ -59,7 +59,7 @@ public class PlayerListener implements Listener {
 	public PlayerListener() {
 		reinitializeDatabase();
 	}
-	
+
 	@EventHandler
 	public void onInventoryClickEvent(InventoryClickEvent event) {
 		Player p = (Player) event.getWhoClicked();
@@ -94,16 +94,16 @@ public class PlayerListener implements Listener {
 					} catch(NumberFormatException e) { }
 					
 					if(a != null) {
-						p.playSound(p.getLocation(), Sound.ORB_PICKUP, 4.0F, 2.0F);
+						p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 4.0F, 2.0F);
 					} else {
-						p.sendMessage(MessageHandler.getMessage("prefix") + "§cAn interal error occured!");
+						p.sendMessage(MessageHandler.getMessage("prefix") + "Â§cAn interal error occured!");
 					}
 				}
 			}
 		} else {
 			SpectatorUser su = um.getSpectator(p.getName());
 			if(su != null) {
-				if(is.getType() == Material.SKULL_ITEM && name.startsWith("§e")) {
+				if(is.getType() == Material.SKULL_ITEM && name.startsWith("Â§e")) {
 					String pname = name.substring(2, name.length());
 					event.setCancelled(true);
 					Game g = su.getGame();
@@ -119,7 +119,7 @@ public class PlayerListener implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onPlayerInteractEvent(PlayerInteractEvent event) {
 		if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -151,7 +151,7 @@ public class PlayerListener implements Listener {
 				
 				if(hand.equals(VotingPhase.getVotingOpenItemStack())) {
 					if(g.getState() != GameState.VOTING) {
-						p.sendMessage(MessageHandler.getMessage("prefix") + "§cVoting isn't active right now!");
+						p.sendMessage(MessageHandler.getMessage("prefix") + "Â§cVoting isn't active right now!");
 						return;
 					}
 					if(!g.getVotingPhrase().canVote(p.getName())) {
@@ -200,7 +200,7 @@ public class PlayerListener implements Listener {
 			User user = um.getUser(p.getName());
 			if(user != null && user.getCurrentChest() != null) {
 				Location loc = user.getCurrentChest().getLocation();
-				loc.getWorld().playSound(loc, Sound.CHEST_CLOSE, 1.0F, 1.0F);
+				loc.getWorld().playSound(loc, Sound.BLOCK_CHEST_CLOSE, 1.0F, 1.0F);
 			}
 		}
 	}
@@ -279,13 +279,15 @@ public class PlayerListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onPlayerItemPickup(PlayerPickupItemEvent event) {
-		User u = um.getUser(event.getPlayer().getName());
+	public void onPlayerItemPickup(EntityPickupItemEvent event) {
+		if (event.getEntity() instanceof Player) {
+		User u = um.getUser(event.getEntity().getName());
 		if(u != null) {
 			GameState gs = u.getGame().getState();
 			if(gs == GameState.WAITING || gs == GameState.VOTING || gs == GameState.COOLDOWN || u.getGame().isFinishing())
 				event.setCancelled(true);
-		}
+		        }
+	        }
 	}
 	
 	@EventHandler
