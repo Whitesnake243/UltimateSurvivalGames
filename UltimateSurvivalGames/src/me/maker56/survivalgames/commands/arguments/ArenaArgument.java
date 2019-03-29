@@ -6,6 +6,8 @@ import me.maker56.survivalgames.commands.messages.MessageHandler;
 import me.maker56.survivalgames.commands.permission.Permission;
 import me.maker56.survivalgames.commands.permission.PermissionHandler;
 
+import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -13,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import org.bukkit.plugin.PluginManager;
 
 public class ArenaArgument {
 	
@@ -28,14 +31,14 @@ public class ArenaArgument {
 	public boolean execute() {
 		
 		if(!(sender instanceof Player)) {
-			sender.sendMessage("§cThe arena argument can only execute as a Player!");
+			sender.sendMessage("&cThe arena argument can only execute as a Player!");
 			return true;
 		}
 		
 		Player p = (Player)sender;
 		
 		if(!PermissionHandler.hasPermission(p, Permission.ARENA)) {
-			p.sendMessage(MessageHandler.getMessage("no-permission"));
+			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("no-permission")));
 			return true;
 		}
 		
@@ -52,7 +55,7 @@ public class ArenaArgument {
 			} else if(args[1].equalsIgnoreCase("create")) {
 				
 				if(args.length < 4) {
-					p.sendMessage(MessageHandler.getMessage("cmd-error").replace("%0%", "You must specify a arenaname and a gamename: /sg arena create <LOBBYNAME> <ARENA NAME>"));
+					p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("cmd-error").replace("%0%", "You must specify a arenaname and a gamename: /sg arena create <LOBBYNAME> <ARENA NAME>")));
 					return true;
 				}
 				
@@ -65,7 +68,7 @@ public class ArenaArgument {
 			} else if(args[1].equalsIgnoreCase("select")) {
 				
 				if(args.length < 4) {
-					p.sendMessage(MessageHandler.getMessage("cmd-error").replace("%0%", "You must specify a arenaname and a gamename: /sg arena select <LOBBYNAME> <ARENA NAME>"));
+					p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("cmd-error").replace("%0%", "You must specify a arenaname and a gamename: /sg arena select <LOBBYNAME> <ARENA NAME>")));
 					return true;
 				}
 				
@@ -85,7 +88,7 @@ public class ArenaArgument {
 				
 			} else if(args[1].equalsIgnoreCase("removespawn")) {
 				if(args.length == 2) {
-					p.sendMessage(MessageHandler.getMessage("cmd-error").replace("%0%", "You must specify a number: /sg arena removespawn <ID>"));
+					p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("cmd-error").replace("%0%", "You must specify a number: /sg arena removespawn <ID>")));
 					return true;
 				}
 				
@@ -94,7 +97,7 @@ public class ArenaArgument {
 				try {
 					id = Integer.parseInt(args[2]);
 				} catch(NumberFormatException e) {
-					p.sendMessage(MessageHandler.getMessage("cmd-error").replace("%0%", args[2] + " isn't a valid number!"));
+					p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("cmd-error").replace("%0%", args[2] + " isn't a valid number!")));
 					return true;
 				}
 				
@@ -115,7 +118,7 @@ public class ArenaArgument {
 				} else if(args[2].equalsIgnoreCase("remove")) {
 					
 					if(args.length == 3) {
-						p.sendMessage(MessageHandler.getMessage("cmd-error").replace("%0%", "You must specify a number: /sg arena deathmatch remove <ID>"));
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("cmd-error").replace("%0%", "You must specify a number: /sg arena deathmatch remove <ID>")));
 						return true;
 					}
 					
@@ -124,7 +127,7 @@ public class ArenaArgument {
 					try {
 						id = Integer.parseInt(args[3]);
 					} catch(NumberFormatException e) {
-						p.sendMessage(MessageHandler.getMessage("cmd-error").replace("%0%", args[3] + " isn't a valid number!"));
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("cmd-error").replace("%0%", args[3] + " isn't a valid number!")));
 						return true;
 					}
 					
@@ -142,7 +145,7 @@ public class ArenaArgument {
 						try {
 							radius = Integer.parseInt(args[3]);
 						} catch(NumberFormatException e) {
-							p.sendMessage(MessageHandler.getMessage("prefix") + args[3] + " isn't a valid radius!");
+							p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + args[3] + " isn't a valid radius!"));
 						}
 						SurvivalGames.arenaManager.setDeathmatchDomeRadius(p, radius, false);
 					}
@@ -156,18 +159,13 @@ public class ArenaArgument {
 				return true;
 				
 			} else if(args[1].equalsIgnoreCase("tools")) {
-				
 				WorldEditPlugin we = SurvivalGames.getWorldEdit();
 				if(we == null) {
-					ItemStack is = new ItemStack(Material.CARROT_STICK);
-					ItemMeta im = is.getItemMeta();
-					im.setDisplayName("SurvivalGames Selection Tool");
-					is.setItemMeta(im);
-					p.getInventory().addItem(is);
-					p.sendMessage(MessageHandler.getMessage("arena-tools"));
+                    p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") +"This is soon to be removed Use the correct Worldedit"));
+                    Bukkit.getPluginManager().disablePlugin(SurvivalGames.getInstance());
 				} else {
-					p.getInventory().addItem(new ItemStack(we.getConfig().getInt("wand-item")));
-					p.sendMessage(MessageHandler.getMessage("arena-tools-worldedit"));
+					p.getInventory().addItem(new ItemStack(Material.WOODEN_AXE));
+					p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("arena-tools-worldedit")));
 				}
 				return true;
 				
@@ -176,7 +174,7 @@ public class ArenaArgument {
 		}
 		
 		
-		p.sendMessage(MessageHandler.getMessage("prefix") + "§cCommand not found! Type /sg arena for help!");
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "&cCommand not found! Type /sg arena for help!"));
 		return true;
 		
 	}

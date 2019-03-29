@@ -6,6 +6,7 @@ import me.maker56.survivalgames.commands.permission.Permission;
 import me.maker56.survivalgames.commands.permission.PermissionHandler;
 import me.maker56.survivalgames.sign.SignManager;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -30,7 +31,7 @@ public class SignListener implements Listener {
 		if(event.getLine(0).equalsIgnoreCase("[SurvivalGames]")) {
 			
 			if(!PermissionHandler.hasPermission(p, Permission.LOBBY)) {
-				p.sendMessage(MessageHandler.getMessage("no-permission"));
+				p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("no-permission")));
 				event.getBlock().breakNaturally();
 				return;
 			}
@@ -52,7 +53,7 @@ public class SignListener implements Listener {
 		if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR)
 			return;
 		Block b = event.getClickedBlock();
-		if(b.getType() == Material.WALL_SIGN || b.getType() == Material.SIGN_POST) {
+		if(b.getType() == Material.WALL_SIGN || b.getType() == Material.LEGACY_SIGN_POST) {
 			String lobby = sm.getLobby(b.getLocation());
 			
 			if(lobby != null) {
@@ -81,12 +82,12 @@ public class SignListener implements Listener {
 		if(event.isCancelled())
 			return;
 		Block b = event.getBlock();
-		if(b.getType() == Material.WALL_SIGN || b.getType() == Material.SIGN_POST) {
+		if(b.getType() == Material.WALL_SIGN || b.getType() == Material.LEGACY_SIGN_POST) {
 			if(sm.isSign(b.getLocation())) {
 				if(event.getPlayer().isSneaking()) {
 					sm.removeSign(event.getPlayer(), b.getLocation());
 				} else {
-					event.getPlayer().sendMessage(MessageHandler.getMessage("prefix") + "§cYou have to sneak if you want to delete this survivalgames sign.");
+					event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "&cYou have to sneak if you want to delete this survivalgames sign."));
 					event.setCancelled(true);
 				}
 			}

@@ -8,6 +8,7 @@ import me.maker56.survivalgames.game.Game;
 import me.maker56.survivalgames.game.GameState;
 import me.maker56.survivalgames.user.User;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitTask;
@@ -60,20 +61,20 @@ public class CooldownPhase {
 				}
 				
 				if(time == 27) {
-					game.sendMessage(MessageHandler.getMessage("prefix") + "MAPINFO §7- §eName: §b" + arena.getName());
+					game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "MAPINFO &7- &eName: &b" + arena.getName()));
 				}
 				
 				if(time > 0 && (time % 5 == 0 || (time <= 10 && time > 0))) {
-					game.sendMessage(MessageHandler.getMessage("game-cooldown").replace("%0%", Util.getFormatedTime(time)));
+					game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-cooldown").replace("%0%", Util.getFormatedTime(time))));
 				}
 				
 				if(time <= 5 && time > 0) {
 					for(User user : game.getUsers()) {
-						user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.BLOCK_NOTE_PLING, 8.0F, 1.0F);
+						user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 8.0F, 1.0F);
 					}
 				} else if(time == 0) {
 					for(User user : game.getUsers()) {
-						user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.BLOCK_NOTE_SNARE, 8.0F, 1.0F);
+						user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 8.0F, 1.0F);
 						user.clearInventory();
 					}
 					task.cancel();

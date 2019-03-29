@@ -22,9 +22,9 @@ import me.maker56.survivalgames.user.SpectatorUser;
 import me.maker56.survivalgames.user.User;
 import me.maker56.survivalgames.user.UserState;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -138,16 +138,16 @@ public class Game {
 			
 			playerNavigatorInventory = Bukkit.createInventory(null, inv, inventoryTitle);
 			
-			ItemStack head = new ItemStack(Material.SKULL_ITEM, 0);
+			ItemStack head = new ItemStack(Material.LEGACY_SKULL_ITEM, 0);
 			head.setDurability((short) 3);
 			ItemMeta im = head.getItemMeta();
 			List<String> lore = new ArrayList<>();
-			lore.add("§7Click to spectate!");
+			lore.add("&7Click to spectate!");
 			for(int i = 0; i < users.size(); i++) {
 				if(i >= inv)
 					break;
 				User u = users.get(i);
-				im.setDisplayName("§e" + u.getName());
+				im.setDisplayName("&e" + u.getName());
 				head.setItemMeta(im);
 				playerNavigatorInventory.setItem(i, head);
 			}
@@ -179,7 +179,7 @@ public class Game {
 			}
 		}, 2L);
 		
-		sendSpectators(MessageHandler.getMessage("spectator-join").replace("%0%", user.getName()));
+		sendSpectators(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("spectator-join").replace("%0%", user.getName())));
 		updateScoreboard();
 	}
 	
@@ -254,7 +254,7 @@ public class Game {
 			getVotingPhrase().equipPlayer(user);
 		}
 		
-		sendMessage(MessageHandler.getMessage("join-success").replace("%0%", p.getName()).replace("%1%", Integer.valueOf(users.size()).toString()).replace("%2%", Integer.valueOf(maxplayers).toString()));
+		sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("join-success").replace("%0%", p.getName()).replace("%1%", Integer.valueOf(users.size()).toString()).replace("%2%", Integer.valueOf(maxplayers).toString())));
 		SurvivalGames.signManager.updateSigns();
 		updateScoreboard();
 		checkForStart();
@@ -264,18 +264,18 @@ public class Game {
 	
 	public void forceStart(Player p) {
 		if(users.size() < 2) {
-			p.sendMessage(MessageHandler.getMessage("prefix") + "§cAt least 2 players are required to start the game!");
+			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "&cAt least 2 players are required to start the game!"));
 			return;
 		}
 		
 		if((getVotingPhrase() != null && getVotingPhrase().isRunning()) || (getCooldownPhrase() != null && getCooldownPhrase().isRunning()) ) {
-			p.sendMessage(MessageHandler.getMessage("prefix") + "§cThe game is already starting!");
+			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "&cThe game is already starting!"));
 			return;
 		}
 		
 		forcedStart = true;
 		checkForStart();
-		p.sendMessage(MessageHandler.getMessage("prefix") + "You've started the game in lobby " + getName() + " successfully!");
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "You've started the game in lobby " + getName() + " successfully!"));
 	}
 	
 	public void leave(User user) {
@@ -385,10 +385,10 @@ public class Game {
 			if(users.size() == 1) {
 				if(getState() == GameState.COOLDOWN) {
 					cooldownPhase.cancelTask();
-					sendMessage(MessageHandler.getMessage("game-start-canceled"));
+					sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-start-canceled")));
 				} else if(getState() == GameState.VOTING){
 					votingPhase.cancelTask();
-					sendMessage(MessageHandler.getMessage("game-start-canceled"));
+					sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-start-canceled")));
 				}
 				forcedStart = false;
 			}
@@ -397,10 +397,10 @@ public class Game {
 			if(users.size() == reqplayers - 1) {
 				if(getState() == GameState.COOLDOWN) {
 					cooldownPhase.cancelTask();
-					sendMessage(MessageHandler.getMessage("game-start-canceled"));
+					sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-start-canceled")));
 				} else if(getState() == GameState.VOTING){
 					votingPhase.cancelTask();
-					sendMessage(MessageHandler.getMessage("game-start-canceled"));
+					sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-start-canceled")));
 				}
 			}
 		}
@@ -565,9 +565,9 @@ public class Game {
 		String s = new String();
 		List<User> users = getUsers();
 		for(int i = 0; i < users.size(); i++) {
-			s += "§e" + users.get(i).getName();
+			s += ChatColor.translateAlternateColorCodes('&',"&e" + users.get(i).getName());
 			if(i != users.size() - 1)
-				s += "§7, ";
+				s += ChatColor.translateAlternateColorCodes('&',"&7, ");
 		}
 		return s;
 	}

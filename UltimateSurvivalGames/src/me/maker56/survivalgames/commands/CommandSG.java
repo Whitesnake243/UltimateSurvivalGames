@@ -20,6 +20,7 @@ import me.maker56.survivalgames.user.User;
 import me.maker56.survivalgames.user.UserManager;
 import me.maker56.survivalgames.user.UserState;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,13 +31,13 @@ public class CommandSG implements CommandExecutor {
 	private String authors;
 	
 	public CommandSG() {
-		this.authors = " §7§m--§r §ePlugin developed by ";
+		this.authors = ChatColor.translateAlternateColorCodes('&', " &7&m--&r &ePlugin developed by ");
 		List<String> authors = SurvivalGames.getInstance().getDescription().getAuthors();
 		for(int i = 0; i < authors.size(); i++) {
-			this.authors += authors.get(i);
+			ChatColor.translateAlternateColorCodes('&', this.authors += authors.get(i));
 			
 			if(i != authors.size() - 1) {
-				this.authors += " and ";
+                ChatColor.translateAlternateColorCodes('&', this.authors += " and ");
 			}
 		}
 	}
@@ -48,34 +49,34 @@ public class CommandSG implements CommandExecutor {
 			
 			
 			if(args.length == 0) {
-				sender.sendMessage(MessageHandler.getMessage("prefix") + "Version " + SurvivalGames.instance.getDescription().getVersion() + authors);
+				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "Version " + SurvivalGames.instance.getDescription().getVersion() + authors));
 				
 				if(PermissionHandler.hasPermission(sender, Permission.JOIN)) {
-					sender.sendMessage("§8/§6sg join [LOBBY] §7- §eJoin a game!");
-					sender.sendMessage("§8/§6sg leave §7- §eLeave a game!");
-					sender.sendMessage("§8/§6sg vote <ID> §7- §eVote for an arena!");
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8/&6sg join [LOBBY] &7- &eJoin a game!"));
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8/&6sg leave &7- &eLeave a game!"));
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8/&6sg vote <ID> &7- &eVote for an arena!"));
 				}
 				
-				sender.sendMessage("§8/§6sg stats [NAME] §7- §eShow you statistics of a player");
+				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8/&6sg stats [NAME] &7- &eShow you statistics of a player"));
 				
 				if(PermissionHandler.hasPermission(sender, Permission.LIST)) {
-					sender.sendMessage("§8/§6sg list §7- §eList of all available lobbys!");
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8/&6sg list &7- &eList of all available lobbys!"));
 				}
 				
 				if(PermissionHandler.hasPermission(sender, Permission.START)) {
-					sender.sendMessage("§8/§6sg start §7- §eForce a lobby to start!");
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8/&6sg start &7- &eForce a lobby to start!"));
 				}
 				
 				if(PermissionHandler.hasPermission(sender, Permission.GAME)) {
-					sender.sendMessage("§8/§6sg lobby §7- §eShows the lobby helpsite!");
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8/&6sg lobby &7- &eShows the lobby helpsite!"));
 				}
 				
 				if(PermissionHandler.hasPermission(sender, Permission.ARENA)) {
-					sender.sendMessage("§8/§6sg arena §7- §eShows the arena helpsite!");
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8/&6sg arena &7- &eShows the arena helpsite!"));
 				}
 				
 				if(PermissionHandler.hasPermission(sender, Permission.CONFIG)) {
-					sender.sendMessage("§8/§6sg config §7- §eShows the configuration management helpsite!");
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8/&6sg config &7- &eShows the configuration management helpsite!"));
 				}
 			} else {
 				
@@ -99,7 +100,7 @@ public class CommandSG implements CommandExecutor {
 						SurvivalGames.userManger.joinGame(p, SurvivalGames.gameManager.getGames().get(0).getName());
 						return true;
 					} else if(args.length == 1) {
-						p.sendMessage(MessageHandler.getMessage("game-must-enter").replace("%0%", "/sg join <GAMENAME>"));
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-must-enter").replace("%0%", "/sg join <GAMENAME>")));
 						return true;
 					}
 					
@@ -114,7 +115,7 @@ public class CommandSG implements CommandExecutor {
 					if(user == null) {
 						user = SurvivalGames.userManger.getSpectator(p.getName());
 						if(user == null) {
-							p.sendMessage(MessageHandler.getMessage("leave-not-playing"));
+							p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("leave-not-playing")));
 							return true;
 						}
 					}
@@ -136,31 +137,31 @@ public class CommandSG implements CommandExecutor {
 					Player p = (Player)sender;
 					
 					if(!SurvivalGames.userManger.isPlaying(p.getName())) {
-						p.sendMessage(MessageHandler.getMessage("leave-not-playing"));
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("leave-not-playing")));
 						return true;
 					}
 					
 					if(args.length == 1) {
-						p.sendMessage(MessageHandler.getMessage("cmd-error").replace("%0%", "You must specify a Arena-ID!"));
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("cmd-error").replace("%0%", "You must specify a Arena-ID!")));
 						return true;
 					}
 					
 					User user = SurvivalGames.userManger.getUser(p.getName());
 					
 					if(!user.getGame().isVotingEnabled()) {
-						p.sendMessage(MessageHandler.getMessage("game-no-voting-enabled"));
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-no-voting-enabled")));
 						return true;
 					}
 					
 					if(user.getGame().getState() != GameState.VOTING) {
-						p.sendMessage(MessageHandler.getMessage("game-no-vote"));
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-no-vote")));
 						return true;
 					}
 					
 					VotingPhase vp = user.getGame().getVotingPhrase();
 					
 					if(!vp.canVote(p.getName())) {
-						p.sendMessage(MessageHandler.getMessage("game-already-vote"));
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-already-vote")));
 						return true;
 					}
 					
@@ -170,7 +171,7 @@ public class CommandSG implements CommandExecutor {
 					try {
 						mapid = Integer.parseInt(args[1]);
 					} catch (NumberFormatException e) {
-						p.sendMessage(MessageHandler.getMessage("cmd-error").replace("%0%", args[1] + " ist not a valid number!"));
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("cmd-error").replace("%0%", args[1] + " ist not a valid number!")));
 						return true;
 					}
 					
@@ -178,7 +179,7 @@ public class CommandSG implements CommandExecutor {
 					Arena arena = vp.vote(p, mapid);
 					
 					if(arena == null) {
-						p.sendMessage(MessageHandler.getMessage("game-bad-vote"));
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-bad-vote")));
 						return true;
 					}
 					return true;
@@ -186,21 +187,20 @@ public class CommandSG implements CommandExecutor {
 				// LIST
 				} else if(args[0].equalsIgnoreCase("list")) {
 					if(!PermissionHandler.hasPermission(sender, Permission.LIST)) {
-						sender.sendMessage(MessageHandler.getMessage("no-permission"));
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("no-permission")));
 						return true;
 					}
 					
 					List<Game> games = SurvivalGames.gameManager.getGames();
-					sender.sendMessage(MessageHandler.getMessage("prefix") + "List of all loaded lobbys§8: §7(§b" + games.size() + "§7)");
-					for(Game game : games) {
-						sender.sendMessage("§7- §6" + game.getName() + "§8: §e" + game.getState().toString() + " §7(§e" + game.getPlayingUsers() + "§7/§e" + game.getMaximumPlayers() + "§7)");
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "List of all loaded lobbys&8: &7(&b" + games.size() + "&7)"));
+					for(Game game : games) {sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7- &6" + game.getName() + "&8: &e" + game.getState().toString() + " &7(&e" + game.getPlayingUsers() + "&7/&e" + game.getMaximumPlayers() + "&7)"));
 					}
 					return true;
 					
 				// FORCE START
 				} else if(args[0].equalsIgnoreCase("start")) {
 					if(!PermissionHandler.hasPermission(sender, Permission.START)) {
-						sender.sendMessage(MessageHandler.getMessage("no-permission"));
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("no-permission")));
 						return true;
 					}
 					Player p = (Player) sender;
@@ -217,7 +217,7 @@ public class CommandSG implements CommandExecutor {
 					}
 					
 					if(game == null) {
-						p.sendMessage(MessageHandler.getMessage("game-not-found").replace("%0%", (args.length <= 1 ? "" : args[1])));
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-not-found").replace("%0%", (args.length <= 1 ? "" : args[1]))));
 						return true;
 					}
 					
@@ -227,17 +227,17 @@ public class CommandSG implements CommandExecutor {
 				// DEBUG
 				} else if(args[0].equalsIgnoreCase("debug")) {
 					if(!PermissionHandler.hasPermission(sender, Permission.LOBBY)) {
-						sender.sendMessage(MessageHandler.getMessage("no-permission"));
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("no-permission")));
 						return true;
 					}
 					boolean nV = !Util.debug;
 					Util.debug = nV;
-					sender.sendMessage(MessageHandler.getMessage("prefix") + "Debug Mode§7: " + (nV ? "§aENABLED" : "§cDISABLED"));
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "Debug Mode&7: " + (nV ? "&aENABLED" : "&cDISABLED")));
 					return true;
 					
 				}
 				
-				sender.sendMessage(MessageHandler.getMessage("prefix") + "§cCommand not found! Type /sg for help!");
+				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "&cCommand not found! Type /sg for help!"));
 				return true;
 			}
 			

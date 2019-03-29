@@ -5,6 +5,7 @@ import me.maker56.survivalgames.commands.permission.Permission;
 import me.maker56.survivalgames.commands.permission.PermissionHandler;
 import me.maker56.survivalgames.statistics.StatisticManager;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class StatsArgument {
@@ -19,7 +20,7 @@ public class StatsArgument {
 	
 	public boolean execute() {
 		if(!PermissionHandler.hasPermission(sender, Permission.JOIN)) {
-			sender.sendMessage(MessageHandler.getMessage("no-permission"));
+			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("no-permission")));
 			return true;
 		}
 		

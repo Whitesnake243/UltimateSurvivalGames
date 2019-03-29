@@ -13,6 +13,7 @@ import me.maker56.survivalgames.game.Game;
 import me.maker56.survivalgames.game.GameManager;
 import me.maker56.survivalgames.game.GameState;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -149,7 +150,7 @@ public class ResetListener implements Listener {
 	public void onSaveComplete(SaveDoneEvent event) {
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			if(PermissionHandler.hasPermission(p, Permission.ARENA)) {
-				p.sendMessage(MessageHandler.getMessage("prefix") + "Done saveing arena " + event.getArena() + " in lobby " + event.getLobby() + "! It tooks " + event.getTime() + "! The file is " + event.getFileSize() + " " + event.getFileSizeFormat() + " big.");
+				p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "Done saving arena " + event.getArena() + " in lobby " + event.getLobby() + "! It tooks " + event.getTime() + "! The file is " + event.getFileSize() + " " + event.getFileSizeFormat() + " big."));
 			}
 		}
 	}

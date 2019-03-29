@@ -34,12 +34,12 @@ public class MessageHandler {
 	public static String getMessage(String name) {
 		if(messages.containsKey(name)) {
 			if(withoutPrefix.contains(name)) {
-				return messages.get(name);
+				return ChatColor.translateAlternateColorCodes('&', messages.get(name));
 			} else {
-				return messages.get("prefix") + messages.get(name);
+				return ChatColor.translateAlternateColorCodes('&', messages.get("prefix") + messages.get(name));
 			}
 		} else {
-			return "§cMessage not found!";
+			return "&cMessage not found!";
 		}
 	}
 	

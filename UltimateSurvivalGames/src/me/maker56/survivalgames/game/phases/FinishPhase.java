@@ -1,5 +1,6 @@
 package me.maker56.survivalgames.game.phases;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -32,7 +33,7 @@ public class FinishPhase {
 				}
 				
 				if(time == 5) {
-					game.sendMessage(MessageHandler.getMessage("game-end").replace("%0%", Util.getFormatedTime(time)));
+					game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-end").replace("%0%", Util.getFormatedTime(time))));
 				}
 				time--;
 			}

@@ -3,6 +3,7 @@ package me.maker56.survivalgames.statistics;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -73,7 +74,7 @@ class ResponseHandler implements DatabaseResponse {
 			} else {
 				Player pl = Bukkit.getPlayer(name);
 				if(p != null && pl == null) {
-					p.sendMessage(MessageHandler.getMessage("stats-player-not-found").replace("%0%", name));
+					p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("stats-player-not-found").replace("%0%", name)));
 					return;
 				} else if(uuid == null) {
 					uuid = pl.getUniqueId().toString();

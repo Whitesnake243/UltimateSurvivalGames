@@ -11,7 +11,7 @@ import me.maker56.survivalgames.game.Game;
 import me.maker56.survivalgames.game.GameState;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -78,7 +78,7 @@ public class SignManager {
 					updateSign(loc, lobby);
 				}
 			}, 1L);
-			p.sendMessage(MessageHandler.getMessage("prefix") + "You've created the join sign successfully!");
+			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "You've created the join sign successfully!"));
 		}
 	}
 	
@@ -94,7 +94,7 @@ public class SignManager {
 			signs.remove(Util.serializeLocation(loc, false) + ":" + lobby);
 			SurvivalGames.signs.set("Sign.List", signs);
 			SurvivalGames.saveSigns();
-			p.sendMessage(MessageHandler.getMessage("prefix") + "You've removed the join sign successfully!");
+			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "You've removed the join sign successfully!"));
 		}
 	}
 	
@@ -111,19 +111,19 @@ public class SignManager {
 	public void sendInfo(CommandSender sender, String lobby) {
 		Game g = SurvivalGames.gameManager.getGame(lobby);
 		if(g != null) {
-			sender.sendMessage(MessageHandler.getMessage("game-sign-info").replace("%0%", lobby));
+			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-sign-info").replace("%0%", lobby)));
 			if(g.getState() == GameState.INGAME || g.getState() == GameState.DEATHMATCH || g.getState() == GameState.COOLDOWN) {
 				if(arena)
-					sender.sendMessage(MessageHandler.getMessage("game-sign-arena").replace("%0%", g.getCurrentArena().getName()));
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-sign-arena").replace("%0%", g.getCurrentArena().getName())));
 				if(playersleft) {
 					String s = g.getAlivePlayers();
-					sender.sendMessage(MessageHandler.getMessage("game-sign-playersleft").replace("%1%", s).replace("%0%", Integer.valueOf(g.getPlayingUsers()).toString()));
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-sign-playersleft").replace("%1%", s).replace("%0%", Integer.valueOf(g.getPlayingUsers()).toString())));
 				}
 			} else {
-				sender.sendMessage(MessageHandler.getMessage("game-sign-noinfo"));
+				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-sign-noinfo")));
 			}
 		} else {
-			sender.sendMessage(MessageHandler.getMessage("join-unknown-game").replace("%0%", lobby));
+			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("join-unknown-game").replace("%0%", lobby)));
 		}
 	}
 	
@@ -138,7 +138,7 @@ public class SignManager {
 	
 	public void updateSign(Location loc, String lobby) {
 		Block b = loc.getBlock();
-		if(b.getType() == Material.SIGN_POST || b.getType() == Material.WALL_SIGN) {
+		if(b.getType() == Material.LEGACY_SIGN_POST || b.getType() == Material.WALL_SIGN) {
 			Sign s = (Sign) b.getState();
 			Game g = SurvivalGames.gameManager.getGame(lobby);
 			if(g != null) {
@@ -149,11 +149,11 @@ public class SignManager {
 				s.update();
 			} else {
 				if(SurvivalGames.database.contains("Games." + lobby)) {
-					s.setLine(1, "ง4Game not");
-					s.setLine(2, "ง4loaded!");
+					s.setLine(1, "ยง4Game not");
+					s.setLine(2, "ยง4loaded!");
 				} else {
-					s.setLine(1, "ง4Game not");
-					s.setLine(2, "ง4found!");
+					s.setLine(1, "ยง4Game not");
+					s.setLine(2, "ยง4found!");
 				}
 				s.update();
 			}

@@ -3,6 +3,8 @@ package me.maker56.survivalgames.game;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -34,7 +36,7 @@ public class GameManager {
 		String path = "Games." + lobbyname;
 		
 		if(cfg.contains(path)) {
-			p.sendMessage(MessageHandler.getMessage("game-already-exists").replace("%0%", lobbyname));
+			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-already-exists").replace("%0%", lobbyname)));
 			return;
 		}
 		
@@ -53,14 +55,14 @@ public class GameManager {
 		cfg.set(path + "Lobby", Util.serializeLocation(p.getLocation(), true));
 		SurvivalGames.saveDataBase();
 		
-		p.sendMessage(MessageHandler.getMessage("game-created").replace("%0%", lobbyname));
-		p.sendMessage(MessageHandler.getMessage("game-set-spawn").replace("%0%", lobbyname));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-created").replace("%0%", lobbyname)));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-set-spawn").replace("%0%", lobbyname)));
 		return;
 	}
 	
 	public void setSpawn(Player p, String lobbyname) {
 		if(!cfg.contains("Games." + lobbyname)) {
-			p.sendMessage(MessageHandler.getMessage("game-not-found").replace("%0%", lobbyname));
+			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-not-found").replace("%0%", lobbyname)));
 			return;
 		}
 		
@@ -69,7 +71,7 @@ public class GameManager {
 		String s = loc.getWorld().getName() + "," + loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getYaw() + "," + loc.getPitch();
 		cfg.set("Games." + lobbyname + ".Lobby", s);
 		SurvivalGames.saveDataBase();
-		p.sendMessage(MessageHandler.getMessage("game-spawn-set").replace("%0%", lobbyname));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-spawn-set").replace("%0%", lobbyname)));
 		return;
 	}
 	
@@ -108,10 +110,12 @@ public class GameManager {
 				dp.cancelTask();
 			}
 			games.remove(game);
+
 		}
 	}
 	
 	public boolean load(String name) {
+		Bukkit.broadcastMessage("1");
 		if(getGame(name) != null) {
 			System.out.println("[SurvivalGames] Lobby " + name + " is already loaded!");
 			return false;
@@ -132,35 +136,42 @@ public class GameManager {
 		}
 		
 		List<Arena> arenas = new ArrayList<>();
-		
-		for(String key : cfg.getConfigurationSection(path + "Arenas.").getKeys(false)) {
-			if(!cfg.getBoolean(path + "Arenas." + key + ".Enabled")) {
-				continue;
-			}
-	
-			Arena arena = SurvivalGames.arenaManager.getArena(name, key);
-			
-			if(arena != null) {
-				arenas.add(arena);
-			}
-		}
-		
+		Bukkit.broadcastMessage(path);
+        for(String key : cfg.getConfigurationSection(path + "Arenas.").getKeys(false)) {
+            String[] keysplit = key.split(",");
+            if(!cfg.getBoolean(path + "Arenas." + keysplit[0]+ ".Enabled")) {
+                continue;
+            }
+
+            Arena arena = SurvivalGames.arenaManager.getArena(name, key);
+
+            if(arena != null) {
+                arenas.add(arena);
+            }
+        }
+		Bukkit.broadcastMessage("2.1-GM");
 		if(arenas.size() == 0) {
 			System.out.println("[SurvivalGames] No arena in lobby " + name + " loaded!");
 			return false;
 		}
-		
+		Bukkit.broadcastMessage("2.2");
 		if(!cfg.contains(path + "Lobby") && arenas.size() != 1) {
 			System.out.println("[SurvivalGames] The spawn point in lobby " + name + " isn't defined!");
 			return false;
 		}
-		
+		Bukkit.broadcastMessage("2.3");
 		Location lobby = Util.parseLocation(cfg.getString(path + "Lobby"));
+		Bukkit.broadcastMessage("2.4");
 		boolean voting = cfg.getBoolean(path + "Enable-Voting");
+		Bukkit.broadcastMessage("2.5");
 		int lobbytime = cfg.getInt(path + "Lobby-Time");
+		Bukkit.broadcastMessage("2.6");
 		int maxVotingArenas = cfg.getInt(path + "Max-Voting-Arenas");
+		Bukkit.broadcastMessage("2.7");
 		int reqplayers = cfg.getInt(path + "Required-Players-to-start");
+		Bukkit.broadcastMessage("2.8");
 		boolean resetEnabled = SurvivalGames.instance.getConfig().getBoolean("Enable-Arena-Reset");
+		Bukkit.broadcastMessage("3");
 		
 		games.add(new Game(name, lobby, voting, lobbytime, maxVotingArenas, reqplayers, arenas, resetEnabled));
 		return true;

@@ -16,6 +16,7 @@ import me.maker56.survivalgames.game.GameState;
 import me.maker56.survivalgames.user.User;
 import me.maker56.survivalgames.user.UserManager;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Material;
@@ -63,7 +64,7 @@ public class IngamePhase {
 	
 	public void start() {		
 		game.setState(GameState.INGAME);
-		game.sendMessage(MessageHandler.getMessage("game-start").replace("%0%", Integer.valueOf(game.getPlayingUsers()).toString()));
+		game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-start").replace("%0%", Integer.valueOf(game.getPlayingUsers()).toString())));
 		running = true;
 		game.redefinePlayerNavigatorInventory();
 		players = game.getPlayingUsers();
@@ -87,12 +88,12 @@ public class IngamePhase {
 		}
 		
 		if(period != 0) {
-			game.sendMessage(MessageHandler.getMessage("game-grace-period").replace("%0%", Integer.valueOf(period).toString()));
+			game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-grace-period").replace("%0%", Integer.valueOf(period).toString())));
 			grace = true;
 			
 			gracetask = Bukkit.getScheduler().runTaskLater(SurvivalGames.instance, new Runnable() {
 				public void run() {
-					game.sendMessage(MessageHandler.getMessage("game-grace-period-ended"));
+					game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-grace-period-ended")));
 					grace = false;
 					startTask();
 				}
@@ -111,13 +112,13 @@ public class IngamePhase {
 				
 				if(game.getCurrentArena().isDeathmatchEnabled()) {
 					if(time % 600 == 0 && time > 300) {
-						game.sendMessage(MessageHandler.getMessage("game-deathmatch-cooldown").replace("%0%", Util.getFormatedTime(time)));
+						game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-deathmatch-cooldown").replace("%0%", Util.getFormatedTime(time))));
 					} else if(time <= 300 && time % 60 == 0 && time > 60) {
-						game.sendMessage(MessageHandler.getMessage("game-deathmatch-cooldown").replace("%0%", Util.getFormatedTime(time)));
+						game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-deathmatch-cooldown").replace("%0%", Util.getFormatedTime(time))));
 					} else if(time <= 60 && time % 10 == 0 && time > 10) {
-						game.sendMessage(MessageHandler.getMessage("game-deathmatch-cooldown").replace("%0%", Util.getFormatedTime(time)));
+						game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-deathmatch-cooldown").replace("%0%", Util.getFormatedTime(time))));
 					} else if(time <= 10 && time > 0) {
-						game.sendMessage(MessageHandler.getMessage("game-deathmatch-cooldown").replace("%0%", Util.getFormatedTime(time)));
+						game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-deathmatch-cooldown").replace("%0%", Util.getFormatedTime(time))));
 					} else if(time == 0) {
 						cancelTask();
 						cancelLightningTask();
@@ -140,18 +141,18 @@ public class IngamePhase {
 		user.getStatistics().addDeath();
 		
 		if(leave) {
-			game.sendMessage(MessageHandler.getMessage("game-player-left").replace("%0%", user.getName()));
+			game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-player-left").replace("%0%", user.getName())));
 		} else {
 			if(killer == null) {
-				game.sendMessage(MessageHandler.getMessage("game-player-die-damage").replace("%0%", user.getName()));
+				game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-player-die-damage").replace("%0%", user.getName())));
 			} else {
 				// STATISTIC
 				killer.getStatistics().addKill();
-				game.sendMessage(MessageHandler.getMessage("game-player-die-killer").replace("%0%", user.getName()).replace("%1%", killer.getName()));
+				game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-player-die-killer").replace("%0%", user.getName()).replace("%1%", killer.getName())));
 				double killMoney = game.getCurrentArena().getMoneyOnKill();
 				if(killMoney > 0 && SurvivalGames.econ != null) {
 					SurvivalGames.econ.depositPlayer(killer.getName(), killMoney);
-					killer.sendMessage(MessageHandler.getMessage("arena-money-kill").replace("%0%", Double.valueOf(killMoney).toString()).replace("%1%", user.getName()));
+					killer.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("arena-money-kill").replace("%0%", Double.valueOf(killMoney).toString()).replace("%1%", user.getName())));
 				}
 				
 				// KILL STATISTIC
@@ -165,7 +166,7 @@ public class IngamePhase {
 			}
 		}
 		
-		game.sendMessage(MessageHandler.getMessage("game-remainplayers").replace("%0%", Integer.valueOf(remain).toString()));
+		game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-remainplayers").replace("%0%", Integer.valueOf(remain).toString())));
 		if(lightningOD)
 			user.getPlayer().getWorld().strikeLightningEffect(user.getPlayer().getLocation());
 		
@@ -193,14 +194,14 @@ public class IngamePhase {
 			winner.getStatistics().addPlayed();
 			
 			if(braodcastWin) {
-				Bukkit.broadcastMessage(MessageHandler.getMessage("game-win").replace("%0%", winner.getName()).replace("%1%", game.getCurrentArena().getName()).replace("%2%", game.getName()));
+				Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-win").replace("%0%", winner.getName()).replace("%1%", game.getCurrentArena().getName()).replace("%2%", game.getName())));
 			}
 			
-			winner.sendMessage(MessageHandler.getMessage("game-win-winner-message").replace("%0%", game.getCurrentArena().getName()));
+			winner.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-win-winner-message").replace("%0%", game.getCurrentArena().getName())));
 			double winMoney = game.getCurrentArena().getMoneyOnWin();
 			if(winMoney > 0 && SurvivalGames.econ != null) {
 				SurvivalGames.econ.depositPlayer(winner.getName(), winMoney);
-				winner.sendMessage(MessageHandler.getMessage("arena-money-win").replace("%0%", Double.valueOf(winMoney).toString()));
+				winner.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("arena-money-win").replace("%0%", Double.valueOf(winMoney).toString())));
 			}
 			
 			// GAME STATISTIC
@@ -242,9 +243,9 @@ public class IngamePhase {
 			public void run() {
 				
 				if(time % 10 == 0 && time > 10) {
-					game.sendMessage(MessageHandler.getMessage("game-deathmatch-cooldown").replace("%0%", Util.getFormatedTime(time)));
+					game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-deathmatch-cooldown").replace("%0%", Util.getFormatedTime(time))));
 				} else if(time <= 10 && time > 0) {
-					game.sendMessage(MessageHandler.getMessage("game-deathmatch-cooldown").replace("%0%", Util.getFormatedTime(time)));
+					game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-deathmatch-cooldown").replace("%0%", Util.getFormatedTime(time))));
 				} else if(time == 0) {
 					cancelDeathmatchTask();
 					cancelLightningTask();

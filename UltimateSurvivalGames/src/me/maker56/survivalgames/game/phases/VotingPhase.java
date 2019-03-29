@@ -16,9 +16,8 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.ClickEvent.Action;
-
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -93,13 +92,13 @@ public class VotingPhase {
 				}
 				
 				if(time % 10 == 0 && time > 10) {
-					game.sendMessage(MessageHandler.getMessage("game-voting-cooldown").replace("%0%", Util.getFormatedTime(time)));
+					game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-voting-cooldown").replace("%0%", Util.getFormatedTime(time))));
 				}
 				
 				if(time % 15 == 0 && time != 0) {
 					sendVoteMessage();
 				} else if(time <= 10 && time > 0){
-					game.sendMessage(MessageHandler.getMessage("game-voting-cooldown").replace("%0%", Util.getFormatedTime(time)));
+					game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-voting-cooldown").replace("%0%", Util.getFormatedTime(time))));
 				} else if(time == 0) {
 					for(User user : game.getUsers()) {
 						user.getPlayer().getInventory().setItem(1, null);
@@ -109,7 +108,7 @@ public class VotingPhase {
 					task.cancel();
 					running = false;
 					time = game.getLobbyTime();
-					game.sendMessage(MessageHandler.getMessage("game-voting-end"));
+					game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-voting-end")));
 					Arena winner = getMostVotedArena();
 					winner.getSpawns().get(0).getWorld().setTime(0);
 					
@@ -178,7 +177,7 @@ public class VotingPhase {
 			
 			ItemStack is = arenaItem.clone();
 			ItemMeta im = is.getItemMeta();
-			im.setDisplayName((i + 1) + ". §e§l" + a.getName());
+			im.setDisplayName((i + 1) + ". &e&l" + a.getName());
 			is.setItemMeta(im);
 			
 			voteInventory.setItem(c, is);
@@ -222,9 +221,9 @@ public class VotingPhase {
 				int amount = PermissionHandler.getVotePower(p);
 				a.setVotes(a.getVotes() + amount);
 				game.getVotedUsers().add(p.getName());
-				p.sendMessage(MessageHandler.getMessage("game-success-vote").replace("%0%", a.getName()));
+				p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-success-vote").replace("%0%", a.getName())));
 				if(amount > 1) {
-					p.sendMessage(MessageHandler.getMessage("game-extra-vote").replace("%0%", Integer.valueOf(amount).toString()));
+					p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-extra-vote").replace("%0%", Integer.valueOf(amount).toString())));
 				}
 				game.updateScoreboard();
 			}
@@ -238,12 +237,12 @@ public class VotingPhase {
 	private void sendVoteMessage() {
 		if(game.isVotingEnabled()) {
 			if(voteItem == null) {
-				game.sendMessage(MessageHandler.getMessage("game-vote"));
+				game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-vote")));
 			}
 			
 			int i = 1;
 			for(Arena arena : voteArenas) {
-				game.sendMessage(new ComponentBuilder("§3" + i + "§7. §6" + arena.getName() + " §7(§e" + arena.getVotes() + "§7)")
+				game.sendMessage(new ComponentBuilder("&3" + i + "&7. &6" + arena.getName() + " &7(&e" + arena.getVotes() + "&7)")
 				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to vote for arena " + arena.getName()).create()))
 				.event(new ClickEvent(Action.RUN_COMMAND, "/sg vote " + i)).create());
 				i++;

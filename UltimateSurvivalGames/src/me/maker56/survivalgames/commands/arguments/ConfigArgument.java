@@ -21,7 +21,7 @@ public class ConfigArgument {
 	
 	public boolean execute() {
 		if(!(sender instanceof Player)) {
-			sender.sendMessage("§cThe config argument can only execute as a Player!");
+			sender.sendMessage("&cThe config argument can only execute as a Player!");
 			return true;
 		}
 		

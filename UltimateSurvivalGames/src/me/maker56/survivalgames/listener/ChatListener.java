@@ -21,9 +21,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import ru.tehkode.permissions.PermissionUser;
-import ru.tehkode.permissions.bukkit.PermissionsEx;
-
 public class ChatListener implements Listener {
 
 	private UserManager um = SurvivalGames.getUserManager();
@@ -88,14 +85,10 @@ public class ChatListener implements Listener {
 	}
 	
 	public String[] getFormats(Player p) {
-		if(pex) {
-			PermissionUser pu = PermissionsEx.getPermissionManager().getUser(p);
-			return new String[] { ChatColor.translateAlternateColorCodes('&', pu.getPrefix()), ChatColor.translateAlternateColorCodes('&', pu.getSuffix()) };
+		if(p.isOp()) {
+			return new String[] { "&c", "&7> &r" };
 		}
-		
-		if(p.isOp())
-			return new String[] { "§c", "§7> §r" };	
-		return new String[] { "§a", "§7> §r" };	
+		return new String[] { "&a", "&7> &r" };	
 	}
 
 }

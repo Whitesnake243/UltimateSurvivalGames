@@ -5,6 +5,7 @@ import me.maker56.survivalgames.commands.messages.MessageHandler;
 import me.maker56.survivalgames.commands.permission.Permission;
 import me.maker56.survivalgames.commands.permission.PermissionHandler;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,7 +20,7 @@ public class UpdateListener implements Listener {
 	public static void update(String version) {
 		UpdateListener.version = version;
 		System.out.println("[SurvivalGames] A newer version of survivalgames is available. (" + version + ") You can download it here: http://dev.bukkit.org/bukkit-plugins/ultimatesurvivalgames/ You're using " + SurvivalGames.version);
-		updateInfo = MessageHandler.getMessage("prefix") + "§eA newer version of SurvivalGames is available. §7(§b" + version + "§7) §eYou can download it here: §bhttp://dev.bukkit.org/bukkit-plugins/ultimatesurvivalgames/ §7You're using §o" + SurvivalGames.version;
+		updateInfo = ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "&eA newer version of SurvivalGames is available. &7(&b" + version + "&7) &eYou can download it here: &bhttp://dev.bukkit.org/bukkit-plugins/ultimatesurvivalgames/ &7You're using &o" + SurvivalGames.version);
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			if(PermissionHandler.hasPermission(p, Permission.LOBBY) || PermissionHandler.hasPermission(p, Permission.ARENA)) {
 				p.sendMessage(updateInfo);

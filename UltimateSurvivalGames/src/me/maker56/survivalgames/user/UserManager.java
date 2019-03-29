@@ -1,6 +1,7 @@
 package me.maker56.survivalgames.user;
 
 import me.maker56.survivalgames.SurvivalGames;
+import me.maker56.survivalgames.Util;
 import me.maker56.survivalgames.commands.messages.MessageHandler;
 import me.maker56.survivalgames.commands.permission.Permission;
 import me.maker56.survivalgames.commands.permission.PermissionHandler;
@@ -8,16 +9,21 @@ import me.maker56.survivalgames.game.Game;
 import me.maker56.survivalgames.game.GameManager;
 import me.maker56.survivalgames.game.GameState;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class UserManager {
-	
+    public ArrayList<ItemStack> contents = new ArrayList<ItemStack>();
 	private GameManager gm = SurvivalGames.gameManager;
-	
+
 	// START SPECTATOR
-	
+
 	public void leaveGame(SpectatorUser su) {
 		Game g = su.getGame();
 		for(User u : g.getUsers()) {
@@ -29,83 +35,102 @@ public class UserManager {
 		}
 		setState(su.getPlayer(), su);
 	}
-	
+
 	public void joinGameAsSpectator(Player p, String gamename) {
 		if(!SurvivalGames.instance.getConfig().getBoolean("Spectating.Enabled")) {
-			p.sendMessage(MessageHandler.getMessage("spectator-disabled"));
+			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("spectator-disabled")));
 			return;
 		}
-		
+
 		if(!PermissionHandler.hasPermission(p, Permission.SPECTATE)) {
-			p.sendMessage(MessageHandler.getMessage("no-permission"));
+			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("no-permission")));
 			return;
 		}
-		
+
 		if(isSpectator(p.getName()) || isPlaying(p.getName())) {
-			p.sendMessage(MessageHandler.getMessage("join-already-playing"));
+			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("join-already-playing")));
 			return;
 		}
-		
+
 		if(p.getVehicle() != null) {
-			p.sendMessage(MessageHandler.getMessage("join-vehicle"));
+			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("join-vehicle")));
 			return;
 		}
-		
+
 		Game g = gm.getGame(gamename);
-		
+
 		if(g == null) {
-			p.sendMessage(MessageHandler.getMessage("join-unknown-game").replace("%0%", gamename));
+			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("join-unknown-game").replace("%0%", gamename)));
 			return;
 		}
-		
+
 		int max = SurvivalGames.instance.getConfig().getInt("Spectating.Max-Spectators-Per-Arena", 8);
 		if(g.getSpecators().size() >= max) {
-			p.sendMessage(MessageHandler.getMessage("spectator-full").replace("%0%", Integer.valueOf(max).toString()));
+			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("spectator-full").replace("%0%", Integer.valueOf(max).toString())));
 			return;
 		}
-		
+
 		GameState state = g.getState();
-		
+
 		if(state == GameState.VOTING || state == GameState.WAITING || state == GameState.COOLDOWN || state == GameState.RESET) {
-			p.sendMessage(MessageHandler.getMessage("spectator-game-running"));
+			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("spectator-game-running")));
 			return;
 		}
-		
+
 		g.joinSpectator(new SpectatorUser(p, g));
 		return;
 	}
-	
+
 	// END SPECTATOR
-	
+    private UserManager um = SurvivalGames.userManger;
 	public void joinGame(Player p, String gamename) {
 		if(!PermissionHandler.hasPermission(p, Permission.JOIN)) {
-			p.sendMessage(MessageHandler.getMessage("no-permission"));
+			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("no-permission")));
 			return;
 		}
-		
-		for(ItemStack item : p.getInventory().getContents())
-		{
-		    if(item != null)
-		    {
-		      p.sendMessage("§cCsak üres táskával lehet belépni a játékba.");
-		      return;
-		    }
-		}
-		
+		if (p.getInventory().getContents() != null) {
+            int es = p.getInventory().getContents().length;
+            for (int i = 1; i < 31; i++) {
+                if (i > es) {
+                    break;
+                }
+                ItemStack item = p.getInventory().getItem(i);
+                if (item != null) {
+                    contents.add(item);
+                }
+            }
+            int Ar = contents.size()+1;
+            //Testing to see if its set or not
+            p.sendMessage(contents.toString()+" | "+ p.getEnderChest().getContents().toString()+" | "+ p.getInventory().getContents().toString());
+            if (Ar > 27) {
+                p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix")+MessageHandler.getMessage("items-in-inventory")));
+                return;
+            }
+            for (int i = 1; i < Ar; i++) {
+                if (contents.isEmpty()) {
+                    break;
+                }
+                ItemStack item = p.getInventory().getItem(i);
+                if (item != null) {
+                    p.getEnderChest().addItem(new ItemStack(contents.get(i)));
+                }
+            }
+            SurvivalGames.Pinvo.set(p.getName(),p.getEnderChest().getContents());
+        }
 		if(isPlaying(p.getName())) {
-			p.sendMessage(MessageHandler.getMessage("join-already-playing"));
+			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("join-already-playing")));
 			return;
 		}
 		
 		if(p.getVehicle() != null) {
-			p.sendMessage(MessageHandler.getMessage("join-vehicle"));
+			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("join-vehicle")));
 			return;
 		}
 		
 		Game g = gm.getGame(gamename);
 		
 		if(g == null) {
-			p.sendMessage(MessageHandler.getMessage("join-unknown-game").replace("%0%", gamename));
+			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("join-unknown-game").replace("%0%", gamename)));
 			return;
 		}
 		
@@ -115,7 +140,7 @@ public class UserManager {
 			if(SurvivalGames.instance.getConfig().getBoolean("Spectating.Enabled")) {
 				joinGameAsSpectator(p, gamename);
 			} else {
-				p.sendMessage(MessageHandler.getMessage("join-game-running"));
+				p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("join-game-running")));
 			}
 			return;
 		}
@@ -123,10 +148,10 @@ public class UserManager {
 		if(g.getUsers().size() >= g.getMaximumPlayers()) {
 			User kick = PermissionHandler.canJoin(p, g);
 			if(kick != null) {
-				kick.sendMessage(MessageHandler.getMessage("fulljoin-kick"));
+				kick.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("fulljoin-kick")));
 				leaveGame(kick.getPlayer());
 			} else {
-				p.sendMessage(MessageHandler.getMessage("join-game-full"));
+				p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("join-game-full")));
 				return;
 			}
 		}
@@ -144,7 +169,7 @@ public class UserManager {
 				leaveGame(su);
 				return;
 			}
-			p.sendMessage(MessageHandler.getMessage("leave-not-playing"));
+			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("leave-not-playing")));
 			return;
 		}
 		
@@ -165,7 +190,7 @@ public class UserManager {
 		
 		
 		if(game.getState() == GameState.WAITING || game.getState() == GameState.VOTING || game.getState() == GameState.COOLDOWN)
-			game.sendMessage(MessageHandler.getMessage("game-leave").replace("%0%", p.getName()).replace("%1%", Integer.valueOf(game.getPlayingUsers() - 1).toString()).replace("%2%", Integer.valueOf(game.getMaximumPlayers()).toString()));
+			game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-leave").replace("%0%", p.getName()).replace("%1%", Integer.valueOf(game.getPlayingUsers() - 1).toString()).replace("%2%", Integer.valueOf(game.getMaximumPlayers()).toString())));
 		game.leave(user);
 		
 		if(game.getScoreboardPhase() != null) {

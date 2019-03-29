@@ -142,11 +142,11 @@ public class UpdateCheck {
     /**
      * Initialize the updater.
      *
-     * @param plugin   The plugin that is checking for an update.
-     * @param id       The dev.bukkit.org id of the project.
-     * @param file     The file that the plugin is running from, get this by doing this.getFile() from within your main class.
-     * @param type     Specify the type of update this will be. See {@link UpdateType}
-     * @param announce True if the program should announce the progress of new updates in console.
+     #* @param plugin   The plugin that is checking for an update.
+     *# @param id       The dev.bukkit.org id of the project.
+     *# @param file     The file that the plugin is running from, get this by doing this.getFile() from within your main class.
+     *# @param type     Specify the type of update this will be. See {@link UpdateType}
+     *# @param announce True if the program should announce the progress of new updates in console.
      */
     public UpdateCheck(Plugin plugin, int id) {
         this.plugin = plugin;
@@ -253,7 +253,7 @@ public class UpdateCheck {
      * determine whether a new update is actually an update is sometimes extremely complicated.
      * </p>
      * <p>
-     * Updater will call this method from {@link #versionCheck(String)} before deciding whether
+     #* Updater will call this method from {@link} before deciding whether
      * the remote version is actually an update.
      * If you have a specific versioning scheme with which a mathematical determination can
      * be reliably made to decide whether one version is higher than another, you may

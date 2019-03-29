@@ -6,6 +6,7 @@ import me.maker56.survivalgames.SurvivalGames;
 import me.maker56.survivalgames.commands.messages.MessageHandler;
 import me.maker56.survivalgames.user.UserState;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -18,7 +19,7 @@ public class StatisticManager {
 	
 	public static void sendStatistics(CommandSender sender, String name) {
 		if(name.length() < 4 || name.length() > 16 || !name.matches("[a-zA-Z0-9_]*")) {
-			sender.sendMessage(MessageHandler.getMessage("stats-player-not-found").replace("%0%", name));
+			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("stats-player-not-found").replace("%0%", name)));
 			return;
 		}
 		
@@ -36,7 +37,7 @@ public class StatisticManager {
 			
 			if(state != null) {
 				if(!state.areStatisticsLoaded()) {
-					sender.sendMessage(MessageHandler.getMessage("stats-player-not-loaded").replace("%0%", realname));
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("stats-player-not-loaded").replace("%0%", realname)));
 					return;
 				}
 				
@@ -68,14 +69,14 @@ public class StatisticManager {
 	}
 	
 	public static void sendStatistics(CommandSender sender, StatisticData sd) {
-		sender.sendMessage(MessageHandler.getMessage("stats-header").replace("%0%", sd.name));
-		sender.sendMessage(MessageHandler.getMessage("stats-kills").replace("%0%", Integer.valueOf(sd.getKills()).toString()));
-		sender.sendMessage(MessageHandler.getMessage("stats-deaths").replace("%0%", Integer.valueOf(sd.getDeaths()).toString()));
-		sender.sendMessage(MessageHandler.getMessage("stats-kdr").replace("%0%", Float.valueOf((float) (Math.round( sd.getKDR() * 100. ) / 100.)).toString().replace(".", ",")));
-		sender.sendMessage(MessageHandler.getMessage("stats-wins").replace("%0%", Integer.valueOf(sd.getWins()).toString()));
-		sender.sendMessage(MessageHandler.getMessage("stats-played").replace("%0%", Integer.valueOf(sd.getPlayed()).toString()));
-		sender.sendMessage(MessageHandler.getMessage("stats-points").replace("%0%", Integer.valueOf(sd.getPoints()).toString()));
-		sender.sendMessage(MessageHandler.getMessage("stats-footer").replace("%0%", sd.name));
+		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("stats-header").replace("%0%", sd.name)));
+		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("stats-kills").replace("%0%", Integer.valueOf(sd.getKills()).toString())));
+		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("stats-deaths").replace("%0%", Integer.valueOf(sd.getDeaths()).toString())));
+		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("stats-kdr").replace("%0%", Float.valueOf((float) (Math.round( sd.getKDR() * 100. ) / 100.)).toString().replace(".", ","))));
+		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("stats-wins").replace("%0%", Integer.valueOf(sd.getWins()).toString())));
+		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("stats-played").replace("%0%", Integer.valueOf(sd.getPlayed()).toString())));
+		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("stats-points").replace("%0%", Integer.valueOf(sd.getPoints()).toString())));
+		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("stats-footer").replace("%0%", sd.name)));
 	}
 
 }

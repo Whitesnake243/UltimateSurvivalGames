@@ -8,6 +8,7 @@ import me.maker56.survivalgames.game.Game;
 import me.maker56.survivalgames.game.GameState;
 import me.maker56.survivalgames.user.UserManager;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
@@ -48,15 +49,15 @@ public class DomeListener implements Listener {
 					if(arena.isDomeEnabled()) {
 						double distance = arena.domeDistance(p.getLocation());
 						if(distance >= arena.getDomeRadius()) {
-							p.playEffect(p.getEyeLocation(), Effect.FLAME, 16451);
-							p.playEffect(p.getEyeLocation(), Effect.FLAME, 16452);
-							p.playEffect(p.getEyeLocation(), Effect.FLAME, 16457);
+							p.playEffect(p.getEyeLocation(), Effect.MOBSPAWNER_FLAMES, 16451);
+							p.playEffect(p.getEyeLocation(), Effect.MOBSPAWNER_FLAMES, 16452);
+							p.playEffect(p.getEyeLocation(), Effect.MOBSPAWNER_FLAMES, 16457);
 							
 							Vector v = Util.calculateVector(p.getLocation(), arena.getDomeMiddle());
 							v.multiply(2);
 							p.setVelocity(v);
 
-							p.sendMessage(MessageHandler.getMessage("game-deathmatch-end-reached"));
+							p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-deathmatch-end-reached")));
 							
 							if(distance > arena.getDomeRadius() && distance - arena.getDomeRadius() > 8) {
 								p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 100, 1, true));

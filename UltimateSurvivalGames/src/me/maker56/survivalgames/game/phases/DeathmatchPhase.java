@@ -12,6 +12,7 @@ import me.maker56.survivalgames.game.GameState;
 import me.maker56.survivalgames.user.SpectatorUser;
 import me.maker56.survivalgames.user.User;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.potion.PotionEffect;
@@ -35,7 +36,7 @@ public class DeathmatchPhase {
 	}
 	
 	public void start() {
-		game.sendMessage(MessageHandler.getMessage("game-deathmatch-start"));
+		game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-deathmatch-start")));
 		game.setState(GameState.DEATHMATCH);
 		
 		List<Location> spawns = game.getCurrentArena().getDeathmatchSpawns();
@@ -58,16 +59,16 @@ public class DeathmatchPhase {
 		task = Bukkit.getScheduler().runTaskTimer(SurvivalGames.instance, new Runnable() {
 			public void run() {
 				if(time == 60) {
-					game.sendMessage(MessageHandler.getMessage("game-deathmatch-timeout-warning"));
+					game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-deathmatch-timeout-warning")));
 				}
 				
 				
 				if(time % 60 == 0 && time != 0) {
-					game.sendMessage(MessageHandler.getMessage("game-deathmatch-timeout").replace("%0%", Util.getFormatedTime(time)));
+					game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-deathmatch-timeout").replace("%0%", Util.getFormatedTime(time))));
 				} else if(time % 10 == 0 && time < 60 && time > 10) {
-					game.sendMessage(MessageHandler.getMessage("game-deathmatch-timeout").replace("%0%", Util.getFormatedTime(time)));
+					game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-deathmatch-timeout").replace("%0%", Util.getFormatedTime(time))));
 				} else if(time <= 10 && time > 0) {
-					game.sendMessage(MessageHandler.getMessage("game-deathmatch-timeout").replace("%0%", Util.getFormatedTime(time)));
+					game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-deathmatch-timeout").replace("%0%", Util.getFormatedTime(time))));
 				} else if(time == 0) {
 					Arena a = game.getCurrentArena();
 					User user = null;

@@ -1,10 +1,13 @@
 package me.maker56.survivalgames;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
 import me.maker56.survivalgames.commands.messages.MessageHandler;
 import me.maker56.survivalgames.listener.UpdateListener;
 
@@ -31,7 +34,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import com.sk89q.worldedit.schematic.SchematicFormat;
 
 public class Util {
 	
@@ -48,11 +50,12 @@ public class Util {
 			// ITEM ID / MATERIAL / SUBID
 			String[] idsSplit = gSplit[0].split(":");
 			try {
-				is = new ItemStack(Integer.parseInt(idsSplit[0]));
+				is = new ItemStack(Material.getMaterial(idsSplit[0]));
 			} catch(NumberFormatException e) {
+				e.printStackTrace();
 				is = new ItemStack(Material.valueOf(idsSplit[0]));
 			}
-			
+
 			if(idsSplit.length > 1)
 				is.setDurability(Short.parseShort(idsSplit[1]));
 			
@@ -247,15 +250,13 @@ public class Util {
 	public static Location parseLocation(String s) {
 		String[] split = s.split(",");
 		Location loc = null;
-		
-		
 		try {
 			World world = Bukkit.getWorld(split[0]);
 			if(split.length == 6) {
 				double x = Double.parseDouble(split[1]);
 				double y = Double.parseDouble(split[2]);
 				double z = Double.parseDouble(split[3]);
-				
+
 				float yaw = Float.parseFloat(split[4]);
 				float pitch = Float.parseFloat(split[5]);
 				loc = new Location(world, x, y, z, yaw, pitch);
@@ -263,7 +264,7 @@ public class Util {
 				int x = Integer.parseInt(split[1]);
 				int y = Integer.parseInt(split[2]);
 				int z = Integer.parseInt(split[3]);
-				
+
 				loc = new Location(world, x, y, z);
 			}
 		} catch(NumberFormatException | ArrayIndexOutOfBoundsException e) {
@@ -292,7 +293,7 @@ public class Util {
 			System.out.println("[SurvivalGames] [Debug] " + object.toString());
 			for(Player p : Bukkit.getOnlinePlayers()) {
 				if(p.isOp()) 
-					p.sendMessage("§7[Debug] " + object.toString());
+					p.sendMessage("&7[Debug] " + object.toString());
 			}
 		}
 	}
@@ -307,7 +308,7 @@ public class Util {
 				if(!key.endsWith(".map"))
 					continue;
 				File file = new File("plugins/SurvivalGames/reset/" + key);
-				SchematicFormat sf = SchematicFormat.getFormat(file);
+				ClipboardFormat sf = ClipboardFormats.findByFile(file);
 				if(sf == null) {
 					outdated.add(key);
 					
@@ -316,20 +317,24 @@ public class Util {
 		}
 		String s = null;
 		if(!outdated.isEmpty()) {
-			s = MessageHandler.getMessage("prefix") + "§cThe format of " + outdated.size() + " map saves is outdated§7: §e";
+			s = MessageHandler.getMessage("prefix") + "&cThe format of " + outdated.size() + " map saves is outdated&7: &e";
 			for(int i = 0; i < outdated.size(); i++) {
 				s+= outdated.get(i);
 				if(i != outdated.size() - 1) {
-					s+= "§7, §e";
+					s+= "&7, &e";
 				} else {
-					s+= " §c! ";
+					s+= " &c! ";
 				}
 				
 
 			}
-			s+= "Select all the arenas with §l/sg arena select §cand type §c§l/sg arena save§c! In the old format, the arenas will not reset!";
+			s+= "Select all the arenas with &l/sg arena select &cand type &c&l/sg arena save&c! In the old format, the arenas will not reset!";
 		}
 		UpdateListener.setOutdatedMaps(s);
 	}
 
+	public static void Error(String e) {
+		String Out = new String(e);
+		SurvivalGames.instance.getLogger().severe("[SurvivalGames] " + Out);
+	}
 }

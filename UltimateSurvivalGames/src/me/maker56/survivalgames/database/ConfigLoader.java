@@ -22,6 +22,7 @@ public class ConfigLoader {
 		reloadScoreboard();
 		reloadBarAPI();
 		reloadKits();
+		reloadPinvo();
 	}
 	
 	public static void reloadChests() {
@@ -30,9 +31,9 @@ public class ConfigLoader {
 		
 		List<String> lvl1 = new ArrayList<>();
 		
-		lvl1.add(Material.WOOD_AXE + "");
+		lvl1.add(Material.WOODEN_AXE + "");
 		lvl1.add(Material.LEATHER_BOOTS + "");
-		lvl1.add(Material.GOLD_HELMET + "");
+		lvl1.add(Material.GOLDEN_HELMET + "");
 		lvl1.add(Material.APPLE + " 3");
 		lvl1.add(Material.ARROW + " 5");
 		c.addDefault("Chestloot.Level 1", lvl1);
@@ -41,28 +42,28 @@ public class ConfigLoader {
 		List<String> lvl2 = new ArrayList<>();
 		
 		lvl2.add(Material.COOKED_BEEF +"");
-		lvl2.add(Material.RAW_CHICKEN + " 2");
+		lvl2.add(Material.CHICKEN + "2");
 		lvl2.add(Material.COOKED_CHICKEN + "");
-		lvl2.add(Material.MUSHROOM_SOUP + "");
-		lvl2.add(Material.WOOD_SWORD + "");
-		lvl2.add(Material.GOLD_HELMET + "");
-		lvl2.add(Material.GOLD_LEGGINGS + "");
+		lvl2.add(Material.MUSHROOM_STEW + "");
+		lvl2.add(Material.WOODEN_SWORD + "");
+		lvl2.add(Material.GOLDEN_HELMET + "");
+		lvl2.add(Material.GOLDEN_LEGGINGS + "");
 		lvl2.add(Material.LEATHER_BOOTS + "");
-		lvl2.add(Material.GRILLED_PORK + " 2");
+		lvl2.add(Material.COOKED_PORKCHOP + " 2");
 		lvl2.add(Material.BOWL + "");
 		lvl2.add(Material.MELON + " 2");
-		lvl2.add(Material.RAW_CHICKEN + "");
+		lvl2.add(Material.CHICKEN + "");
 		
 		c.addDefault("Chestloot.Level 2", lvl2);
 		
 		
 		List<String> lvl3 = new ArrayList<>();
 		
-		lvl3.add(Material.MELON_BLOCK + "");
+		lvl3.add(Material.MELON + "");
 		lvl3.add(Material.IRON_HELMET + "");
 		lvl3.add(Material.MELON + " 4");
-		lvl3.add(Material.GOLD_SWORD + "");
-		lvl3.add(Material.WEB + " 3");
+		lvl3.add(Material.GOLDEN_SWORD + "");
+		lvl3.add(Material.COBWEB + " 3");
 		lvl3.add(Material.CHAINMAIL_CHESTPLATE + "");
 		lvl3.add(Material.CHAINMAIL_BOOTS + "");
 		lvl3.add(Material.FISHING_ROD + "");
@@ -82,9 +83,9 @@ public class ConfigLoader {
 		lvl4.add(Material.IRON_BOOTS + "");
 		lvl4.add(Material.CHAINMAIL_HELMET + "");
 		lvl4.add(Material.FLINT_AND_STEEL + "");
-		lvl4.add(Material.GOLD_BOOTS + "");
+		lvl4.add(Material.GOLDEN_BOOTS + "");
 		lvl4.add(Material.STONE_SWORD + "");
-		lvl4.add(Material.WOOD_SWORD + "");
+		lvl4.add(Material.WOODEN_SWORD + "");
 		lvl4.add(Material.STRING + " 2");
 		
 		c.addDefault("Chestloot.Level 4", lvl4);
@@ -232,7 +233,11 @@ public class ConfigLoader {
 		c.options().copyDefaults(true);
 		SurvivalGames.saveScoreboard();
 	}
-	
+
+    public static void reloadPinvo() {
+        FileConfiguration c = new YMLLoader("plugins/SurvivalGames", "pinvo.yml").getFileConfiguration();
+        SurvivalGames.Pinvo = c;
+    }
 
 	
 	public static void reloadSigns() {
@@ -340,7 +345,7 @@ public class ConfigLoader {
 		
 		c.addDefault("Voting.Item", Material.CHEST + " name:&eVote_for_an_arena lore:&7Rightclick_to_open//&7the_voting_menu!");
 		c.addDefault("Voting.InventoryTitle", "Vote for an arena!");
-		c.addDefault("Voting.ArenaItem", Material.EMPTY_MAP + " 0 lore:&7Click_to_vote//&7for_this_arena!");
+		c.addDefault("Voting.ArenaItem", Material.MAP + " 0 lore:&7Click_to_vote//&7for_this_arena!");
 		c.addDefault("Leave-Item", Material.MAGMA_CREAM + " name:&eLeave_the_lobby lore:&7Rightclick_to_leave//&7the_lobby!");
 		
 		c.addDefault("Spectating.Enabled", true);
@@ -383,7 +388,6 @@ public class ConfigLoader {
 		FileConfiguration c = new YMLLoader("plugins/SurvivalGames", "database.yml").getFileConfiguration();
 		SurvivalGames.database = c;
 	}
-	
 	public static void reloadMessages() {
 		FileConfiguration c = new YMLLoader("plugins/SurvivalGames", "messages.yml").getFileConfiguration();
 		SurvivalGames.messages = c;
@@ -391,7 +395,7 @@ public class ConfigLoader {
 		c.addDefault("prefix", "&7[&3SG&7] &6");
 		c.addDefault("no-permission", "&cYou don't have permission to do this!");
 		c.addDefault("cmd-error", "&cError: %0%");
-		
+		c.addDefault("items-in-inventory","&cYou have to many items in your inventory Please remove them to join a Game");
 		c.addDefault("join-unknown-game", "&cThe lobby %0% does not exist!");
 		c.addDefault("join-game-running", "&cThis game is already running!");
 		c.addDefault("join-vehicle", "&cYou can't join SurvivalGames in a vehicle!");
@@ -509,3 +513,4 @@ public class ConfigLoader {
 	}
 
 }
+

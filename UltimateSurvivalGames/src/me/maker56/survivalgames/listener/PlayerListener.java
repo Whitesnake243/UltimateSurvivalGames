@@ -14,7 +14,8 @@ import me.maker56.survivalgames.user.User;
 import me.maker56.survivalgames.user.UserManager;
 import me.maker56.survivalgames.user.UserState;
 
-import org.bukkit.ChatColor;
+
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -96,25 +97,25 @@ public class PlayerListener implements Listener {
 					if(a != null) {
 						p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 4.0F, 2.0F);
 					} else {
-						p.sendMessage(MessageHandler.getMessage("prefix") + "§cAn interal error occured!");
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "&cAn interal error occured!"));
 					}
 				}
 			}
 		} else {
 			SpectatorUser su = um.getSpectator(p.getName());
 			if(su != null) {
-				if(is.getType() == Material.SKULL_ITEM && name.startsWith("§e")) {
+				if(is.getType() == Material.SKELETON_SKULL && name.startsWith("&e")) {
 					String pname = name.substring(2, name.length());
 					event.setCancelled(true);
 					Game g = su.getGame();
 					User user = g.getUser(pname);
 					if(user == null) {
-						p.sendMessage(MessageHandler.getMessage("spectator-not-living").replace("%0%", pname));
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("spectator-not-living").replace("%0%", pname)));
 						return;
 					}
 					p.closeInventory();
 					p.teleport(user.getPlayer().getLocation());
-					p.sendMessage(MessageHandler.getMessage("spectator-new-player").replace("%0%", pname));
+					p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("spectator-new-player").replace("%0%", pname)));
 				}
 			}
 		}
@@ -151,11 +152,11 @@ public class PlayerListener implements Listener {
 				
 				if(hand.equals(VotingPhase.getVotingOpenItemStack())) {
 					if(g.getState() != GameState.VOTING) {
-						p.sendMessage(MessageHandler.getMessage("prefix") + "§cVoting isn't active right now!");
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "&cVoting isn't active right now!"));
 						return;
 					}
 					if(!g.getVotingPhrase().canVote(p.getName())) {
-						p.sendMessage(MessageHandler.getMessage("game-already-vote"));
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-already-vote")));
 						return;
 					}
 					event.setCancelled(true);
@@ -476,7 +477,7 @@ public class PlayerListener implements Listener {
 				for(Arena arena : game.getArenas()) {
 					if(arena.containsBlock(loc)) {
 						event.setCancelled(true);
-						p.sendMessage(MessageHandler.getMessage("forbidden-build"));
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("forbidden-build")));
 						return;
 					}
 				}
@@ -488,7 +489,7 @@ public class PlayerListener implements Listener {
 			if(game.getState() != GameState.INGAME && game.getState() != GameState.DEATHMATCH) {
 				event.setCancelled(true);
 			} else {
-				if(game.getCurrentArena().getAllowedMaterials().contains(event.getBlock().getTypeId()) && !game.isFinishing()) {
+				if(game.getCurrentArena().getAllowedMaterials().contains(event.getBlock().getType()) && !game.isFinishing()) {
 					return;
 				} else {
 					event.setCancelled(true);
@@ -506,8 +507,8 @@ public class PlayerListener implements Listener {
 			Game game = user.getGame();
 			
 			if(game.getArenas().size() == 1) {
-				if(game.getState() == GameState.WAITING || game.getState() == GameState.COOLDOWN) {
-					event.setCancelled(true);
+				if(game.getState() == GameState.WAITING) {
+					event.setCancelled(false);
 				}
 			} else {
 				if(game.getState() == GameState.COOLDOWN) {
@@ -528,7 +529,7 @@ public class PlayerListener implements Listener {
 				for(Arena arena : game.getArenas()) {
 					if(arena.containsBlock(loc)) {
 						event.setCancelled(true);
-						p.sendMessage(MessageHandler.getMessage("forbidden-build"));
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("forbidden-build")));
 						return;
 					}
 				}
@@ -539,7 +540,7 @@ public class PlayerListener implements Listener {
 			if(arena == null) {
 				event.setCancelled(true);
 			} else {
-				if(arena.getAllowedMaterials().contains(event.getBlock().getTypeId())) {
+				if(arena.getAllowedMaterials().contains(event.getBlock().getType())) {
 					if(event.getBlock().getType() == Material.TNT) {
 						event.getBlock().setType(Material.AIR);
 						event.getBlock().getWorld().spawn(event.getBlock().getLocation(), TNTPrimed.class);
@@ -569,14 +570,14 @@ public class PlayerListener implements Listener {
 				if(u == null)
 					u = um.getSpectator(p.getName());
 				Game g = u.getGame();
-				p.sendMessage(MessageHandler.getMessage("game-player-list").replace("%0%", Integer.valueOf(g.getPlayingUsers()).toString()).replace("%1%", g.getAlivePlayers()));
+				p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-player-list").replace("%0%", Integer.valueOf(g.getPlayingUsers()).toString()).replace("%1%", g.getAlivePlayers())));
 				event.setCancelled(true);
 			} else if(message.startsWith("/vote")) {
 				p.chat("/sg " + message.replace("/", ""));
 				event.setCancelled(true);
 			} else {
 				event.setCancelled(true);
-				p.sendMessage(MessageHandler.getMessage("forbidden-command"));
+				p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("forbidden-command")));
 			}
 		}
 	}

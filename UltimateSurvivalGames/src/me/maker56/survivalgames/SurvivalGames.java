@@ -2,6 +2,8 @@ package me.maker56.survivalgames;
 
 import java.io.IOException;
 
+import com.sk89q.worldedit.LocalSession;
+import com.sk89q.worldedit.regions.Region;
 import me.maker56.survivalgames.arena.ArenaManager;
 import me.maker56.survivalgames.arena.chest.ChestListener;
 import me.maker56.survivalgames.arena.chest.ChestManager;
@@ -34,16 +36,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 public class SurvivalGames extends JavaPlugin {
-	
+
 	public static SurvivalGames instance;
-	public static FileConfiguration messages, database, signs, reset, chestloot, scoreboard, kits;
-	
+	public static FileConfiguration messages, database, signs, reset, chestloot, scoreboard, kits, arenas, Pinvo;
 	public static ArenaManager arenaManager;
 	public static GameManager gameManager;
 	public static ChestManager chestManager;
 	public static UserManager userManger;
 	public static SignManager signManager;
 	public static ScoreBoardManager scoreBoardManager;
+	public static Region s;
 	
 	public static Economy econ;
 	
@@ -58,6 +60,7 @@ public class SurvivalGames extends JavaPlugin {
 			}
 		}
 		DatabaseManager.close();
+		saveall();
 	}
 	
 	public void onEnable() {
@@ -68,15 +71,16 @@ public class SurvivalGames extends JavaPlugin {
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
-		
+
 		instance = this;
 		version += getDescription().getVersion();
 		
 		new ConfigLoader().load();
 		DatabaseManager.open();
 		DatabaseManager.load();
-		
-		startUpdateChecker();
+
+		// Hate update notifcations with a passion
+		//startUpdateChecker();
 		
 		PermissionHandler.reinitializeDatabase();
 		Game.reinitializeDatabase();
@@ -115,7 +119,8 @@ public class SurvivalGames extends JavaPlugin {
 		if(getWorldEdit() != null) {
 			System.out.println("[SurvivalGames] Plugin enabled. WorldEdit found!");
 		} else {
-			System.out.println("[SurvivalGames] Plugin enabled.");
+			System.out.println("[SurvivalGames] Plugin disabled.");
+			Bukkit.getPluginManager().disablePlugin(SurvivalGames.instance);
 		}
 		
 		signManager.updateSigns();
@@ -145,10 +150,34 @@ public class SurvivalGames extends JavaPlugin {
 	}
 	
 	// FILECONFIGURATION SAVE
-	
+	public static void saveall() {
+	    saveDataBase();
+	    saveArenas();
+	    saveReset();
+	    saveSigns();
+	    saveChests();
+	    saveKits();
+	    saveMessages();
+	    saveScoreboard();
+	    savePinvo();
+    }
+    public static void savePinvo() {
+        try {
+            Pinvo.save("plugins/SurvivalGames/messages.yml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 	public static void saveMessages() {
 		try {
 			messages.save("plugins/SurvivalGames/messages.yml");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	public static void saveArenas() {
+		try {
+			arenas.save("plugins/SurvivalGames/arenas.yml");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
