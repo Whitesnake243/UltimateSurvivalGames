@@ -11,6 +11,7 @@ import me.maker56.survivalgames.game.GameState;
 
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -82,40 +83,53 @@ public class UserManager {
 	}
 
 	// END SPECTATOR
-    private UserManager um = SurvivalGames.userManger;
 	public void joinGame(Player p, String gamename) {
 		if(!PermissionHandler.hasPermission(p, Permission.JOIN)) {
 			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("no-permission")));
 			return;
 		}
 		if (p.getInventory().getContents() != null) {
-            int es = p.getInventory().getContents().length;
-            for (int i = 1; i < 31; i++) {
+            int es = new Integer(p.getInventory().getContents().length);
+            for (int i = 1; i < es + 1; i++) {
                 if (i > es) {
                     break;
                 }
-                ItemStack item = p.getInventory().getItem(i);
+                ItemStack item = null;
+                try {
+                    item = new ItemStack(p.getInventory().getItem(i));
+                } catch (IllegalArgumentException e) {
+                }
                 if (item != null) {
-                    contents.add(item);
+                    for (int ii = 1 ; ii < es + 1; ii++) {
+                        if (p.getEnderChest().getContents().length < 28) {
+                            p.getEnderChest().addItem(new ItemStack(item));
+                            p.getInventory().setItem(i, new ItemStack(Material.AIR));
+                            break;
+                        }
+                        if (p.getEnderChest().getContents().length > 26){
+                            contents.add(item);
+                            p.getInventory().setItem(i, new ItemStack(Material.AIR));
+                            break;
+                        }
+                    }
+                    //int e = new Integer(p.getEnderChest().firstEmpty());
+                    //if (e < 0 && e > 28) {
+                    //    p.getEnderChest().addItem(new ItemStack(item));
+                    //}
+                    //if (e > 27 && e < 38) {
+                    //    contents.add(item);
+                    // }
                 }
             }
-            int Ar = contents.size()+1;
+            int Ar = new Integer(contents.size());
             //Testing to see if its set or not
-            p.sendMessage(contents.toString()+" | "+ p.getEnderChest().getContents().toString()+" | "+ p.getInventory().getContents().toString());
-            if (Ar > 27) {
-                p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix")+MessageHandler.getMessage("items-in-inventory")));
+            //p.sendMessage(contents.toString()+" | "+ p.getEnderChest().getContents().toString()+" | "+ p.getInventory().getContents().toString());
+            if (Ar > 26) {
+                SurvivalGames.Pinvo.set("Inventories."+p.getName(), contents);
+                SurvivalGames.savePinvo();
                 return;
             }
-            for (int i = 1; i < Ar; i++) {
-                if (contents.isEmpty()) {
-                    break;
-                }
-                ItemStack item = p.getInventory().getItem(i);
-                if (item != null) {
-                    p.getEnderChest().addItem(new ItemStack(contents.get(i)));
-                }
-            }
-            SurvivalGames.Pinvo.set(p.getName(),p.getEnderChest().getContents());
+
         }
 		if(isPlaying(p.getName())) {
 			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("join-already-playing")));
@@ -207,6 +221,34 @@ public class UserManager {
 		} else {
 			setState(p, user);
 		}
+		ArrayList<ItemStack> con = new ArrayList(SurvivalGames.Pinvo.getList("Inventories." + p.getName()));
+        if (p.getInventory().getContents() == null) {
+            int es = new Integer(p.getEnderChest().getContents().length);
+            for (int i = 1; i < es + 1; i++) {
+                if (i > es) {
+                    break;
+                }
+                ItemStack item = null;
+                try {
+                    item = new ItemStack(p.getEnderChest().getItem(i));
+                } catch (IllegalArgumentException e) {
+                }
+                if (item != null) {
+                    for (int ii = 1; ii < es + 1; ii++) {
+                        if (p.getInventory().getContents().length <= 27) {
+                            p.getInventory().addItem(new ItemStack(item));
+                            p.getEnderChest().setItem(i, new ItemStack(Material.AIR));
+                            break;
+                        }
+                        if (p.getInventory().getContents().length >=27 && p.getInventory().getContents().length <= 37) {
+                            p.getInventory().setItem(i,item);
+                            con.remove(item);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
 	}
 	
 	public void setState(Player p, UserState state) {
