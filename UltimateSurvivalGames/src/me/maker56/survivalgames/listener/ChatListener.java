@@ -1,7 +1,5 @@
 package me.maker56.survivalgames.listener;
 
-import java.util.Iterator;
-
 import me.maker56.survivalgames.SurvivalGames;
 import me.maker56.survivalgames.game.Game;
 import me.maker56.survivalgames.user.UserManager;
@@ -11,7 +9,6 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ClickEvent.Action;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -20,6 +17,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+
+import java.util.Iterator;
 
 public class ChatListener implements Listener {
 
@@ -52,11 +51,11 @@ public class ChatListener implements Listener {
 			if(u != null) {
 				String format = design;
 				String[] formats = getFormats(u.getPlayer());
-				format = format.replace("{STATE}", u.isSpectator() ? specPrefix : "");
-				format = format.replace("{PREFIX}", formats[0]);
-				format = format.replace("{PLAYERNAME}", u.getName());
-				format = format.replace("{SUFFIX}", formats[1]);
-				format = format.replace("{MESSAGE}", event.getMessage());
+				format = format.replace("{STATE}", ChatColor.translateAlternateColorCodes('&', u.isSpectator() ? specPrefix : ""));
+				format = format.replace("{PREFIX}", ChatColor.translateAlternateColorCodes('&', formats[0]));
+				format = format.replace(ChatColor.translateAlternateColorCodes('&', "{PLAYERNAME}"), ChatColor.translateAlternateColorCodes('&', u.getName()));
+				format = format.replace(ChatColor.translateAlternateColorCodes('&', "{SUFFIX}"), ChatColor.translateAlternateColorCodes('&', formats[1]));
+				format = format.replace("{MESSAGE}", ChatColor.translateAlternateColorCodes('&', event.getMessage()));
 				
 				System.out.println(ChatColor.stripColor(format));
 				
@@ -86,9 +85,9 @@ public class ChatListener implements Listener {
 	
 	public String[] getFormats(Player p) {
 		if(p.isOp()) {
-			return new String[] { "&c", "&7> &r" };
+			return new String[] {"&7[&3SG&7] &r[&4", "&r]&7: &a" };
 		}
-		return new String[] { "&a", "&7> &r" };	
+		return new String[] { "&7[&3SG&7] &r", "&7: &r" };
 	}
 
 }

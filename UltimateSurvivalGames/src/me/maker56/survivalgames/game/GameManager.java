@@ -1,22 +1,20 @@
 package me.maker56.survivalgames.game;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-
-import me.maker56.survivalgames.Util;
 import me.maker56.survivalgames.SurvivalGames;
+import me.maker56.survivalgames.Util;
 import me.maker56.survivalgames.arena.Arena;
 import me.maker56.survivalgames.commands.messages.MessageHandler;
 import me.maker56.survivalgames.game.phases.CooldownPhase;
 import me.maker56.survivalgames.game.phases.DeathmatchPhase;
 import me.maker56.survivalgames.game.phases.IngamePhase;
 import me.maker56.survivalgames.game.phases.VotingPhase;
+import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameManager {
 	
@@ -115,7 +113,6 @@ public class GameManager {
 	}
 	
 	public boolean load(String name) {
-		Bukkit.broadcastMessage("1");
 		if(getGame(name) != null) {
 			System.out.println("[SurvivalGames] Lobby " + name + " is already loaded!");
 			return false;
@@ -136,7 +133,6 @@ public class GameManager {
 		}
 		
 		List<Arena> arenas = new ArrayList<>();
-		Bukkit.broadcastMessage(path);
         for(String key : cfg.getConfigurationSection(path + "Arenas.").getKeys(false)) {
             String[] keysplit = key.split(",");
             if(!cfg.getBoolean(path + "Arenas." + keysplit[0]+ ".Enabled")) {
@@ -149,29 +145,20 @@ public class GameManager {
                 arenas.add(arena);
             }
         }
-		Bukkit.broadcastMessage("2.1-GM");
 		if(arenas.size() == 0) {
 			System.out.println("[SurvivalGames] No arena in lobby " + name + " loaded!");
 			return false;
 		}
-		Bukkit.broadcastMessage("2.2");
 		if(!cfg.contains(path + "Lobby") && arenas.size() != 1) {
 			System.out.println("[SurvivalGames] The spawn point in lobby " + name + " isn't defined!");
 			return false;
 		}
-		Bukkit.broadcastMessage("2.3");
 		Location lobby = Util.parseLocation(cfg.getString(path + "Lobby"));
-		Bukkit.broadcastMessage("2.4");
 		boolean voting = cfg.getBoolean(path + "Enable-Voting");
-		Bukkit.broadcastMessage("2.5");
 		int lobbytime = cfg.getInt(path + "Lobby-Time");
-		Bukkit.broadcastMessage("2.6");
 		int maxVotingArenas = cfg.getInt(path + "Max-Voting-Arenas");
-		Bukkit.broadcastMessage("2.7");
 		int reqplayers = cfg.getInt(path + "Required-Players-to-start");
-		Bukkit.broadcastMessage("2.8");
 		boolean resetEnabled = SurvivalGames.instance.getConfig().getBoolean("Enable-Arena-Reset");
-		Bukkit.broadcastMessage("3");
 		
 		games.add(new Game(name, lobby, voting, lobbytime, maxVotingArenas, reqplayers, arenas, resetEnabled));
 		return true;

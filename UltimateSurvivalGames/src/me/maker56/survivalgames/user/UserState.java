@@ -1,17 +1,16 @@
 package me.maker56.survivalgames.user;
 
-import java.util.Iterator;
-
 import me.maker56.survivalgames.game.Game;
 import me.maker56.survivalgames.statistics.StatisticData;
 import me.maker56.survivalgames.statistics.StatisticLoader;
 import net.md_5.bungee.api.chat.BaseComponent;
-
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+
+import java.util.Iterator;
 
 public abstract class UserState {
 	
@@ -22,6 +21,7 @@ public abstract class UserState {
 	private GameMode gamemode;
 	private boolean allowFlying, flying;
 	private float fall;
+	private ItemStack[] Inventory;
 	
 	private long joinTime = System.currentTimeMillis();
 	private Game game;
@@ -38,6 +38,7 @@ public abstract class UserState {
 		this.allowFlying = p.getAllowFlight();
 		this.flying = p.isFlying();
 		this.fireticks = p.getFireTicks();
+		this.Inventory = p.getInventory().getContents();
 		
 		StatisticLoader.load(this);
 	}
@@ -87,6 +88,8 @@ public abstract class UserState {
 	public int getLevel() {
 		return this.level;
 	}
+
+	public ItemStack[] getInventory() { return this.Inventory; }
 
 	public void clear() {
 		for (Iterator<PotionEffect> i = player.getActivePotionEffects().iterator(); i.hasNext();) {

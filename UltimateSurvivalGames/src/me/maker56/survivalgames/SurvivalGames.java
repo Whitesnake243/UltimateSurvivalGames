@@ -1,8 +1,6 @@
 package me.maker56.survivalgames;
 
-import java.io.IOException;
-
-import com.sk89q.worldedit.LocalSession;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.Region;
 import me.maker56.survivalgames.arena.ArenaManager;
 import me.maker56.survivalgames.arena.chest.ChestListener;
@@ -14,26 +12,19 @@ import me.maker56.survivalgames.database.ConfigLoader;
 import me.maker56.survivalgames.database.sql.DatabaseManager;
 import me.maker56.survivalgames.game.Game;
 import me.maker56.survivalgames.game.GameManager;
-import me.maker56.survivalgames.listener.ChatListener;
-import me.maker56.survivalgames.listener.PlayerListener;
-import me.maker56.survivalgames.listener.ResetListener;
-import me.maker56.survivalgames.listener.SelectionListener;
-import me.maker56.survivalgames.listener.SignListener;
-import me.maker56.survivalgames.listener.SpectatorListener;
-import me.maker56.survivalgames.listener.UpdateListener;
+import me.maker56.survivalgames.listener.*;
 import me.maker56.survivalgames.metrics.Metrics;
 import me.maker56.survivalgames.scoreboard.ScoreBoardManager;
 import me.maker56.survivalgames.sign.SignManager;
 import me.maker56.survivalgames.user.UserManager;
 import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import java.io.IOException;
 
 public class SurvivalGames extends JavaPlugin {
 
@@ -60,7 +51,6 @@ public class SurvivalGames extends JavaPlugin {
 			}
 		}
 		DatabaseManager.close();
-		saveall();
 	}
 	
 	public void onEnable() {
@@ -159,14 +149,6 @@ public class SurvivalGames extends JavaPlugin {
 	    saveKits();
 	    saveMessages();
 	    saveScoreboard();
-	    savePinvo();
-    }
-    public static void savePinvo() {
-        try {
-            Pinvo.save("plugins/SurvivalGames/messages.yml");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 	public static void saveMessages() {
 		try {

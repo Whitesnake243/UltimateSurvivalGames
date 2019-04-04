@@ -1,18 +1,18 @@
 package me.maker56.survivalgames.database;
 
+import me.maker56.survivalgames.SurvivalGames;
+import me.maker56.survivalgames.game.GameState;
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.maker56.survivalgames.SurvivalGames;
-import me.maker56.survivalgames.game.GameState;
-
-import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-
 public class ConfigLoader {
 	
 	public void load() {
+
 		reloadConfig();
 		reloadMessages();
 		reloadDatabase();
@@ -22,9 +22,8 @@ public class ConfigLoader {
 		reloadScoreboard();
 		reloadBarAPI();
 		reloadKits();
-		reloadPinvo();
 	}
-	
+
 	public static void reloadChests() {
 		FileConfiguration c = new YMLLoader("plugins/SurvivalGames", "chestloot.yml").getFileConfiguration();
 		SurvivalGames.chestloot = c;
@@ -234,12 +233,6 @@ public class ConfigLoader {
 		SurvivalGames.saveScoreboard();
 	}
 
-    public static void reloadPinvo() {
-        FileConfiguration c = new YMLLoader("plugins/SurvivalGames", "pinvo.yml").getFileConfiguration();
-        SurvivalGames.Pinvo = c;
-    }
-
-	
 	public static void reloadSigns() {
 		FileConfiguration c = new YMLLoader("plugins/SurvivalGames", "signs.yml").getFileConfiguration();
 		SurvivalGames.signs = c;
@@ -375,6 +368,8 @@ public class ConfigLoader {
 		c.addDefault("TNT-Extra-Damage", 7.0);
 		
 		c.addDefault("Enable-Arena-Reset", true);
+		c.addDefault("Command-On-Leave", true);
+		c.addDefault("Command","spawn");
 		
 		c.options().copyDefaults(true);
 		SurvivalGames.instance.saveConfig();
