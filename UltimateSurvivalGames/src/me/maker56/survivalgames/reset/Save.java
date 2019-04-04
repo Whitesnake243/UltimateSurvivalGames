@@ -1,38 +1,36 @@
 package me.maker56.survivalgames.reset;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
-
 import com.sk89q.jnbt.CompoundTag;
 import com.sk89q.jnbt.IntTag;
 import com.sk89q.jnbt.StringTag;
 import com.sk89q.jnbt.Tag;
+import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardWriter;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockState;
 import me.maker56.survivalgames.SurvivalGames;
 import me.maker56.survivalgames.Util;
 import me.maker56.survivalgames.commands.messages.MessageHandler;
 import me.maker56.survivalgames.events.SaveDoneEvent;
-
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.plugin.Plugin;
 
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.EditSession;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
 
 import static me.maker56.survivalgames.SurvivalGames.s;
 
@@ -80,15 +78,8 @@ public class Save extends Thread {
                     Time = System.currentTimeMillis() - start;
                     seconds = (int) (Time / 1000);
                     Time -= seconds * 1000;
-                    TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - start);
-                    if (time > 59) {
-                        mins = TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - start);
-                        output = String.valueOf(mins);
-                    }else {
-                        output = String.valueOf(TimeUnit.MILLISECONDS.toSeconds(Time));
-                    }
                     if(rounded <= 100) {
-                        p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "&eSaving Arena Please Standby, Time elapsed: "+ output));
+                        p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "&eSaving Arena Please Standby, Time elapsed: "+ Time));
                         Util.debug(stepsDone + "/" + maxSteps);
                     }
                 }

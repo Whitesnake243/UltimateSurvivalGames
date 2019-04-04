@@ -1,39 +1,27 @@
 package me.maker56.survivalgames.arena;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.regions.Region;
 import me.maker56.survivalgames.SurvivalGames;
 import me.maker56.survivalgames.Util;
 import me.maker56.survivalgames.commands.messages.MessageHandler;
 import me.maker56.survivalgames.game.Game;
 import me.maker56.survivalgames.listener.DomeListener;
-import me.maker56.survivalgames.listener.SelectionListener;
 import me.maker56.survivalgames.reset.Save;
 import me.maker56.survivalgames.reset.Selection;
-
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.util.Vector;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
-import static me.maker56.survivalgames.SurvivalGames.database;
 import static me.maker56.survivalgames.SurvivalGames.s;
 
 public class ArenaManager {
@@ -366,15 +354,17 @@ public class ArenaManager {
 		cfg.set(path + "Enabled", false);
 		
 		cfg.set(path + "Grace-Period", SurvivalGames.instance.getConfig().getInt("Default.Arena.Grace-Period"));
-
         cfg.set(path + "BMin", String.valueOf(s.getMinimumPoint()));
 
-        Location Min = new Location(Bukkit.getWorld(s.getWorld().getName()),Double.valueOf(s.getMinimumPoint().getBlockX()),Double.valueOf(s.getMinimumPoint().getBlockY()),Double.valueOf(s.getMinimumPoint().getBlockZ()));
-        cfg.set(path + "Min", Min);
+        Location Min = new Location(p.getWorld(),Double.valueOf(s.getMinimumPoint().getBlockX()),Double.valueOf(s.getMinimumPoint().getBlockY()),Double.valueOf(s.getMinimumPoint().getBlockZ()));
+        cfg.set(path + "Min", Util.serializeLocation(Min, false));
+        cfg.set(path + "Min1.X", s.getMinimumPoint().getBlockX());
+        cfg.set(path + "Min1.Y", s.getMinimumPoint().getBlockY());
+        cfg.set(path + "Min1.Z", s.getMinimumPoint().getBlockZ());
         cfg.set(path + "BMax", String.valueOf(s.getMaximumPoint()));
-        Location Max = new Location(Bukkit.getWorld(s.getWorld().getName()),Double.valueOf(s.getMaximumPoint().getBlockX()),Double.valueOf(s.getMaximumPoint().getBlockY()),Double.valueOf(s.getMaximumPoint().getBlockZ()));
+        Location Max = new Location(p.getWorld(),Double.valueOf(s.getMaximumPoint().getBlockX()),Double.valueOf(s.getMaximumPoint().getBlockY()),Double.valueOf(s.getMaximumPoint().getBlockZ()));
 
-        cfg.set(path + "Max", Max);
+        cfg.set(path + "Max", Util.serializeLocation(Max, false));
         cfg.set(path + "World", p.getWorld().getName());
 
 		cfg.set(path + "Allowed-Blocks", SurvivalGames.instance.getConfig().getIntegerList("Default.Arena.Allowed-Blocks"));

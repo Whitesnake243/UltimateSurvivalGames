@@ -1,14 +1,10 @@
 package me.maker56.survivalgames.reset;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.Callable;
-import java.util.zip.GZIPInputStream;
-
+import com.sk89q.jnbt.Tag;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.MaxChangedBlocksException;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
@@ -16,52 +12,38 @@ import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
 import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.DataException;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import me.maker56.survivalgames.SurvivalGames;
 import me.maker56.survivalgames.Util;
 import me.maker56.survivalgames.events.ResetDoneEvent;
-
-import org.apache.commons.lang.UnhandledException;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 
-import com.sk89q.jnbt.ByteArrayTag;
-import com.sk89q.jnbt.CompoundTag;
-import com.sk89q.jnbt.IntTag;
-import com.sk89q.jnbt.ListTag;
-import com.sk89q.jnbt.NBTInputStream;
-import com.sk89q.jnbt.ShortTag;
-import com.sk89q.jnbt.Tag;
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.MaxChangedBlocksException;
-import com.sk89q.worldedit.math.Vector3;
-import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.blocks.Blocks;
-import com.sk89q.worldedit.blocks.TileEntityBlock;
-import com.sk89q.worldedit.WorldEditException;
-import org.bukkit.plugin.Plugin;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.Callable;
 
 import static me.maker56.survivalgames.SurvivalGames.database;
-import static me.maker56.survivalgames.SurvivalGames.s;
 
 @SuppressWarnings("deprecation")
 public class Reset extends Thread {
 
     private static List<String> resets = new ArrayList<>();
-    private Integer px;
-    private Integer py;
-    private Integer pz;
 
     public static boolean isResetting(String lobby, String arena) {
         return resets.contains(lobby + arena);
@@ -100,16 +82,11 @@ public class Reset extends Thread {
 
         File file = new File("plugins/SurvivalGames/reset/" + lobby + arena + ".schematic");
         Clipboard clipboard;
-        String pos = database.getString("Games." + lobby + ".Arenas." + arena + ".Min");
-
-        pos.replaceFirst("\\(","0,");
-        pos.replaceFirst("\\)",",0");
-        String[] rawpos = pos.split(", ");
-        px = Integer.parseInt(rawpos[1]);
-        py = Integer.parseInt(rawpos[2]);
-        pz = Integer.parseInt(rawpos[3]);
-
-
+        String path = "Games." + lobby + ".Arenas." + arena + ".Min";
+        String W = database.getString("Games." + lobby + ".Arenas." + arena + ".World");
+        Double x = database.getDouble(path + ".x");
+        Double y = database.getDouble(path + ".y");
+        Double z = database.getDouble(path + ".z");
         try {
             // find and load Schem
             ClipboardFormat format = ClipboardFormats.findByFile(file);
@@ -122,7 +99,7 @@ public class Reset extends Thread {
             try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(BukkitAdapter.adapt(world), -1)) {
                 Operation operation = new ClipboardHolder(clipboard)
                         .createPaste(editSession)
-                        .to(BlockVector3.at(px,py,pz))
+                        .to(BlockVector3.at(x,y,z))
                         .ignoreAirBlocks(true)
                         .build();
                 Operations.complete(operation);
@@ -149,8 +126,9 @@ public class Reset extends Thread {
             }
         });
     }
-    EditSession es = WorldEdit.getInstance().getEditSessionFactory().getEditSession(s.getWorld(), -1);
+
     public void resetNext() {
+        EditSession es = WorldEdit.getInstance().getEditSessionFactory().getEditSession(BukkitAdapter.adapt(world), -1);
         build = true;
         Util.debug("reset next!");
         Bukkit.getScheduler().callSyncMethod(SurvivalGames.instance, new Callable<Void>() {
