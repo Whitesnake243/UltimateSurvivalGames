@@ -345,9 +345,9 @@ public class ArenaManager {
 			}
 
 		}
-		
-		int chesttype = SurvivalGames.instance.getConfig().getInt("Default.Arena.Chests.TypeID");
-		int chestdata = SurvivalGames.instance.getConfig().getInt("Default.Arena.Chests.Data");
+
+		String chesttype = SurvivalGames.instance.getConfig().getString("Default.Arena.Chests.TypeID");
+		String chestdata = SurvivalGames.instance.getConfig().getString("Default.Arena.Chests.Data");
 		
 		String path = "Games." + gamename + ".Arenas." + arenaname + ".";
 		
@@ -358,12 +358,8 @@ public class ArenaManager {
 
         Location Min = new Location(p.getWorld(),Double.valueOf(s.getMinimumPoint().getBlockX()),Double.valueOf(s.getMinimumPoint().getBlockY()),Double.valueOf(s.getMinimumPoint().getBlockZ()));
         cfg.set(path + "Min", Util.serializeLocation(Min, false));
-        cfg.set(path + "Min1.X", s.getMinimumPoint().getBlockX());
-        cfg.set(path + "Min1.Y", s.getMinimumPoint().getBlockY());
-        cfg.set(path + "Min1.Z", s.getMinimumPoint().getBlockZ());
         cfg.set(path + "BMax", String.valueOf(s.getMaximumPoint()));
         Location Max = new Location(p.getWorld(),Double.valueOf(s.getMaximumPoint().getBlockX()),Double.valueOf(s.getMaximumPoint().getBlockY()),Double.valueOf(s.getMaximumPoint().getBlockZ()));
-
         cfg.set(path + "Max", Util.serializeLocation(Max, false));
         cfg.set(path + "World", p.getWorld().getName());
 
@@ -435,7 +431,7 @@ public class ArenaManager {
 		
 		int graceperiod = cfg.getInt(path + "Grace-Period");
 		
-		Material chesttype = Material.getMaterial(String.valueOf(cfg.getInt(path + "Chest.TypeID")));
+		Material chesttype = Material.getMaterial(cfg.getString(path + "Chest.TypeID"));
 		int chestdata = cfg.getInt(path + "Chest.Data");
 		
 		List<Location> spawns = new ArrayList<>();

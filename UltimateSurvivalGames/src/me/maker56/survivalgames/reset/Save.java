@@ -73,15 +73,11 @@ public class Save extends Thread {
             public void run() {
                 Player p = Bukkit.getPlayer(pname);
                 if(p != null) {
-                    double percent = stepsDone / (maxSteps / 100);
-                    double rounded = Math.round( percent * 100. ) / 100.;
                     Time = System.currentTimeMillis() - start;
                     seconds = (int) (Time / 1000);
                     Time -= seconds * 1000;
-                    if(rounded <= 100) {
-                        p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "&eSaving Arena Please Standby, Time elapsed: "+ Time));
-                        Util.debug(stepsDone + "/" + maxSteps);
-                    }
+                    p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "&eSaving Arena Please Standby, Time elapsed: "+ seconds));
+
                 }
             }
         }, 70, 60);
@@ -180,7 +176,7 @@ public class Save extends Thread {
                         int z = v.getBlockZ();
 
                         int index = y * width * length + z * width + x;
-                        BlockState block = es.getBlock(new BlockVector3(x, y, z).add(origin));
+                        BlockState block = es.getBlock(BlockVector3.at(x, y, z).add(origin));
 
                         // Save 4096 IDs in an AddBlocks section
                         if (block.getBlockType().getLegacyId() > 255) {
@@ -196,7 +192,7 @@ public class Save extends Thread {
                         blockData[index] = Byte.valueOf(block.toBaseBlock().getNbtData().toString());
 
                         // Get the list of key/values from the block
-                        BaseBlock blockss = es.getFullBlock(new BlockVector3(x, y, z).add(origin));
+                        BaseBlock blockss = es.getFullBlock(BlockVector3.at(x, y, z).add(origin));
                         CompoundTag rawTag = blockss.getNbtData();
                         if (rawTag != null) {
                             Map<String, Tag> values = new HashMap<>();

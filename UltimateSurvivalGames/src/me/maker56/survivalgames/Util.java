@@ -1,38 +1,28 @@
 package me.maker56.survivalgames;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.math.Vector3;
 import me.maker56.survivalgames.commands.messages.MessageHandler;
 import me.maker56.survivalgames.listener.UpdateListener;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
+import org.bukkit.*;
 import org.bukkit.FireworkEffect.Builder;
 import org.bukkit.FireworkEffect.Type;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 
 public class Util {
@@ -53,7 +43,7 @@ public class Util {
 				is = new ItemStack(Material.getMaterial(idsSplit[0]));
 			} catch(NumberFormatException e) {
 				e.printStackTrace();
-				is = new ItemStack(Material.valueOf(idsSplit[0]));
+				is = new ItemStack(Material.valueOf(idsSplit[0].toLowerCase()));
 			}
 
 			if(idsSplit.length > 1)
@@ -273,7 +263,47 @@ public class Util {
 		
 		return loc;
 	}
-	
+    public static Vector3 parseLocationToVector3(String s) {
+        String[] split = s.split(",");
+        Vector3 loc = null;
+        World world;
+        try {
+            world = Bukkit.getWorld(split[0]);
+            if (split.length == 4) {
+                double x = Integer.parseInt(split[1]);
+                double y = Integer.parseInt(split[2]);
+                double z = Integer.parseInt(split[3]);
+
+                loc = Vector3.at(x, y, z);
+            }
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            System.err.println("[SurvivalGames] Cannot parse location from string: " + s);
+        }
+
+        return loc;
+    }
+    public static BlockVector3 parseLocToBv3(String s) {
+        String[] split = s.split(",");
+        BlockVector3 loc = null;
+        try {
+            if(split.length == 6) {
+                double x = Double.parseDouble(split[1]);
+                double y = Double.parseDouble(split[2]);
+                double z = Double.parseDouble(split[3]);
+                loc = BlockVector3.at(x, y, z);
+            } else if(split.length == 4) {
+                int x = Integer.parseInt(split[1]);
+                int y = Integer.parseInt(split[2]);
+                int z = Integer.parseInt(split[3]);
+
+                loc = BlockVector3.at(x, y, z);
+            }
+        } catch(NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            System.err.println("[SurvivalGames] Cannot parse location from string: " + s);
+        }
+
+        return loc;
+    }
 	public static String serializeLocation(Location l, boolean exact) {
 		if(l != null) {
 			String key = l.getWorld().getName() + ",";
@@ -334,7 +364,6 @@ public class Util {
 	}
 
 	public static void Error(String e) {
-		String Out = new String(e);
-		SurvivalGames.instance.getLogger().severe("[SurvivalGames] " + Out);
+		SurvivalGames.instance.getLogger().severe("[SurvivalGames] " + e);
 	}
 }

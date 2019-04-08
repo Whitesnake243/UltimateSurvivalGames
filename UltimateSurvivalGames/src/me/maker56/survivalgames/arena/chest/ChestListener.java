@@ -6,7 +6,6 @@ import me.maker56.survivalgames.game.Game;
 import me.maker56.survivalgames.game.GameState;
 import me.maker56.survivalgames.user.User;
 import me.maker56.survivalgames.user.UserManager;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -42,7 +41,7 @@ public class ChestListener implements Listener {
 				Block b = event.getClickedBlock();
 				Material type = b.getType();
 				
-				if((type == arena.getChestType() && ((arena.getChestData() >= 0 && b.getData() == arena.getChestData()) || arena.getChestData() < 0)) || b.getType() == Material.ENDER_CHEST) {
+				if((type ==  Material.LEGACY_CHEST || type == Material.CHEST || type == Material.ENDER_CHEST)) {
 					Location loc = b.getLocation();
 					event.setCancelled(true);
 					if(game.isChestRegistered(loc)) {

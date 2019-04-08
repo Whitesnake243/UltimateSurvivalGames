@@ -1,7 +1,5 @@
 package me.maker56.survivalgames.listener;
 
-import java.util.List;
-
 import me.maker56.survivalgames.SurvivalGames;
 import me.maker56.survivalgames.arena.Arena;
 import me.maker56.survivalgames.commands.messages.MessageHandler;
@@ -13,45 +11,29 @@ import me.maker56.survivalgames.user.SpectatorUser;
 import me.maker56.survivalgames.user.User;
 import me.maker56.survivalgames.user.UserManager;
 import me.maker56.survivalgames.user.UserState;
-
-
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityPickupItemEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerBucketFillEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.List;
 
 public class PlayerListener implements Listener {
 	
@@ -97,7 +79,7 @@ public class PlayerListener implements Listener {
 					if(a != null) {
 						p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 4.0F, 2.0F);
 					} else {
-						p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "&cAn interal error occured!"));
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "&cAn internal error occured!"));
 					}
 				}
 			}

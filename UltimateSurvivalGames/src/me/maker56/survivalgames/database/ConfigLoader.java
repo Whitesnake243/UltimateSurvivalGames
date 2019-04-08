@@ -167,8 +167,8 @@ public class ConfigLoader {
 		c.addDefault(path + "Enabled", true);
 		c.addDefault(path + "Title", "&b&lWaiting for players");
 		List<String> content = new ArrayList<>();
-		content.add("&eRequired players to start&7://%requiredplayers%");
-		content.add("&eCurrent player amount&7://%playing%");
+		content.add("&eRequired&7://%requiredplayers%");
+		content.add("&eCurrent&7://%playing%");
 		c.addDefault(path + "Scores", content);
 		
 		path = "Phase.Voting.";
@@ -274,7 +274,7 @@ public class ConfigLoader {
 		FileConfiguration c = SurvivalGames.instance.getConfig();
 		
 		c.options().header("Explanation for the configuration:\nhttp://dev.bukkit.org/bukkit-plugins/ultimatesurvivalgames/pages/config/");
-		
+
 		c.addDefault("enable-update-check", true);
 		c.addDefault("use-permissions", true);
 		c.addDefault("broadcast-win", true);
@@ -297,7 +297,7 @@ public class ConfigLoader {
 		c.addDefault("Default.Max-Voting-Arenas", 3);
 		c.addDefault("Default.Required-Players-to-start", 2);
 		
-		c.addDefault("Default.Arena.Chests.TypeID", 54);
+		c.addDefault("Default.Arena.Chests.TypeID", "CHEST");
 		c.addDefault("Default.Arena.Chests.Data", -1);
 		c.addDefault("Default.Arena.Grace-Period", 30);
 		

@@ -29,7 +29,7 @@ import java.io.IOException;
 public class SurvivalGames extends JavaPlugin {
 
 	public static SurvivalGames instance;
-	public static FileConfiguration messages, database, signs, reset, chestloot, scoreboard, kits, arenas, Pinvo;
+	public static FileConfiguration messages, database, signs, reset, chestloot, scoreboard, kits, arenas;
 	public static ArenaManager arenaManager;
 	public static GameManager gameManager;
 	public static ChestManager chestManager;
@@ -117,14 +117,8 @@ public class SurvivalGames extends JavaPlugin {
 	}
 	
 	// UPDATE CHECKING
-
-	public void startUpdateChecker() {
-		Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
-			public void run() {
-				new UpdateCheck(SurvivalGames.instance, 61788);
-			}
-		}, 0L, 216000);
-	}
+    
+    // Removed due to bukkit it only works with bukkit
 	
 	// VAULT
 	

@@ -189,8 +189,8 @@ public class UserManager {
         p.setExp(state.getExp());
         p.setFallDistance(state.getFallDistance());
         p.setFireTicks(state.getFireTicks());
-        if (SurvivalGames.database.getBoolean("Command-On-Leave")) {
-            String a = SurvivalGames.database.getString("Command");
+        if (SurvivalGames.instance.getConfig().getBoolean("Command-On-Leave")) {
+            String a = SurvivalGames.instance.getConfig().getString("Command");
             p.performCommand(a);
         } else {
             p.teleport(state.getLocation());

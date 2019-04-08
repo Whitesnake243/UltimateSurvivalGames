@@ -1,9 +1,5 @@
 package me.maker56.survivalgames.game.phases;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import me.maker56.survivalgames.SurvivalGames;
 import me.maker56.survivalgames.Util;
 import me.maker56.survivalgames.arena.Arena;
@@ -12,17 +8,22 @@ import me.maker56.survivalgames.commands.permission.PermissionHandler;
 import me.maker56.survivalgames.game.Game;
 import me.maker56.survivalgames.game.GameState;
 import me.maker56.survivalgames.user.User;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ClickEvent.Action;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.ClickEvent.Action;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class VotingPhase {
 	
@@ -175,9 +176,9 @@ public class VotingPhase {
 			if(a == null)
 				break;
 			
-			ItemStack is = arenaItem.clone();
+			ItemStack is = new ItemStack(Material.getMaterial(arenaItem.getType().name()));
 			ItemMeta im = is.getItemMeta();
-			im.setDisplayName((i + 1) + ". &e&l" + a.getName());
+			im.setDisplayName((i + 1) + ". §e§l" + a.getName());
 			is.setItemMeta(im);
 			
 			voteInventory.setItem(c, is);
@@ -242,7 +243,7 @@ public class VotingPhase {
 			
 			int i = 1;
 			for(Arena arena : voteArenas) {
-				game.sendMessage(new ComponentBuilder("&3" + i + "&7. &6" + arena.getName() + " &7(&e" + arena.getVotes() + "&7)")
+				game.sendMessage(new ComponentBuilder(ChatColor.translateAlternateColorCodes('&',"&3" + i + "&7. &6" + arena.getName() + " &7(&e" + arena.getVotes() + "&7)"))
 				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to vote for arena " + arena.getName()).create()))
 				.event(new ClickEvent(Action.RUN_COMMAND, "/sg vote " + i)).create());
 				i++;

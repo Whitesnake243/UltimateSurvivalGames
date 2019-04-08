@@ -1,7 +1,5 @@
 package me.maker56.survivalgames.commands.arguments;
 
-import java.util.List;
-
 import me.maker56.survivalgames.SurvivalGames;
 import me.maker56.survivalgames.arena.Arena;
 import me.maker56.survivalgames.chat.Helper;
@@ -10,10 +8,13 @@ import me.maker56.survivalgames.commands.permission.Permission;
 import me.maker56.survivalgames.commands.permission.PermissionHandler;
 import me.maker56.survivalgames.game.Game;
 import me.maker56.survivalgames.game.GameState;
-
+import me.maker56.survivalgames.reset.Reset;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public class LobbyArgument {
 	
@@ -131,8 +132,37 @@ public class LobbyArgument {
 					p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-must-enter").replace("%0%", "/sg lobby unload <NAME>")));
 					return true;
 				}
-				p.performCommand("sg lobby unload " + args[2]);
-				p.performCommand("sg lobby load " + args[2]);
+				//lobby=0
+                //reload=1
+                //Lname=2
+                //Aname=3
+				if (args.length==3){
+                    p.performCommand("sg lobby unload " + args[2]);
+                    p.performCommand("sg lobby load "+ args[2]);
+                    return true;
+                }
+				if (args.length == 4) {
+                    Game game = SurvivalGames.getGameManager().getGame(args[2]);
+                    Arena arena = SurvivalGames.getArenaManager().getArena(args[2], args[3]);
+                    if (!arena.getName().isEmpty()) {
+                        game.kickall();
+                        game.setState(GameState.RESET);
+                        World w = arena.getMinimumLocation().getWorld();
+                        if (game.isResetEnabled()) {
+                            new Reset(w, game.getName(), arena.getName(), game.getChunksToReset()).start();
+                            return true;
+                        } else {
+                            String name = game.getName();
+                            SurvivalGames.gameManager.unload(game);
+                            SurvivalGames.gameManager.load(name);
+                            SurvivalGames.signManager.updateSigns();
+                        }
+                        p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix")+"Reload of "+args[3]+" in "+ args[2] +" - Complete"));
+                        return true;
+                    }
+                }
+
+
 				return true;
 				
 				
