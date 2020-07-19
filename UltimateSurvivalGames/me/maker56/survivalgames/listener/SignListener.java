@@ -53,7 +53,7 @@ public class SignListener implements Listener {
 		if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR)
 			return;
 		Block b = event.getClickedBlock();
-		if(b.getType() == Material.OAK_WALL_SIGN || b.getType() == Material.OAK_SIGN) {
+		if(b.getType() == Material.LEGACY_WALL_SIGN || b.getType() == Material.LEGACY_SIGN_POST) {
 			String lobby = sm.getLobby(b.getLocation());
 			
 			if(lobby != null) {
@@ -82,7 +82,7 @@ public class SignListener implements Listener {
 		if(event.isCancelled())
 			return;
 		Block b = event.getBlock();
-		if(b.getType() == Material.OAK_WALL_SIGN || b.getType() == Material.OAK_SIGN) {
+		if(b.getType() == Material.LEGACY_WALL_SIGN || b.getType() == Material.LEGACY_SIGN_POST) {
 			if(sm.isSign(b.getLocation())) {
 				if(event.getPlayer().isSneaking()) {
 					sm.removeSign(event.getPlayer(), b.getLocation());

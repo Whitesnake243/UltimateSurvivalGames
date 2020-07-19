@@ -58,7 +58,7 @@ public class Game {
 	private int maxVotingArenas;
 	private List<Arena> arenas;
 	private int reqplayers, maxplayers;
-	private GameState state;
+	private me.maker56.survivalgames.game.GameState state;
 	private int lobbytime, cooldown = 30;
 	private int death = 0;
 	
@@ -90,9 +90,9 @@ public class Game {
 		this.reqplayers = reqplayers;
 		this.maxplayers = getFewestArena().getSpawns().size();
 		
-		setScoreboardPhase(SurvivalGames.getScoreboardManager().getNewScoreboardPhase(GameState.WAITING));
+		setScoreboardPhase(SurvivalGames.getScoreboardManager().getNewScoreboardPhase(me.maker56.survivalgames.game.GameState.WAITING));
 		
-		setState(GameState.WAITING);
+		setState(me.maker56.survivalgames.game.GameState.WAITING);
 	}
 	
 	public List<String> getVotedUsers() {
@@ -147,7 +147,7 @@ public class Game {
 				if(i >= inv)
 					break;
 				User u = users.get(i);
-				im.setDisplayName("&e" + u.getName());
+				im.setDisplayName("&e" + u.());
 				head.setItemMeta(im);
 				playerNavigatorInventory.setItem(i, head);
 			}
@@ -451,7 +451,7 @@ public class Game {
 		return arena;
 	}
 	
-	public void setState(GameState state) {
+	public void setState(me.maker56.survivalgames.game.GameState state) {
 		this.state = state;
 		if(SurvivalGames.signManager != null)
 			SurvivalGames.signManager.updateSigns();
@@ -498,7 +498,7 @@ public class Game {
 		return arenas;
 	}
 	
-	public GameState getState() {
+	public me.maker56.survivalgames.game.GameState getState() {
 		return state;
 	}
 	

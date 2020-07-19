@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="UltimateSurvivalGames:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/UltimateSurvivalGames_jar</output-path>
+    <root id="archive" name="UltimateSurvivalGames.jar">
+      <element id="module-output" name="UltimateSurvivalGames" />
+    </root>
+  </artifact>
+</component>

@@ -138,7 +138,7 @@ public class SignManager {
 	
 	public void updateSign(Location loc, String lobby) {
 		Block b = loc.getBlock();
-		if(b.getType() == Material.OAK_WALL_SIGN || b.getType() == Material.OAK_SIGN) {
+		if(b.getType() == Material.LEGACY_SIGN_POST || b.getType() == Material.LEGACY_WALL_SIGN) {
 			Sign s = (Sign) b.getState();
 			Game g = SurvivalGames.gameManager.getGame(lobby);
 			if(g != null) {
