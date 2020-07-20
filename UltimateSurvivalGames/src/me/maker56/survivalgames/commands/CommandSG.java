@@ -57,7 +57,7 @@ public class CommandSG implements CommandExecutor {
 					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8/&6sg vote <ID> &7- &eVote for an arena!"));
 				}
 				
-				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8/&6sg stats [NAME] &7- &eShow you statistics of a player"));
+				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8/&6sg stats [NAME] &7- &eShows statistics of a player"));
 				
 				if(PermissionHandler.hasPermission(sender, Permission.LIST)) {
 					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8/&6sg list &7- &eList of all available lobbys!"));

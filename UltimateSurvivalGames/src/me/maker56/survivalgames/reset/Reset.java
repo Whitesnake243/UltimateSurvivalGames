@@ -39,6 +39,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 
+import static me.maker56.survivalgames.SurvivalGames.WorldeditVer;
+
 @SuppressWarnings("deprecation")
 public class Reset extends Thread {
 
@@ -73,48 +75,91 @@ public class Reset extends Thread {
 
     @Override
     public void run() {
-        TaskManager.IMP.async(new Runnable() {
-            @Override
-            public void run() {
-                if(isResetting(lobby, arena))
-                    return;
-                System.out.println("[SurvivalGames] Start arena reset... (arena " + arena + ", lobby " + lobby + ")");
-                resets.add(lobby + arena);
-                start = System.currentTimeMillis();
+        //Fawe  Worldedit
+        if(WorldeditVer == 1) {
+            TaskManager.IMP.async(new Runnable() {
+                @Override
+                public void run() {
+                    if (isResetting(lobby, arena))
+                        return;
+                    System.out.println("[SurvivalGames] Start arena reset... (arena " + arena + ", lobby " + lobby + ")");
+                    resets.add(lobby + arena);
+                    start = System.currentTimeMillis();
 
-                File file = new File("plugins/SurvivalGames/reset/" + lobby + arena + ".schematic");
-                Clipboard clipboard;
-                String path = "Games." + lobby + ".Arenas." + arena ;
-                BlockVector3 bv3 = Util.parseLocToBv3(SurvivalGames.database.getString(path + ".Min"));
-                String M = SurvivalGames.database.getString("Games." + lobby + ".Arenas." + arena + ".Chest.TypeID");
-                if (M == "54" || M.equals("chest")){
-                    SurvivalGames.database.set(path+"Chest.TypeID", "CHEST");
-                    SurvivalGames.saveDataBase();
-                }
-                try {
-                    // find and load Schem
-                    ClipboardFormat format = ClipboardFormats.findByFile(file);
-                    try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
-                        clipboard = reader.read();
+                    File file = new File("plugins/SurvivalGames/reset/" + lobby + arena + ".schematic");
+                    Clipboard clipboard;
+                    String path = "Games." + lobby + ".Arenas." + arena;
+                    BlockVector3 bv3 = Util.parseLocToBv3(SurvivalGames.database.getString(path + ".Min"));
+                    String M = SurvivalGames.database.getString("Games." + lobby + ".Arenas." + arena + ".Chest.TypeID");
+                    if (M == "54" || M.equals("chest")) {
+                        SurvivalGames.database.set(path + "Chest.TypeID", "CHEST");
+                        SurvivalGames.saveDataBase();
                     }
+                    try {
+                        // find and load Schem
+                        ClipboardFormat format = ClipboardFormats.findByFile(file);
+                        try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
+                            clipboard = reader.read();
+                        }
 
 
-                    // paste Schem
-                    try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(BukkitAdapter.adapt(world), -1)) {
-                        Operation operation = new ClipboardHolder(clipboard)
-                                .createPaste(editSession)
-                                .to(bv3)
-                                .ignoreAirBlocks(true)
-                                .build();
-                        Operations.complete(operation);
-                    } catch (WorldEditException e) {
-                        e.printStackTrace();
+                        // paste Schem
+                        try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(BukkitAdapter.adapt(world), -1)) {
+                            Operation operation = new ClipboardHolder(clipboard)
+                                    .createPaste(editSession)
+                                    .to(bv3)
+                                    .ignoreAirBlocks(true)
+                                    .build();
+                            Operations.complete(operation);
+                        } catch (WorldEditException e) {
+                            e.printStackTrace();
+                        }
+                    } catch (IOException e) {
+                        Util.Error(String.valueOf(e));
                     }
-                } catch (IOException e) {
-                    Util.Error(String.valueOf(e));
                 }
+            });
+        }
+        //Normal Worldedit
+        else if(WorldeditVer == 0){
+            if (isResetting(lobby, arena))
+                return;
+            System.out.println("[SurvivalGames] Start arena reset... (arena " + arena + ", lobby " + lobby + ")");
+            resets.add(lobby + arena);
+            start = System.currentTimeMillis();
+
+            File file = new File("plugins/SurvivalGames/reset/" + lobby + arena + ".schematic");
+            Clipboard clipboard;
+            String path = "Games." + lobby + ".Arenas." + arena;
+            BlockVector3 bv3 = Util.parseLocToBv3(SurvivalGames.database.getString(path + ".Min"));
+            String M = SurvivalGames.database.getString("Games." + lobby + ".Arenas." + arena + ".Chest.TypeID");
+            if (M == "54" || M.equals("chest")) {
+                SurvivalGames.database.set(path + "Chest.TypeID", "CHEST");
+                SurvivalGames.saveDataBase();
             }
-        });
+            try {
+                // find and load Schem
+                ClipboardFormat format = ClipboardFormats.findByFile(file);
+                try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
+                    clipboard = reader.read();
+                }
+
+
+                // paste Schem
+                try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(BukkitAdapter.adapt(world), -1)) {
+                    Operation operation = new ClipboardHolder(clipboard)
+                            .createPaste(editSession)
+                            .to(bv3)
+                            .ignoreAirBlocks(true)
+                            .build();
+                    Operations.complete(operation);
+                } catch (WorldEditException e) {
+                    e.printStackTrace();
+                }
+            } catch (IOException e) {
+                Util.Error(String.valueOf(e));
+            }
+        }
         if (chunks != null) {
             int s = chunks.size();
             if (s > 0) {

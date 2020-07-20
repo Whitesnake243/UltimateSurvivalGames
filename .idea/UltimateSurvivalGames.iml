@@ -11,7 +11,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="spigot-1.16.1" level="application" />
     <orderEntry type="library" name="worldedit-bukkit-7.2.0-beta-01" level="application" />
-    <orderEntry type="library" name="AsyncWorldEdit-3.7.3" level="application" />
     <orderEntry type="library" name="Vault" level="application" />
     <orderEntry type="library" name="FastAsyncWorldEdit-1.16-302" level="application" />
   </component>

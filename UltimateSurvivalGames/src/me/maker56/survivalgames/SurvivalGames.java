@@ -37,6 +37,7 @@ public class SurvivalGames extends JavaPlugin {
 	public static SignManager signManager;
 	public static ScoreBoardManager scoreBoardManager;
 	public static Region s;
+	public static int WorldeditVer;
 	
 	public static Economy econ;
 	
@@ -60,6 +61,12 @@ public class SurvivalGames extends JavaPlugin {
 			System.err.println("[SurvivalGames] ##########################################################");
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
+		}
+		String s = Bukkit.getPluginManager().getPlugin("Worldedit").getName();
+		if(s.contains("FastAsyncWorldEdit")) {
+			WorldeditVer = 1;
+		} else {
+			WorldeditVer = 0;
 		}
 
 		instance = this;

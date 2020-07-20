@@ -138,7 +138,7 @@ public class Game {
 			
 			playerNavigatorInventory = Bukkit.createInventory(null, inv, inventoryTitle);
 			
-			ItemStack head = new ItemStack(Material.LEGACY_SKULL_ITEM, 0);
+			ItemStack head = new ItemStack(Material.PLAYER_HEAD, 0);
 			head.setDurability((short) 3);
 			ItemMeta im = head.getItemMeta();
 			List<String> lore = new ArrayList<>();
