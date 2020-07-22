@@ -26,6 +26,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import static me.maker56.survivalgames.SurvivalGames.WorldeditVer;
+
 public class CommandSG implements CommandExecutor {
 	
 	private String authors;
@@ -89,6 +91,11 @@ public class CommandSG implements CommandExecutor {
 					return new StatsArgument(sender, args).execute();
 				} else if(args[0].equalsIgnoreCase("config")) {
 					return new ConfigArgument(sender, args).execute();
+				}
+				if(args[0].equalsIgnoreCase("Worldedit")) {
+					Player p = (Player)sender;
+					p.sendMessage(String.valueOf(WorldeditVer));
+					return true;
 				}
 				
 				// JOIN

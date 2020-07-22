@@ -51,7 +51,11 @@ public class SurvivalGames extends JavaPlugin {
 				game.kickall();
 			}
 		}
-		DatabaseManager.close();
+		try {
+			DatabaseManager.close();
+		} catch (NoClassDefFoundError T) {
+			System.out.println("Database Not in Use");
+		}
 	}
 	
 	public void onEnable() {
@@ -61,12 +65,6 @@ public class SurvivalGames extends JavaPlugin {
 			System.err.println("[SurvivalGames] ##########################################################");
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
-		}
-		String s = Bukkit.getPluginManager().getPlugin("Worldedit").getName();
-		if(s.contains("FastAsyncWorldEdit")) {
-			WorldeditVer = 1;
-		} else {
-			WorldeditVer = 0;
 		}
 
 		instance = this;

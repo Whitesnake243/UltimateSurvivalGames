@@ -76,7 +76,7 @@ public class Reset extends Thread {
     @Override
     public void run() {
         //Fawe  Worldedit
-        if(WorldeditVer == 1) {
+        try {
             TaskManager.IMP.async(new Runnable() {
                 @Override
                 public void run() {
@@ -119,9 +119,8 @@ public class Reset extends Thread {
                     }
                 }
             });
-        }
-        //Normal Worldedit
-        else if(WorldeditVer == 0){
+        } catch(NoClassDefFoundError t) {
+            System.out.println("Fawe Not detected Using Regular Mode");
             if (isResetting(lobby, arena))
                 return;
             System.out.println("[SurvivalGames] Start arena reset... (arena " + arena + ", lobby " + lobby + ")");
@@ -159,7 +158,13 @@ public class Reset extends Thread {
             } catch (IOException e) {
                 Util.Error(String.valueOf(e));
             }
+
+
         }
+
+
+        //Normal Worldedit
+
         if (chunks != null) {
             int s = chunks.size();
             if (s > 0) {
@@ -201,7 +206,6 @@ public class Reset extends Thread {
             }
         });
     }
-
     public void resetNext() {
         EditSession es = WorldEdit.getInstance().getEditSessionFactory().getEditSession(BukkitAdapter.adapt(world), -1);
         build = true;
