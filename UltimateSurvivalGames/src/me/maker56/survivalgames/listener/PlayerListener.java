@@ -521,7 +521,7 @@ public class PlayerListener implements Listener {
 			Arena arena = user.getGame().getCurrentArena();
 			if(arena == null) {
 				event.setCancelled(true);
-			} else { 
+			} else {
 				if(arena.getAllowedMaterials().contains(event.getBlock().getBlockData().getMaterial().name())) {
 					if(event.getBlock().getType() == Material.TNT) {
 						event.getBlock().setType(Material.AIR);
