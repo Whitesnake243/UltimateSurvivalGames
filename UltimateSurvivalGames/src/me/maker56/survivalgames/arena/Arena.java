@@ -12,7 +12,7 @@ public class Arena implements Cloneable {
 	private int graceperiod;
 	private String name;
 	private String game;
-	private List<Integer> allowedBlocks;
+	private List<String> allowedBlocks;
 	private double moneyKill, moneyWin;
 	
 	private Material chesttype;
@@ -25,7 +25,7 @@ public class Arena implements Cloneable {
 	
 	private int votes = 0;
 	
-	public Arena(Location min, Location max, List<Location> spawns, Material chesttype, int chestdata, int graceperiod, String name, String game, boolean deathmatch, List<Location> deathmatchspawns, List<Integer> allowedBlocks, int autodeathmatch, int playerdeathmatch, double moneyKill, double moneyWin, boolean chestrefill, Location domeMiddle, int domeRadius) {
+	public Arena(Location min, Location max, List<Location> spawns, Material chesttype, int chestdata, int graceperiod, String name, String game, boolean deathmatch, List<Location> deathmatchspawns, List<String> allowedBlocks, int autodeathmatch, int playerdeathmatch, double moneyKill, double moneyWin, boolean chestrefill, Location domeMiddle, int domeRadius) {
 		this.min = min;
 		this.max = max;
 		this.spawns = spawns;
@@ -87,7 +87,7 @@ public class Arena implements Cloneable {
 		return chestdata;
 	}
 	
-	public List<Integer> getAllowedMaterials() {
+	public List<String> getAllowedMaterials() {
 		return allowedBlocks;
 	}
 	

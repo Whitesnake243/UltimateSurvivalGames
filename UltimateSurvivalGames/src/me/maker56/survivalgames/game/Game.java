@@ -142,7 +142,7 @@ public class Game {
 			head.setDurability((short) 3);
 			ItemMeta im = head.getItemMeta();
 			List<String> lore = new ArrayList<>();
-			lore.add("&7Click to spectate!");
+			lore.add(org.bukkit.ChatColor.translateAlternateColorCodes('&',"&7Click to spectate!"));
 			for(int i = 0; i < users.size(); i++) {
 				if(i >= inv)
 					break;
@@ -294,6 +294,7 @@ public class Game {
 			int size = users.size();
 			for(int i = 0; i < size; i++) {
 				try {
+					users.get(0).getPlayer().getInventory().clear();
 					SurvivalGames.userManger.leaveGame(users.get(0).getPlayer());
 				} catch(IndexOutOfBoundsException e) {
 					break;
@@ -304,6 +305,7 @@ public class Game {
 			int size = spectators.size();
 			for(int i = 0; i < size; i++) {
 				try {
+					spectators.get(0).getPlayer().getInventory().clear();
 					SurvivalGames.userManger.leaveGame(spectators.get(0));
 				} catch(IndexOutOfBoundsException e) {
 					break;

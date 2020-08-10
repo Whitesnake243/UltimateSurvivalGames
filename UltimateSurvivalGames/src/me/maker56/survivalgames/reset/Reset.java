@@ -162,9 +162,6 @@ public class Reset extends Thread {
 
         }
 
-
-        //Normal Worldedit
-
         if (chunks != null) {
             int s = chunks.size();
             if (s > 0) {

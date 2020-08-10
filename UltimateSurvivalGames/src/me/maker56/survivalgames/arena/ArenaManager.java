@@ -449,7 +449,7 @@ public class ArenaManager {
 			}
 		}
 		
-		List<Integer> allowedBlocks = cfg.getIntegerList(path + "Allowed-Blocks");
+		List<String> allowedBlocks = cfg.getStringList(path + "Allowed-Blocks");
 		
 		int autodeathmatch = cfg.getInt(path + "Auto-Deathmatch");
 		int playerdeathmatch = cfg.getInt(path + "Player-Deathmatch");
