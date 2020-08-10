@@ -471,7 +471,7 @@ public class PlayerListener implements Listener {
 			if(game.getState() != GameState.INGAME && game.getState() != GameState.DEATHMATCH) {
 				event.setCancelled(true);
 			} else {
-				if(game.getCurrentArena().getAllowedMaterials().contains(event.getBlock().getType()) && !game.isFinishing()) {
+				if(game.getCurrentArena().getAllowedMaterials().contains(event.getBlock().getBlockData().getMaterial().name()) && !game.isFinishing()) {
 					return;
 				} else {
 					event.setCancelled(true);
@@ -521,8 +521,8 @@ public class PlayerListener implements Listener {
 			Arena arena = user.getGame().getCurrentArena();
 			if(arena == null) {
 				event.setCancelled(true);
-			} else {
-				if(arena.getAllowedMaterials().contains(event.getBlock().getType())) {
+			} else { 
+				if(arena.getAllowedMaterials().contains(event.getBlock().getBlockData().getMaterial().name())) {
 					if(event.getBlock().getType() == Material.TNT) {
 						event.getBlock().setType(Material.AIR);
 						event.getBlock().getWorld().spawn(event.getBlock().getLocation(), TNTPrimed.class);

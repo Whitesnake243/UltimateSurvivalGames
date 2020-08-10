@@ -41,7 +41,7 @@ public class ConfigLoader {
 		List<String> lvl2 = new ArrayList<>();
 		
 		lvl2.add(Material.COOKED_BEEF +"");
-		lvl2.add(Material.CHICKEN + "2");
+		lvl2.add(Material.CHICKEN + " 2");
 		lvl2.add(Material.COOKED_CHICKEN + "");
 		lvl2.add(Material.MUSHROOM_STEW + "");
 		lvl2.add(Material.WOODEN_SWORD + "");
@@ -308,18 +308,17 @@ public class ConfigLoader {
 		c.addDefault("Default.Money-on-Win", 20.0);
 		c.addDefault("Default.Midnight-chest-refill", true);
 		
-		ArrayList<Integer> allowedBlocks = new ArrayList<>();
+		ArrayList<String> allowedBlocks = new ArrayList<>();
 		
-		allowedBlocks.add(18);
-		allowedBlocks.add(31);
-		allowedBlocks.add(92);
-		allowedBlocks.add(103);
-		allowedBlocks.add(39);
-		allowedBlocks.add(40);
-		allowedBlocks.add(86);
-		allowedBlocks.add(46);
-		allowedBlocks.add(51);
-		allowedBlocks.add(30);
+		allowedBlocks.add("oak_leaves");
+		allowedBlocks.add("dead_bush");
+		allowedBlocks.add("cake");
+		allowedBlocks.add("melon");
+		allowedBlocks.add("brown_mushroom");
+		allowedBlocks.add("red_mushroom");
+		allowedBlocks.add("pumpkin");
+		allowedBlocks.add("tnt");
+		allowedBlocks.add("dirt");
 		
 		c.addDefault("Default.Arena.Allowed-Blocks", allowedBlocks);
 		

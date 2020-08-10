@@ -4,7 +4,7 @@ main: me.maker56.survivalgames.SurvivalGames
 version: 1.60
 website: http://dev.bukkit.org/bukkit-plugins/survival_games
 softdepend: [WorldEdit,Vault,Multiverse-Core,BarAPI,PermissionsEx]
-api-version: 1.13
+api-version: 1.16
 
 commands:
   sg:

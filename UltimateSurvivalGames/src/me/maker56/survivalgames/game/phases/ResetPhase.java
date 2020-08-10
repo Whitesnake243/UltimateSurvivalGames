@@ -8,10 +8,7 @@ import me.maker56.survivalgames.reset.Reset;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.*;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -26,6 +23,7 @@ public class ResetPhase {
 	}
 	
 	private void start() {
+
 	    game.kickall();
         game.setState(GameState.RESET);
         World w;
