@@ -59,14 +59,21 @@ public class SurvivalGames extends JavaPlugin {
 	}
 	
 	public void onEnable() {
-		if(!Bukkit.getPluginManager().isPluginEnabled("WorldEdit")) {
+		if(!Bukkit.getPluginManager().isPluginEnabled("FastAsyncWorldEdit") && !Bukkit.getPluginManager().isPluginEnabled("AsyncWorldEdit")) {
 			System.err.println("[SurvivalGames] ##########################################################");
-			System.err.println("[SurvivalGames] ######### NO WORLDEDIT FOUND! DISABLE PLUGIN... ##########");
+			System.err.println("[SurvivalGames] ############  FastAsyncWorldEdit NOT FOUND! ##############");
+			System.err.println("[SurvivalGames] ############    AsyncWorldEdit NOT FOUND!   ##############");
+			System.err.println("[SurvivalGames] ############        PlUGIN DISABLED!!!      ##############");
 			System.err.println("[SurvivalGames] ##########################################################");
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
-
+		if(Bukkit.getPluginManager().isPluginEnabled("WorldEdit")) {
+			System.err.println("[SurvivalGames] WorldEdit Found!");
+		}
+		if(Bukkit.getPluginManager().isPluginEnabled("AsyncWorldEdit")) {
+			System.err.println("[SurvivalGames] AsyncWorldEdit Found!");
+		}
 		instance = this;
 		version += getDescription().getVersion();
 		
