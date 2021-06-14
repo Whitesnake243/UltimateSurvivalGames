@@ -12,6 +12,8 @@ import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.regions.Regions;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockState;
 import me.maker56.survivalgames.SurvivalGames;
@@ -20,16 +22,14 @@ import me.maker56.survivalgames.commands.messages.MessageHandler;
 import me.maker56.survivalgames.events.SaveDoneEvent;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Callable;
 
 import static me.maker56.survivalgames.SurvivalGames.s;
@@ -46,13 +46,14 @@ public class Save extends Thread {
     private long time;
     private String[] rawtime;
     private String output;
+    private Region s;
 
 
     private Selection sel;
     private long start;
 
 
-    public Save(String lobby, String arena, Selection sel, String pname) {
+    public Save(String lobby, String arena, Selection sel, String pname, Region s) {
         this.lobby = lobby;
         this.sel = sel;
         this.arena = arena;
@@ -86,37 +87,41 @@ public class Save extends Thread {
 
     @Override
     public void run() {
-
         try {
             start = System.currentTimeMillis();
-            File file = new File("plugins/SurvivalGames/reset/" + lobby + arena + ".schematic");
-
-            file.mkdirs();
-            if(file.exists()) {
-                file.delete();
-                try {
-                    file.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return;
+            File file = null;
+            Region k = s;
+            for (int i = 0; i < k.getChunkCubes().size(); i++) {
+                BlockVector3 a = k.getChunkCubes().iterator().next();
+                file = new File("plugins/SurvivalGames/reset/" + lobby + arena + "/" + a.getBlockX() + a.getBlockZ() + ".schematic");
+                file.mkdirs();
+                if(file.exists()) {
+                    file.delete();
+                    try {
+                        file.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return;
+                    }
                 }
+                BlockArrayClipboard clipboard = new BlockArrayClipboard(k);
+                EditSession es = SurvivalGames.getWorldEdit().getWorldEdit().getEditSessionFactory().getEditSession(k.getWorld(), -1);
+                ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(es, k, clipboard, k.getMinimumPoint());
+                forwardExtentCopy.setCopyingEntities(true);
+                Operations.complete(forwardExtentCopy);
+                try (ClipboardWriter writer = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getWriter(new FileOutputStream(file))) {
+                    writer.write(clipboard);
+                }
+                k.getChunkCubes().remove(a);
             }
+
             if(pname != null) {
                 startPercentInfoScheduler();
             }
 
             // Copy start
 
-            BlockArrayClipboard clipboard = new BlockArrayClipboard(s);
-            EditSession es = SurvivalGames.getWorldEdit().getWorldEdit().getEditSessionFactory().getEditSession(s.getWorld(), -1);
-            ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(es, s, clipboard, s.getMinimumPoint());
-            forwardExtentCopy.setCopyingEntities(true);
-            Operations.complete(forwardExtentCopy);
 
-            //saving start
-            try (ClipboardWriter writer = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getWriter(new FileOutputStream(file))) {
-                writer.write(clipboard);
-            }
             sizeB = file.length();
             format = "Bytes";
             if(sizeB >= 1000) {
@@ -132,8 +137,6 @@ public class Save extends Thread {
             Bukkit.getScheduler().callSyncMethod(SurvivalGames.instance, new Callable<Void>() {
                 @Override
                 public Void call() throws Exception {
-                    // TEMPORARY
-                    Util.checkForOutdatedArenaSaveFiles();
                     Bukkit.getPluginManager().callEvent(new SaveDoneEvent(lobby, arena,  (System.currentTimeMillis() - start), sizeB, format));
                     return null;
                 }

@@ -4,6 +4,8 @@ import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.Region;
 import me.maker56.survivalgames.SurvivalGames;
 import me.maker56.survivalgames.Util;
 import me.maker56.survivalgames.commands.messages.MessageHandler;
@@ -21,6 +23,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import static me.maker56.survivalgames.SurvivalGames.s;
 
@@ -69,7 +72,7 @@ public class ArenaManager {
 		if (s.getMinimumPoint() != null && s.getMaximumPoint() != null) {
 			Selection sel = new Selection(s.getMinimumPoint(), s.getMaximumPoint());
 			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "Saving arena... This may take a while. Laggs can occure. You'll get a message, when the save is completed."));
-			(new Save(gamename, arenaname, sel, p.getName())).start();
+			(new Save(gamename, arenaname, sel, p.getName(), s)).start();
 		} else {
 			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "The arena isn't defined yet."));
 		}
@@ -140,7 +143,7 @@ public class ArenaManager {
 		
 		p.sendMessage(ChatColor.translateAlternateColorCodes('&', " &8&l➥ &bDeathmatch &7(&a" + deathmatch + "&7) &e(optional)"));
 		
-		if(deathmatch == true) {
+		if(deathmatch) {
 			if(dspawns < 1) {
 				p.sendMessage(ChatColor.translateAlternateColorCodes('&', " &8&l➥ &bDeathmatch-Spawns &7(&c" + dspawns + "&7) &eAt least 1 Deathmatch Spawn required"));
 			} else {
@@ -153,7 +156,7 @@ public class ArenaManager {
 		
 		if(spawns < 2) {
 			p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aAt least are 2 Spawns required. Type &b/sg arena addspawn &ato add more spawns!"));
-		} else if(deathmatch == true && dspawns < 1){
+		} else if(deathmatch && dspawns < 1){
 			p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aAt least are 1 Deathmatch-Spawn required. Type &b/sg arena deathmatch add &ato add more Deathmatch-Spawns!"));
 		} else {
 			p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aThis arena is ready to play. Just type &b/sg arena finish &ato finish the setup!"));
@@ -201,7 +204,7 @@ public class ArenaManager {
 
 		if(teleport) {
 			if(cfg.contains(path)) {
-				Location loc = Util.parseLocation(cfg.getString(path));
+				Location loc = Util.parseLocation(Objects.requireNonNull(cfg.getString(path)));
 				if(loc == null) {
 					p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("arena-deathmatch-domemiddle-notset")));
 				} else {
@@ -280,7 +283,7 @@ public class ArenaManager {
 		
 		List<String> l = cfg.getStringList(path + type);
 		Location loc = p.getLocation();
-		l.add(loc.getWorld().getName() + "," + loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getYaw() + "," + loc.getPitch());
+		l.add(Objects.requireNonNull(loc.getWorld()).getName() + "," + loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getYaw() + "," + loc.getPitch());
 		cfg.set(path + type, l);
 		SurvivalGames.saveDataBase();
 		p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("arena-spawn-added").replace("%0%", Integer.valueOf(l.size()).toString())));
@@ -356,10 +359,10 @@ public class ArenaManager {
 		cfg.set(path + "Grace-Period", SurvivalGames.instance.getConfig().getInt("Default.Arena.Grace-Period"));
         cfg.set(path + "BMin", String.valueOf(s.getMinimumPoint()));
 
-        Location Min = new Location(p.getWorld(),Double.valueOf(s.getMinimumPoint().getBlockX()),Double.valueOf(s.getMinimumPoint().getBlockY()),Double.valueOf(s.getMinimumPoint().getBlockZ()));
+        Location Min = new Location(p.getWorld(), (double) s.getMinimumPoint().getBlockX(), (double) s.getMinimumPoint().getBlockY(), (double) s.getMinimumPoint().getBlockZ());
         cfg.set(path + "Min", Util.serializeLocation(Min, false));
         cfg.set(path + "BMax", String.valueOf(s.getMaximumPoint()));
-        Location Max = new Location(p.getWorld(),Double.valueOf(s.getMaximumPoint().getBlockX()),Double.valueOf(s.getMaximumPoint().getBlockY()),Double.valueOf(s.getMaximumPoint().getBlockZ()));
+        Location Max = new Location(p.getWorld(), (double) s.getMaximumPoint().getBlockX(), (double) s.getMaximumPoint().getBlockY(), (double) s.getMaximumPoint().getBlockZ());
         cfg.set(path + "Max", Util.serializeLocation(Max, false));
         cfg.set(path + "World", p.getWorld().getName());
 
@@ -389,7 +392,6 @@ public class ArenaManager {
 		if(SurvivalGames.instance.getConfig().getBoolean("Enable-Arena-Reset"))
 			save(p);
 		p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("arena-check").replace("%0%", "/sg arena check")));
-		return;
 	}
 	
 	
@@ -411,8 +413,7 @@ public class ArenaManager {
 	}
 	
 	// ARENA GETTEN
-	
-	@SuppressWarnings("deprecation")
+
 	public Arena getArena(String game, String arenaname) {
 		if(!new File("plugins/SurvivalGames/reset/" + game + arenaname + ".schematic").exists() && SurvivalGames.instance.getConfig().getBoolean("Enable-Arena-Reset")) {
 			System.out.println("[SurvivalGames] Cannot load arena " + arenaname + " in lobby " + game + ": Arena map file is missing! To create a map file, select the arena first with /sg arena select " + game + " " + arenaname + " and type /sg arena save!");

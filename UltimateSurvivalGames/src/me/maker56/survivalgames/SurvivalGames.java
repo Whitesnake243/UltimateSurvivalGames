@@ -90,9 +90,6 @@ public class SurvivalGames extends JavaPlugin {
 		
 		if(setupEconomy())
 			System.out.println("[SurvivalGames] Vault found!");
-		
-		// TEMPORARY
-		Util.checkForOutdatedArenaSaveFiles();
 
 		chestManager = new ChestManager();
 		scoreBoardManager = new ScoreBoardManager();

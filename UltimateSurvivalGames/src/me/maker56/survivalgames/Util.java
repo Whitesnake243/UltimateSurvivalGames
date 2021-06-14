@@ -35,7 +35,7 @@ public class Util {
 	public static ItemStack parseItemStack(String s) {
 		try {
 			String[] gSplit = s.split(" ");
-			ItemStack is = null;
+			ItemStack is;
 			
 			// ITEM ID / MATERIAL / SUBID
 			String[] idsSplit = gSplit[0].split(":");
@@ -99,20 +99,17 @@ public class Util {
 	}
 	
 	public static Vector calculateVector(Location from, Location to) {
-        Location a = from, b = to;
-        
-        double dX = a.getX() - b.getX();
-        double dY = a.getY() - b.getY();
-        double dZ = a.getZ() - b.getZ();
+
+		double dX = from.getX() - to.getX();
+        double dY = from.getY() - to.getY();
+        double dZ = from.getZ() - to.getZ();
         double yaw = Math.atan2(dZ, dX);
         double pitch = Math.atan2(Math.sqrt(dZ * dZ + dX * dX), dY) + Math.PI;
         double x = Math.sin(pitch) * Math.cos(yaw);
         double y = Math.sin(pitch) * Math.sin(yaw);
         double z = Math.cos(pitch);
-        
-        Vector vector = new Vector(x, z, y);
-        
-        return vector;
+
+		return new Vector(x, z, y);
     }
 	
 	public static void shootRandomFirework(Location loc, int height) {
@@ -127,8 +124,8 @@ public class Util {
 				b.withColor(Color.fromBGR(random.nextInt(256), random.nextInt(256), random.nextInt(256)));
 			}
 			b.with(Type.values()[random.nextInt(Type.values().length)]);
-			b.flicker(random.nextInt(2) == 0 ? false : true);
-			b.trail(random.nextInt(2) == 0 ? false : true);
+			b.flicker(random.nextInt(2) != 0);
+			b.trail(random.nextInt(2) != 0);
 			fm.addEffect(b.build());
 		}
 		f.setFireworkMeta(fm);
@@ -149,66 +146,27 @@ public class Util {
 		
 		if(en == null) {
 			switch (enc) {
-			case "PROTECTION":
-				en = Enchantment.PROTECTION_ENVIRONMENTAL;
-				break;
-			case "FIRE_PROTECTION":
-				en = Enchantment.PROTECTION_FIRE;
-				break;
-			case "FEATHER_FALLING":
-				en = Enchantment.PROTECTION_FALL;
-				break;
-			case "BLAST_PROTECTION":
-				en = Enchantment.PROTECTION_EXPLOSIONS;
-				break;
-			case "PROJECTILE_PROTCETION":
-				en = Enchantment.PROTECTION_PROJECTILE;
-				break;
-			case "RESPIRATION":
-				en = Enchantment.OXYGEN;
-				break;
-			case "AQUA_AFFINITY":
-				en = Enchantment.WATER_WORKER;
-				break;
-			case "SHARPNESS":
-				en = Enchantment.DAMAGE_ALL;
-				break;
-			case "SMITE":
-				en = Enchantment.DAMAGE_UNDEAD;
-				break;
-			case "BANE_OF_ARTHROPODS":
-				en = Enchantment.DAMAGE_ARTHROPODS;
-				break;
-			case "LOOTING":
-				en = Enchantment.LOOT_BONUS_MOBS;
-				break;
-			case "EFFICIENCY":
-				en = Enchantment.DIG_SPEED;
-				break;
-			case "UNBREAKING":
-				en = Enchantment.DURABILITY;
-				break;
-			case "FORTUNE":
-				en = Enchantment.LOOT_BONUS_BLOCKS;
-				break;
-			case "POWER":
-				en = Enchantment.ARROW_DAMAGE;
-				break;
-			case "PUNCH":
-				en = Enchantment.ARROW_KNOCKBACK;
-				break;
-			case "FLAME":
-				en = Enchantment.ARROW_FIRE;
-				break;
-			case "INFINITY":
-				en = Enchantment.ARROW_INFINITE;
-				break;
-			case "LUCK_OF_THE_SEA":
-				en = Enchantment.LUCK;
-				break;
+				case "PROTECTION" -> en = Enchantment.PROTECTION_ENVIRONMENTAL;
+				case "FIRE_PROTECTION" -> en = Enchantment.PROTECTION_FIRE;
+				case "FEATHER_FALLING" -> en = Enchantment.PROTECTION_FALL;
+				case "BLAST_PROTECTION" -> en = Enchantment.PROTECTION_EXPLOSIONS;
+				case "PROJECTILE_PROTCETION" -> en = Enchantment.PROTECTION_PROJECTILE;
+				case "RESPIRATION" -> en = Enchantment.OXYGEN;
+				case "AQUA_AFFINITY" -> en = Enchantment.WATER_WORKER;
+				case "SHARPNESS" -> en = Enchantment.DAMAGE_ALL;
+				case "SMITE" -> en = Enchantment.DAMAGE_UNDEAD;
+				case "BANE_OF_ARTHROPODS" -> en = Enchantment.DAMAGE_ARTHROPODS;
+				case "LOOTING" -> en = Enchantment.LOOT_BONUS_MOBS;
+				case "EFFICIENCY" -> en = Enchantment.DIG_SPEED;
+				case "UNBREAKING" -> en = Enchantment.DURABILITY;
+				case "FORTUNE" -> en = Enchantment.LOOT_BONUS_BLOCKS;
+				case "POWER" -> en = Enchantment.ARROW_DAMAGE;
+				case "PUNCH" -> en = Enchantment.ARROW_KNOCKBACK;
+				case "FLAME" -> en = Enchantment.ARROW_FIRE;
+				case "INFINITY" -> en = Enchantment.ARROW_INFINITE;
+				case "LUCK_OF_THE_SEA" -> en = Enchantment.LUCK;
 			}
 		}
-		
 		return en;
 	}
 	// TIME
@@ -263,25 +221,6 @@ public class Util {
 		
 		return loc;
 	}
-    public static Vector3 parseLocationToVector3(String s) {
-        String[] split = s.split(",");
-        Vector3 loc = null;
-        World world;
-        try {
-            world = Bukkit.getWorld(split[0]);
-            if (split.length == 4) {
-                double x = Integer.parseInt(split[1]);
-                double y = Integer.parseInt(split[2]);
-                double z = Integer.parseInt(split[3]);
-
-                loc = Vector3.at(x, y, z);
-            }
-        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            System.err.println("[SurvivalGames] Cannot parse location from string: " + s);
-        }
-
-        return loc;
-    }
     public static BlockVector3 parseLocToBv3(String s) {
         String[] split = s.split(",");
         BlockVector3 loc = null;
@@ -304,6 +243,9 @@ public class Util {
 
         return loc;
     }
+	public static BlockVector3 parseLocToBv3(Double x, Double y, Double z) {
+		return BlockVector3.at(x, y, z);
+	}
 	public static String serializeLocation(Location l, boolean exact) {
 		if(l != null) {
 			String key = l.getWorld().getName() + ",";
@@ -327,42 +269,6 @@ public class Util {
 			}
 		}
 	}
-	
-	// TEMPORARY UPDATE METHODS
-	
-	public static void checkForOutdatedArenaSaveFiles() {
-		File f = new File("plugins/SurvivalGames/reset/");
-		List<String> outdated = new ArrayList<>();
-		if(f.exists()) {
-			for(String key : f.list()) {
-				if(!key.endsWith(".map"))
-					continue;
-				File file = new File("plugins/SurvivalGames/reset/" + key);
-				ClipboardFormat sf = ClipboardFormats.findByFile(file);
-				if(sf == null) {
-					outdated.add(key);
-					
-				}
-			}
-		}
-		String s = null;
-		if(!outdated.isEmpty()) {
-			s = MessageHandler.getMessage("prefix") + "&cThe format of " + outdated.size() + " map saves is outdated&7: &e";
-			for(int i = 0; i < outdated.size(); i++) {
-				s+= outdated.get(i);
-				if(i != outdated.size() - 1) {
-					s+= "&7, &e";
-				} else {
-					s+= " &c! ";
-				}
-				
-
-			}
-			s+= "Select all the arenas with &l/sg arena select &cand type &c&l/sg arena save&c! In the old format, the arenas will not reset!";
-		}
-		UpdateListener.setOutdatedMaps(s);
-	}
-
 	public static void Error(String e) {
 		SurvivalGames.instance.getLogger().severe("[SurvivalGames] " + e);
 	}

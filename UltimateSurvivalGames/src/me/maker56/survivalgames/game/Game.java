@@ -3,6 +3,7 @@ package me.maker56.survivalgames.game;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import me.maker56.survivalgames.SurvivalGames;
 import me.maker56.survivalgames.Util;
 import me.maker56.survivalgames.arena.Arena;
@@ -71,7 +72,7 @@ public class Game {
 	private Arena arena;
 	private List<User> users = new ArrayList<>();
 	private List<Chest> chests = new ArrayList<>();
-	private List<String> rChunks = new ArrayList<>();
+	private List<BlockVector3> rChunks = new ArrayList<>();
 	public ArrayList<String> voted = new ArrayList<>();
 	
 	public Game(String name, Location lobby, boolean voting, int lobbytime, int maxVotingArenas, int reqplayers, List<Arena> arenas, boolean reset) {
@@ -559,19 +560,19 @@ public class Game {
 		return false;
 	}
 	
-	public List<String> getChunksToReset() {
+	public List<BlockVector3> getChunksToReset() {
 		return rChunks;
 	}
 	
 	public String getAlivePlayers() {
-		String s = new String();
+		StringBuilder s = new StringBuilder();
 		List<User> users = getUsers();
 		for(int i = 0; i < users.size(); i++) {
-			s += ChatColor.translateAlternateColorCodes('&',"&e" + users.get(i).getName());
+			s.append(ChatColor.translateAlternateColorCodes('&', "&e" + users.get(i).getName()));
 			if(i != users.size() - 1)
-				s += ChatColor.translateAlternateColorCodes('&',"&7, ");
+				s.append(ChatColor.translateAlternateColorCodes('&', "&7, "));
 		}
-		return s;
+		return s.toString();
 	}
 	
 	// SCOREBOARD

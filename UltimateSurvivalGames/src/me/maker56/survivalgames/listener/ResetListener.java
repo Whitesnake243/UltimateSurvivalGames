@@ -1,8 +1,11 @@
 package me.maker56.survivalgames.listener;
 
 import java.util.List;
+import java.util.concurrent.Callable;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import me.maker56.survivalgames.SurvivalGames;
+import me.maker56.survivalgames.Util;
 import me.maker56.survivalgames.arena.Arena;
 import me.maker56.survivalgames.commands.messages.MessageHandler;
 import me.maker56.survivalgames.commands.permission.Permission;
@@ -18,6 +21,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -32,6 +36,8 @@ import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class ResetListener implements Listener {
 	
@@ -115,7 +121,13 @@ public class ResetListener implements Listener {
 				for(Game game : gm.getGames()) {
 					for(Arena a : game.getArenas()) {
 						if(a.containsBlock(loc)) {
-							blocks.clear();
+							Bukkit.getScheduler().callSyncMethod(SurvivalGames.instance, new Callable<Void>() {
+								@Override
+								public Void call() {
+									event.setCancelled(true);
+									return null;
+								}
+							});
 							return;
 						}
 					}
@@ -129,11 +141,11 @@ public class ResetListener implements Listener {
 			if(game.getState() == GameState.INGAME || game.getState() == GameState.DEATHMATCH) {
 				Arena a = game.getCurrentArena();
 				if(a.containsBlock(loc)) {
-					String chunkKey = loc.getChunk().getX() + "," + loc.getChunk().getZ();
+					BlockVector3 chunkKey = Util.parseLocToBv3(loc.getX(),loc.getY(), loc.getZ());
 					if(!game.getChunksToReset().contains(chunkKey)) {
 						game.getChunksToReset().add(chunkKey);
 						List<String> reset = SurvivalGames.reset.getStringList("Startup-Reset." + game.getName() + "." + a.getName());
-						reset.add(chunkKey);
+						reset.add(chunkKey.toString());
 						SurvivalGames.reset.set("Startup-Reset." + game.getName() + "." + a.getName(), reset);
 						SurvivalGames.saveReset();
 					}

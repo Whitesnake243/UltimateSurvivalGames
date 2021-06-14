@@ -1,6 +1,5 @@
 package me.maker56.survivalgames.reset;
 
-import java.lang.management.MemoryManagerMXBean;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,14 +8,12 @@ import me.maker56.survivalgames.Util;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.util.Vector;
 
 public class Selection {
 
     private Location min, max;
     public int yMin, yMax;
     public double xMin, zMin, xMax, zMax;
-    private World worl;
 
 
     public Selection(Location min, Location max) {
@@ -25,20 +22,16 @@ public class Selection {
     }
 
     public Selection(BlockVector3 minimumPoint, BlockVector3 maximumPoint) {
-        BlockVector3 min = minimumPoint;
-        BlockVector3 max = maximumPoint;
     }
-
 
     private void redefineLocations() {
         if (min != null && max != null) {
-            xMin = Double.valueOf(Math.min(min.getBlockX(), max.getBlockX()));
+            xMin = Math.min(min.getBlockX(), max.getBlockX());
             yMin = Math.min(min.getBlockY(), max.getBlockY());
-            zMin = Double.valueOf(Math.min(min.getBlockZ(), max.getBlockZ()));
-
-            xMax = Double.valueOf(Math.max(min.getBlockX(), max.getBlockX()));
+            zMin = Math.min(min.getBlockZ(), max.getBlockZ());
+            xMax = Math.max(min.getBlockX(), max.getBlockX());
             yMax = Math.max(min.getBlockY(), max.getBlockY());
-            zMax = Double.valueOf(Math.max(min.getBlockZ(), max.getBlockZ()));
+            zMax = Math.max(min.getBlockZ(), max.getBlockZ());
         }
     }
 
@@ -99,9 +92,5 @@ public class Selection {
 
     public boolean isFullDefined() {
         return min != null && max != null;
-    }
-
-    public void Wn(World world) {
-        this.worl = world;
     }
 }

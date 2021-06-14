@@ -74,7 +74,8 @@ public class PlayerListener implements Listener {
 					Arena a = null;
 					try {
 						a = g.getVotingPhrase().vote(p, Integer.parseInt(ChatColor.stripColor(split[0])));
-					} catch(NumberFormatException e) { }
+					} catch(NumberFormatException e) { //
+						}
 					
 					if(a != null) {
 						p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 4.0F, 2.0F);
@@ -87,7 +88,7 @@ public class PlayerListener implements Listener {
 			SpectatorUser su = um.getSpectator(p.getName());
 			if(su != null) {
 				if(is.getType() == Material.SKELETON_SKULL && name.startsWith("&e")) {
-					String pname = name.substring(2, name.length());
+					String pname = name.substring(2);
 					event.setCancelled(true);
 					Game g = su.getGame();
 					User user = g.getUser(pname);
@@ -330,7 +331,7 @@ public class PlayerListener implements Listener {
 		for(Game game : SurvivalGames.gameManager.getGames()) {
 			for(Arena arena : game.getArenas()) {
 				if(arena.containsBlock(event.getBlockClicked().getRelative(event.getBlockFace()).getLocation()))
-					event.setCancelled(true);
+					event.setCancelled(false);
 			}
 		}
 	}
@@ -340,7 +341,7 @@ public class PlayerListener implements Listener {
 		for(Game game : SurvivalGames.gameManager.getGames()) {
 			for(Arena arena : game.getArenas()) {
 				if(arena.containsBlock(event.getBlockClicked().getLocation()))
-					event.setCancelled(true);
+					event.setCancelled(false);
 			}
 		}
 	}
