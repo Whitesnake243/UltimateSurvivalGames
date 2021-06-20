@@ -10,6 +10,7 @@ import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardWriter;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
@@ -38,26 +39,23 @@ import static me.maker56.survivalgames.SurvivalGames.s;
 public class Save extends Thread {
     private long sizeB;
     private String format;
-    private CuboidRegion cc;
     private String lobby, arena;
     private long Time;
-    private long seconds;
-    private double mins;
-    private long time;
-    private String[] rawtime;
-    private String output;
+    private long seconds;;
     private Region s;
-
+    private List<String> l;
 
     private Selection sel;
     private long start;
 
 
-    public Save(String lobby, String arena, Selection sel, String pname, Region s) {
+    public Save(String lobby, String arena, Selection sel, Player pname, Region s, List<String> l) {
         this.lobby = lobby;
         this.sel = sel;
         this.arena = arena;
         this.pname = pname;
+        this.s = s;
+        this.l = l;
 
 
         Util.debug("init arena save - min:" + Util.serializeLocation(sel.getMinimumLocation(), false) + " max:" + Util.serializeLocation(sel.getMaximumLocation(), false));
@@ -67,12 +65,12 @@ public class Save extends Thread {
 
     private double maxSteps, stepsDone = 0;
     private BukkitTask task;
-    private String pname;
+    private Player pname;
 
     public void startPercentInfoScheduler() {
         task = Bukkit.getScheduler().runTaskTimer(SurvivalGames.instance, new Runnable() {
             public void run() {
-                Player p = Bukkit.getPlayer(pname);
+                Player p = pname;
                 if(p != null) {
                     Time = System.currentTimeMillis() - start;
                     seconds = (int) (Time / 1000);
@@ -85,15 +83,40 @@ public class Save extends Thread {
     }
 
 
-    @Override
+    // temp till new saving is finished and working
     public void run() {
         try {
             start = System.currentTimeMillis();
             File file = null;
-            Region k = s;
-            for (int i = 0; i < k.getChunkCubes().size(); i++) {
-                BlockVector3 a = k.getChunkCubes().iterator().next();
-                file = new File("plugins/SurvivalGames/reset/" + lobby + arena + "/" + a.getBlockX() + a.getBlockZ() + ".schematic");
+            BlockVector3 Max;
+            BlockVector3 Min;
+            String k;
+            int Xmin,Zmin,Xmax,Zmax;
+
+            for (int i = 0; i <= l.size()-1; i++) {
+                String o = l.get(i);
+                if (i >= l.size()-1) {
+                    k = o.substring(1,l.get(i).length()-1);
+                } else {
+                    k= o.substring(1,l.get(i).length());
+                }
+                Util.Error(k);
+                String[] split = k.split(", ");
+                Xmin = Integer.parseInt(split[0])*16;
+                Zmin = Integer.parseInt(split[1])*16;
+                if(Xmin < 0) {
+                    Xmax = Xmin-16;
+                } else {
+                    Xmax = Xmin+16;
+                }
+                if(Zmin < 0) {
+                    Zmax = Zmin-16;
+                } else {
+                    Zmax = Zmin+16;
+                }
+                Max = BlockVector3.at(Xmax,255,Zmax);
+                Min = BlockVector3.at(Xmin,0, Zmin);
+                file = new File("plugins/SurvivalGames/reset/" + lobby + arena + "/" + Xmax +","+ Zmax + ".schematic");
                 file.mkdirs();
                 if(file.exists()) {
                     file.delete();
@@ -104,15 +127,22 @@ public class Save extends Thread {
                         return;
                     }
                 }
-                BlockArrayClipboard clipboard = new BlockArrayClipboard(k);
-                EditSession es = SurvivalGames.getWorldEdit().getWorldEdit().getEditSessionFactory().getEditSession(k.getWorld(), -1);
-                ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(es, k, clipboard, k.getMinimumPoint());
-                forwardExtentCopy.setCopyingEntities(true);
-                Operations.complete(forwardExtentCopy);
+                Region t = new CuboidRegion(Min,Max);
+                BlockArrayClipboard clipboard = new BlockArrayClipboard(t);
+
+                try (EditSession editSession = SurvivalGames.getWorldEdit().getWorldEdit().newEditSession(s.getWorld())) {
+                    ForwardExtentCopy fo = new ForwardExtentCopy(
+                            editSession, t, clipboard, Min
+                    );
+                    // configure here
+                    fo.setCopyingEntities(false);
+
+                    Operations.complete(fo);
+                }
                 try (ClipboardWriter writer = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getWriter(new FileOutputStream(file))) {
                     writer.write(clipboard);
                 }
-                k.getChunkCubes().remove(a);
+
             }
 
             if(pname != null) {
@@ -150,7 +180,71 @@ public class Save extends Thread {
             task.cancel();
     }
 
+    public void runa() {
+        Bukkit.getScheduler().callSyncMethod(SurvivalGames.instance, new Callable<Void>() {
+            @Override
+            public Void call() {
+                try {
+                    start = System.currentTimeMillis();
+                    File file = null;
+                    Region k = s;
+                    for (int i = 0; i >= k.getChunkCubes().size() || k.getChunkCubes().isEmpty(); --i) {
+                        BlockVector3 a = k.getChunkCubes().iterator().next();
+                        file = new File("plugins/SurvivalGames/reset/" + lobby + arena + "/" + a.getBlockX() + a.getBlockZ() + ".schematic");
+                        file.mkdirs();
+                        if(file.exists()) {
+                            file.delete();
+                            try {
+                                file.createNewFile();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                return null;
+                            }
+                        }
+                        BlockArrayClipboard clipboard = new BlockArrayClipboard(k);
+                        EditSession es = SurvivalGames.getWorldEdit().getWorldEdit().getEditSessionFactory().getEditSession(k.getWorld(), -1);
+                        ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(es, k, clipboard, k.getMinimumPoint());
+                        forwardExtentCopy.setCopyingEntities(true);
+                        Operations.complete(forwardExtentCopy);
+                        try (ClipboardWriter writer = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getWriter(new FileOutputStream(file))) {
+                            writer.write(clipboard);
+                        }
 
+                    }
+
+                    if(pname != null) {
+                        startPercentInfoScheduler();
+                    }
+
+                    // Copy start
+
+
+                    sizeB = file.length();
+                    format = "Bytes";
+                    if(sizeB >= 1000) {
+                        sizeB = sizeB / 1000;
+                        format = "KiloBytes";
+                        if(sizeB >= 1000) {
+                            sizeB = sizeB / 1000;
+                            format = "MegaBytes";
+                        }
+                    }
+
+                    //End saving of arena
+                    Bukkit.getScheduler().callSyncMethod(SurvivalGames.instance, new Callable<Void>() {
+                        @Override
+                        public Void call() throws Exception {
+                            Bukkit.getPluginManager().callEvent(new SaveDoneEvent(lobby, arena,  (System.currentTimeMillis() - start), sizeB, format));
+                            return null;
+                        }
+                    });
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        });
+    }
 
     private boolean save = false;
     private EditSession es;

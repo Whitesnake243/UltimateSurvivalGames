@@ -2,6 +2,7 @@ package me.maker56.survivalgames;
 
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
+import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.Vector3;
 import me.maker56.survivalgames.commands.messages.MessageHandler;
@@ -221,6 +222,62 @@ public class Util {
 		
 		return loc;
 	}
+
+	public static  BlockVector2 StrToBv3(String bv3) {
+		Double xMin;
+		Double zMin;
+		bv3 = bv3.substring(1, bv3.length() - 1);
+		String[] a = bv3.split(", ");
+		if(a.length >= 3) {
+			return null;
+		} else {
+			xMin = Double.parseDouble(a[0]);
+			zMin = Double.parseDouble(a[1]);
+			Util.Error("X:"+a[0]+", Y:"+a[1]+", Z:"+a[2]);
+			return BlockVector2.at(xMin,zMin);
+		}
+
+	}
+
+	public static  String ChunkCalcBv2(BlockVector2 bv3) {
+		int xMin = bv3.getBlockX()*16;
+		int yMin = 0;
+		int zMin = bv3.getBlockZ()*16;
+		int xMax;
+		int yMax = 255;
+		int zMax;
+		if(xMin < 0) {
+			xMax = xMin-16;
+		} else {
+			xMax = xMin+16;
+		}
+		if(zMin < 0) {
+			zMax = zMin-16;
+		} else {
+			zMax = zMin+16;
+		}
+		return BlockVector3.at(xMin,yMin,zMin)+"/"+BlockVector3.at(zMax,yMax,zMax);
+	}
+	public static  String ChunkCalc(BlockVector3 bv3) {
+		int xMin = bv3.getBlockX()*16;
+		int yMin = 0;
+		int zMin = bv3.getBlockZ()*16;
+		int xMax;
+		int yMax =255;
+		int zMax;
+
+		if(xMin < 0) {
+			xMax = xMin-16;
+		} else {
+			xMax = xMin+16;
+		}
+		if(zMin < 0) {
+			zMax = zMin-16;
+		} else {
+			zMax = zMin+16;
+		}
+		return BlockVector3.at(xMin,yMin,zMin)+"/"+BlockVector3.at(zMax,yMax,zMax);
+	}
     public static BlockVector3 parseLocToBv3(String s) {
         String[] split = s.split(",");
         BlockVector3 loc = null;
@@ -246,6 +303,12 @@ public class Util {
 	public static BlockVector3 parseLocToBv3(Double x, Double y, Double z) {
 		return BlockVector3.at(x, y, z);
 	}
+	public static BlockVector3 parseLocToBv3(Location loc) {
+		return BlockVector3.at(loc.getX(), loc.getY(), loc.getZ());
+	}
+	public static Location parseBv3ToLoc(BlockVector3 bv3, String w){
+		return new Location(Bukkit.getWorld(w),bv3.getX(),bv3.getY(),bv3.getZ());
+	}
 	public static String serializeLocation(Location l, boolean exact) {
 		if(l != null) {
 			String key = l.getWorld().getName() + ",";
@@ -259,7 +322,7 @@ public class Util {
 		}
 		return null;
 	}
-	
+
 	public static void debug(Object object) {
 		if(debug) {
 			System.out.println("[SurvivalGames] [Debug] " + object.toString());

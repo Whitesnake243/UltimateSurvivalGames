@@ -99,8 +99,8 @@ public class SurvivalGames extends JavaPlugin {
 		signManager = new SignManager();
 		
 		getCommand("sg").setExecutor(new CommandSG());
-		
-		pm.registerEvents(new SelectionListener(), this);
+
+		//pm.registerEvents(new SelectionListener(), this);
 		pm.registerEvents(new PlayerListener(), this);
 		pm.registerEvents(new ChestListener(), this);
 		pm.registerEvents(new SignListener(), this);

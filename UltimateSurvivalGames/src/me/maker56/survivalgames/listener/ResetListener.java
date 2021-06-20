@@ -3,6 +3,7 @@ package me.maker56.survivalgames.listener;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.math.BlockVector3;
 import me.maker56.survivalgames.SurvivalGames;
 import me.maker56.survivalgames.Util;
@@ -121,13 +122,12 @@ public class ResetListener implements Listener {
 				for(Game game : gm.getGames()) {
 					for(Arena a : game.getArenas()) {
 						if(a.containsBlock(loc)) {
-							Bukkit.getScheduler().callSyncMethod(SurvivalGames.instance, new Callable<Void>() {
+							Bukkit.getScheduler().runTaskLater(SurvivalGames.instance, new Runnable() {
 								@Override
-								public Void call() {
+								public void run() {
 									event.setCancelled(true);
-									return null;
 								}
-							});
+							},600L);
 							return;
 						}
 					}
@@ -141,9 +141,9 @@ public class ResetListener implements Listener {
 			if(game.getState() == GameState.INGAME || game.getState() == GameState.DEATHMATCH) {
 				Arena a = game.getCurrentArena();
 				if(a.containsBlock(loc)) {
-					BlockVector3 chunkKey = Util.parseLocToBv3(loc.getX(),loc.getY(), loc.getZ());
+					BlockVector2 chunkKey = BlockVector2.at(loc.getX(), loc.getZ());
 					if(!game.getChunksToReset().contains(chunkKey)) {
-						game.getChunksToReset().add(chunkKey);
+						game.getChunksToReset().add(chunkKey.toString());
 						List<String> reset = SurvivalGames.reset.getStringList("Startup-Reset." + game.getName() + "." + a.getName());
 						reset.add(chunkKey.toString());
 						SurvivalGames.reset.set("Startup-Reset." + game.getName() + "." + a.getName(), reset);

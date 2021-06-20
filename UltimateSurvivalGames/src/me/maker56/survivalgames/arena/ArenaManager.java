@@ -4,6 +4,8 @@ import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector2;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import me.maker56.survivalgames.SurvivalGames;
@@ -14,16 +16,15 @@ import me.maker56.survivalgames.listener.DomeListener;
 import me.maker56.survivalgames.reset.Save;
 import me.maker56.survivalgames.reset.Selection;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static me.maker56.survivalgames.SurvivalGames.s;
 
@@ -68,11 +69,36 @@ public class ArenaManager {
 				return;
 			}
 		}
-
+		//Temp till worldedit finishes updating
+		com.sk89q.worldedit.entity.Player Pl = BukkitAdapter.adapt(p);
+		WorldEdit we = SurvivalGames.getWorldEdit().getWorldEdit();
+		try {
+			LocalSession ls = we.getInstance().getSessionManager().get(Pl);
+			s = ls.getSelection(Pl.getWorld());
+		} catch (IncompleteRegionException e) {
+			Util.Error("World edit isnt completely updated for 1.17 I Know about this error Select the other WE point");
+			Util.Error(e.toString()+"  "+"PlayerName: "+ Pl.getName()+ "Locations(Min,Max): "+ s.getMinimumPoint().toString()+","+s.getMaximumPoint().toString());
+		}
 		if (s.getMinimumPoint() != null && s.getMaximumPoint() != null) {
 			Selection sel = new Selection(s.getMinimumPoint(), s.getMaximumPoint());
 			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "Saving arena... This may take a while. Laggs can occure. You'll get a message, when the save is completed."));
-			(new Save(gamename, arenaname, sel, p.getName(), s)).start();
+			BlockVector3 g;
+			Set<BlockVector2> h = s.getChunks();
+			String j = h.toString();
+			//Remove first []'s
+			j = j.substring(1, j.length() - 1);
+			//Remove first ()'s
+			//j = j.substring(1, j.length() - 1);
+			//Split  Coords apart
+			String[] k = j.split("\\), ");
+			List<String> l = new ArrayList<>();
+			l.addAll(Arrays.asList(k).subList(0, k.length));
+			//Convert to real world points
+			Util.Error(l.toString());
+			Util.Error(l.get(0));
+			Util.Error(l.get(l.size()-1));
+			Util.Error(l.size()+"");
+			(new Save(gamename, arenaname, sel, p, s, l)).start();
 		} else {
 			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "The arena isn't defined yet."));
 		}
@@ -339,10 +365,11 @@ public class ArenaManager {
             LocalSession ls = we.getInstance().getSessionManager().get(Pl);
             s = ls.getSelection(Pl.getWorld());
 		} catch (IncompleteRegionException e) {
+			Util.Error("World edit isnt completely updated for 1.17 I Know about this error Select the other WE point");
 			Util.Error(e.toString()+"  "+"PlayerName: "+ Pl.getName()+ "Locations(Min,Max): "+ s.getMinimumPoint().toString()+","+s.getMaximumPoint().toString());
 		}
 		if(we != null) {
-		    if(s == null || s.getMinimumPoint() == null || s.getMaximumPoint() == null) {
+		    if(s.getMinimumPoint() == null || s.getMaximumPoint() == null) {
 				p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("arena-no-selection").replace("%0%", "/sg arena tools")));
 				return;
 			}
