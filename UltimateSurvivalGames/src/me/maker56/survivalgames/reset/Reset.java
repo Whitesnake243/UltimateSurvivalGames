@@ -2,7 +2,6 @@ package me.maker56.survivalgames.reset;
 
 import com.sk89q.jnbt.Tag;
 import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -21,7 +20,10 @@ import com.sk89q.worldedit.world.block.BaseBlock;
 import me.maker56.survivalgames.SurvivalGames;
 import me.maker56.survivalgames.Util;
 import me.maker56.survivalgames.events.ResetDoneEvent;
+import me.maker56.survivalgames.game.Game;
+import me.maker56.survivalgames.game.GameManager;
 import org.bukkit.Bukkit;
+
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.entity.Arrow;
@@ -33,10 +35,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 
-import static me.maker56.survivalgames.SurvivalGames.WorldeditVer;
+
 
 @SuppressWarnings("deprecation")
 public class Reset extends Thread {
@@ -54,7 +55,7 @@ public class Reset extends Thread {
         }
         return false;
     }
-
+    private GameManager gm = SurvivalGames.gameManager;
     private String lobby, arena;
     private World world;
     private long start;
@@ -86,52 +87,68 @@ public class Reset extends Thread {
                 SurvivalGames.database.set(path + "Chest.TypeID", "CHEST");
                 SurvivalGames.saveDataBase();
             }
-            BlockVector3 Min,Max;
-            int Xmin,Zmin,Xmax,Zmax;
+            BlockVector3 Min;
+            int minX = 0,minZ = 0,maxX = 0,maxZ = 0,chunkX,chunkZ;
         for (int i = 0; i <= chunks.size()-1; i++) {
             if (!chunks.isEmpty()) {
                 String k = chunks.get(i).substring(1, chunks.get(i).length() - 1);
                 String[] split = k.split(", ");
-                File file = new File("plugins/SurvivalGames/reset/" + lobby + arena + "/" + split[0] + split[1] + ".schematic");
+                chunkX = Integer.parseInt(split[0]);
+                chunkZ = Integer.parseInt(split[1]);
+                if(chunkX >= 0){
+
+                    minX = chunkX*16;
+                    //maxX = minX+15;
+
+                }
+                if(chunkZ >= 0){
+
+                    minZ = chunkZ*16;
+                    //maxZ = minZ+15;
+
+                }
+                if(chunkX < 0){
+
+                    minX = chunkX*16;
+                    //maxX = minX+15;
+
+                }
+                if(chunkZ < 0){
+
+                    minZ = chunkZ*16;
+                    //maxZ = minZ+15;
+
+                }
+                Min = BlockVector3.at(minX,0, minZ);
+                File file = new File("plugins/SurvivalGames/reset/" + lobby + arena + "/" + split[0] +","+ split[1] + ".schematic");
                 if (!file.exists()) {
-                    Xmin = Integer.parseInt(split[0]);
-                    Zmin = Integer.parseInt(split[1]);
-                    if (Xmin < 0) {
-                        Xmax = Xmin + 16;
-                    } else {
-                        Xmax = Xmin - 16;
+                    Util.Error("Cant find chunk a schem for Arena:"+ arena +" In Lobby:"+ lobby +" Missing File:"+split[0]+","+split[1]+".schematic");
+                    return;
+                }
+                try {
+                    // find and load Schem
+                    ClipboardFormat format = ClipboardFormats.findByFile(file);
+                    try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
+                        clipboard = reader.read();
                     }
-                    if (Zmin < 0) {
-                        Zmax = Zmin + 16;
-                    } else {
-                        Zmax = Zmin - 16;
-                    }
-                    Max = BlockVector3.at(Xmax, 255, Zmax);
-                    Min = BlockVector3.at(Xmin, 0, Zmin);
-                    try {
-                        // find and load Schem
-                        ClipboardFormat format = ClipboardFormats.findByFile(file);
-                        try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
-                            clipboard = reader.read();
-                        }
 
-
-                        // paste Schem
-                        try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(BukkitAdapter.adapt(world), -1)) {
-                            Operation operation = new ClipboardHolder(clipboard)
-                                    .createPaste(editSession)
-                                    .to(Min)
-                                    .ignoreAirBlocks(false)
-                                    .build();
-                            Operations.complete(operation);
-                        } catch (WorldEditException e) {
-                            e.printStackTrace();
-                        }
-                    } catch (IOException e) {
+                    // paste Schem
+                    try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(BukkitAdapter.adapt(world), -1)) {
+                        Operation operation = new ClipboardHolder(clipboard)
+                                .createPaste(editSession)
+                                .to(Min)
+                                .ignoreAirBlocks(false)
+                                .build();
+                        Operations.complete(operation);
+                    } catch (WorldEditException e) {
                         Util.Error(""+e);
                     }
-                    chunks.remove(i);
+                } catch (IOException e) {
+                    Util.Error(""+e);
                 }
+                resetEntities(BlockVector2.at(Double.parseDouble(split[0]),Double.parseDouble(split[1])));
+                chunks.remove(i);
+
             }
         }
 //            try {
@@ -160,29 +177,29 @@ public class Reset extends Thread {
 
 
 
-        if (chunks != null) {
-            int s = chunks.size();
-            if (s > 0) {
-                for (int i = 0; i < s + 1; i++) {
-                    BlockVector2 f = null;
-                    try {
-                        //f = chunks.get(0);
-                    } catch (IndexOutOfBoundsException e) {
-                        Util.Error(e.toString());
-                        try {
-                            //f = chunks.get(1);
-                        }catch (IndexOutOfBoundsException t) {
-                            Util.Error(e.toString());
-                            break;
-                        }
-                    }
-                    if (f != null) {
-                        resetEntities(f);
-                        chunks.remove(0);
-                    }
-                }
-            }
-        }
+//        if (chunks != null) {
+//            int s = chunks.size();
+//            if (s > 0) {
+//                for (int i = 0; i < s + 1; i++) {
+//                    BlockVector2 f = null;
+//                    try {
+//                        //f = chunks.get(0);
+//                    } catch (IndexOutOfBoundsException e) {
+//                        Util.Error(e.toString());
+//                        try {
+//                            //f = chunks.get(1);
+//                        }catch (IndexOutOfBoundsException t) {
+//                            Util.Error(e.toString());
+//                            break;
+//                        }
+//                    }
+//                    if (f != null) {
+//                        resetEntities(f);
+//                        chunks.remove(0);
+//                    }
+//                }
+//            }
+
         Bukkit.getScheduler().callSyncMethod(SurvivalGames.instance, new Callable<Void>() {
             @Override
             public Void call() {

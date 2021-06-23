@@ -21,6 +21,7 @@ import me.maker56.survivalgames.user.UserManager;
 import me.maker56.survivalgames.user.UserState;
 
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -91,11 +92,12 @@ public class CommandSG implements CommandExecutor {
 					return new StatsArgument(sender, args).execute();
 				} else if(args[0].equalsIgnoreCase("config")) {
 					return new ConfigArgument(sender, args).execute();
-				}
-				if(args[0].equalsIgnoreCase("Worldedit")) {
+				} else if(args[0].equalsIgnoreCase("Worldedit")) {
 					Player p = (Player)sender;
 					p.sendMessage(String.valueOf(WorldeditVer));
 					return true;
+				} else if (args[0].equalsIgnoreCase("Reload")) {
+					Bukkit.getPluginManager().disablePlugin(Bukkit.getPluginManager().getPlugin("SurvivalGames"));
 				}
 				
 				// JOIN

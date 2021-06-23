@@ -1,12 +1,10 @@
 package me.maker56.survivalgames.listener;
 
 import java.util.List;
-import java.util.concurrent.Callable;
+
 
 import com.sk89q.worldedit.math.BlockVector2;
-import com.sk89q.worldedit.math.BlockVector3;
 import me.maker56.survivalgames.SurvivalGames;
-import me.maker56.survivalgames.Util;
 import me.maker56.survivalgames.arena.Arena;
 import me.maker56.survivalgames.commands.messages.MessageHandler;
 import me.maker56.survivalgames.commands.permission.Permission;
@@ -19,10 +17,10 @@ import me.maker56.survivalgames.game.GameState;
 
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -37,8 +35,7 @@ import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
+
 
 public class ResetListener implements Listener {
 	
@@ -109,6 +106,7 @@ public class ResetListener implements Listener {
 	@EventHandler
 	public void onBlockFade(BlockFadeEvent event) {
 		if(!event.isCancelled()) {
+			Chunk j = event.getBlock().getChunk();
 			logChunk(event.getBlock().getLocation());
 		}
 	}
@@ -122,12 +120,7 @@ public class ResetListener implements Listener {
 				for(Game game : gm.getGames()) {
 					for(Arena a : game.getArenas()) {
 						if(a.containsBlock(loc)) {
-							Bukkit.getScheduler().runTaskLater(SurvivalGames.instance, new Runnable() {
-								@Override
-								public void run() {
-									event.setCancelled(true);
-								}
-							},600L);
+							event.setCancelled(true);
 							return;
 						}
 					}
@@ -141,7 +134,7 @@ public class ResetListener implements Listener {
 			if(game.getState() == GameState.INGAME || game.getState() == GameState.DEATHMATCH) {
 				Arena a = game.getCurrentArena();
 				if(a.containsBlock(loc)) {
-					BlockVector2 chunkKey = BlockVector2.at(loc.getX(), loc.getZ());
+					BlockVector2 chunkKey = BlockVector2.at(loc.getChunk().getX(), loc.getChunk().getZ());
 					if(!game.getChunksToReset().contains(chunkKey)) {
 						game.getChunksToReset().add(chunkKey.toString());
 						List<String> reset = SurvivalGames.reset.getStringList("Startup-Reset." + game.getName() + "." + a.getName());

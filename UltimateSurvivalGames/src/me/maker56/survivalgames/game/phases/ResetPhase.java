@@ -1,5 +1,6 @@
 package me.maker56.survivalgames.game.phases;
 
+import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.math.BlockVector3;
 import me.maker56.survivalgames.SurvivalGames;
 import me.maker56.survivalgames.Util;
@@ -45,48 +46,35 @@ public class ResetPhase {
             SurvivalGames.gameManager.unload(game);
              List<String> chunks = game.getChunksToReset();
             if (chunks != null) {
-                int s = chunks.size();
-                if (s > 0) {
-                    for (int i = 0; i < s - 1; i++) {
-                        String f = null;
-                        if (chunks.isEmpty()) {
-                            break;
-                        }
-                        try {
-                            f = chunks.get(i);
-                        } catch (IndexOutOfBoundsException e) {
-                            Util.Error(e.toString());
-                            }
-                        if (f != null) {
-                            //resetEntities(f);
-                            chunks.remove(0);
-                        }
-                    }
+                for (int i = 0; i <= chunks.size()-1; i++) {
+                    String k = chunks.get(i).substring(1, chunks.get(i).length() - 1);
+                    String[] split = k.split(", ");
+                    resetEntities(BlockVector2.at(Double.parseDouble(split[0]),Double.parseDouble(split[1])));
                 }
             }
             SurvivalGames.gameManager.load(name);
             SurvivalGames.signManager.updateSigns();
         }
     }
-//    public void resetEntities(final String chunk) {
-//        Bukkit.getScheduler().callSyncMethod(SurvivalGames.instance, (Callable<Void>) () -> {
-//            World world = game.getCurrentArena().getDomeMiddle().getWorld();
-//            Chunk c = world.getChunkAt(chunk.getBlockX(), chunk.getBlockZ());
-//            boolean l = c.isLoaded();
-//            if(!l)
-//                c.load();
-//
-//            for(Entity e : c.getEntities()) {
-//                if(e instanceof Item || e instanceof LivingEntity || e instanceof Arrow) {
-//                    e.remove();
-//                }
-//            }
-//
-//            if(!l)
-//                c.unload();
-//
-//            return null;
-//        });
-//    }
+    public void resetEntities(BlockVector2 chunk) {
+        Bukkit.getScheduler().callSyncMethod(SurvivalGames.instance, (Callable<Void>) () -> {
+            World world = game.getCurrentArena().getDomeMiddle().getWorld();
+            Chunk c = world.getChunkAt(chunk.getBlockX(), chunk.getBlockZ());
+            boolean l = c.isLoaded();
+            if(!l)
+                c.load();
+
+            for(Entity e : c.getEntities()) {
+                if(e instanceof Item || e instanceof LivingEntity || e instanceof Arrow) {
+                    e.remove();
+                }
+            }
+
+            if(!l)
+                c.unload();
+
+            return null;
+        });
+    }
 
 }

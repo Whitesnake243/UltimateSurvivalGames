@@ -94,10 +94,6 @@ public class ArenaManager {
 			List<String> l = new ArrayList<>();
 			l.addAll(Arrays.asList(k).subList(0, k.length));
 			//Convert to real world points
-			Util.Error(l.toString());
-			Util.Error(l.get(0));
-			Util.Error(l.get(l.size()-1));
-			Util.Error(l.size()+"");
 			(new Save(gamename, arenaname, sel, p, s, l)).start();
 		} else {
 			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "The arena isn't defined yet."));
@@ -442,7 +438,8 @@ public class ArenaManager {
 	// ARENA GETTEN
 
 	public Arena getArena(String game, String arenaname) {
-		if(!new File("plugins/SurvivalGames/reset/" + game + arenaname + ".schematic").exists() && SurvivalGames.instance.getConfig().getBoolean("Enable-Arena-Reset")) {
+
+		if(!new File("plugins/SurvivalGames/reset/" + game + arenaname + "/").isDirectory() && SurvivalGames.instance.getConfig().getBoolean("Enable-Arena-Reset")) {
 			System.out.println("[SurvivalGames] Cannot load arena " + arenaname + " in lobby " + game + ": Arena map file is missing! To create a map file, select the arena first with /sg arena select " + game + " " + arenaname + " and type /sg arena save!");
 			return null;
 		}

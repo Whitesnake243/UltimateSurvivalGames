@@ -166,6 +166,7 @@ public class Util {
 				case "FLAME" -> en = Enchantment.ARROW_FIRE;
 				case "INFINITY" -> en = Enchantment.ARROW_INFINITE;
 				case "LUCK_OF_THE_SEA" -> en = Enchantment.LUCK;
+
 			}
 		}
 		return en;
@@ -223,7 +224,23 @@ public class Util {
 		return loc;
 	}
 
-	public static  BlockVector2 StrToBv3(String bv3) {
+	public static  BlockVector3 StrToBv3(String bv3) {
+		Double xMin;
+		Double zMin;
+		Double yMin;
+		bv3 = bv3.substring(1, bv3.length() - 1);
+		String[] a = bv3.split(", ");
+		if(a.length >= 3) {
+			return null;
+		} else {
+			xMin = Double.parseDouble(a[0]);
+			yMin = Double.parseDouble(a[1]);
+			zMin = Double.parseDouble(a[2]);
+			return BlockVector3.at(xMin,yMin,zMin);
+		}
+
+	}
+	public static  BlockVector2 StrToBv2(String bv3) {
 		Double xMin;
 		Double zMin;
 		bv3 = bv3.substring(1, bv3.length() - 1);
@@ -233,7 +250,6 @@ public class Util {
 		} else {
 			xMin = Double.parseDouble(a[0]);
 			zMin = Double.parseDouble(a[1]);
-			Util.Error("X:"+a[0]+", Y:"+a[1]+", Z:"+a[2]);
 			return BlockVector2.at(xMin,zMin);
 		}
 
@@ -303,12 +319,15 @@ public class Util {
 	public static BlockVector3 parseLocToBv3(Double x, Double y, Double z) {
 		return BlockVector3.at(x, y, z);
 	}
+
 	public static BlockVector3 parseLocToBv3(Location loc) {
 		return BlockVector3.at(loc.getX(), loc.getY(), loc.getZ());
 	}
+
 	public static Location parseBv3ToLoc(BlockVector3 bv3, String w){
 		return new Location(Bukkit.getWorld(w),bv3.getX(),bv3.getY(),bv3.getZ());
 	}
+
 	public static String serializeLocation(Location l, boolean exact) {
 		if(l != null) {
 			String key = l.getWorld().getName() + ",";

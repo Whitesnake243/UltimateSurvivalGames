@@ -145,6 +145,7 @@ public class GameManager {
                 arenas.add(arena);
             }
         }
+
 		if(arenas.size() == 0) {
 			System.out.println("[SurvivalGames] No arena in lobby " + name + " loaded!");
 			return false;

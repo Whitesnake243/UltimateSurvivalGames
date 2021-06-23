@@ -1,12 +1,18 @@
 name: SurvivalGames
 authors: [maker56,JefroyTJF,Jerzean]
 main: me.maker56.survivalgames.SurvivalGames
-version: 1.60
+version: 1.17_1
 website: http://dev.bukkit.org/bukkit-plugins/survival_games
 softdepend: [WorldEdit,Vault,Multiverse-Core,BarAPI,PermissionsEx]
-api-version: 1.16
+api-version: 1.17
 
 commands:
   sg:
     description: SurvivalGames Main Command
     aliases: [survivalgames,sg,hg,hungergames]
+  sg lobby:
+    description: SurvivalGames Main Command
+    aliases: []
+  sg arena:
+    description: SurvivalGames Main Command
+    aliases: []
