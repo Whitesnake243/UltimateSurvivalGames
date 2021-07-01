@@ -53,7 +53,7 @@ public class Kit {
 		return costPoints;
 	}
 	
-	public static enum PayType { MONEY, POINTS }
+	public enum PayType { MONEY, POINTS }
 	
 	// ABILITIES / ITEMS
 	private List<ItemStack> items = new ArrayList<>();

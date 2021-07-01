@@ -63,10 +63,9 @@ public class SurvivalGames extends JavaPlugin {
 			System.err.println("[SurvivalGames] ##########################################################");
 			System.err.println("[SurvivalGames] ############  FastAsyncWorldEdit NOT FOUND! ##############");
 			System.err.println("[SurvivalGames] ############    AsyncWorldEdit NOT FOUND!   ##############");
-			System.err.println("[SurvivalGames] ############        PlUGIN DISABLED!!!      ##############");
+			System.err.println("[SurvivalGames] ############     It is highly recomended    ##############");
+			System.err.println("[SurvivalGames] ############     To install one of them     ##############");
 			System.err.println("[SurvivalGames] ##########################################################");
-			Bukkit.getPluginManager().disablePlugin(this);
-			return;
 		}
 		if(Bukkit.getPluginManager().isPluginEnabled("WorldEdit")) {
 			System.err.println("[SurvivalGames] WorldEdit Found!");

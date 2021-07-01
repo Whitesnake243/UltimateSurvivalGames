@@ -523,7 +523,7 @@ public class PlayerListener implements Listener {
 			if(arena == null) {
 				event.setCancelled(true);
 			} else {
-				if(arena.getAllowedMaterials().contains(event.getBlock().getBlockData().getMaterial().name())) {
+				if(arena.getAllowedMaterials().contains(event.getBlock().getBlockData().getMaterial().name().toUpperCase())) {
 					if(event.getBlock().getType() == Material.TNT) {
 						event.getBlock().setType(Material.AIR);
 						event.getBlock().getWorld().spawn(event.getBlock().getLocation(), TNTPrimed.class);
