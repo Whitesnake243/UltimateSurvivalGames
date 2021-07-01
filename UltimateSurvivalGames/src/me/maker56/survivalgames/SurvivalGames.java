@@ -63,7 +63,7 @@ public class SurvivalGames extends JavaPlugin {
 			System.err.println("[SurvivalGames] ##########################################################");
 			System.err.println("[SurvivalGames] ############  FastAsyncWorldEdit NOT FOUND! ##############");
 			System.err.println("[SurvivalGames] ############    AsyncWorldEdit NOT FOUND!   ##############");
-			System.err.println("[SurvivalGames] ############     It is highly recomended    ##############");
+			System.err.println("[SurvivalGames] ############    It is highly recommended    ##############");
 			System.err.println("[SurvivalGames] ############     To install one of them     ##############");
 			System.err.println("[SurvivalGames] ##########################################################");
 		}
