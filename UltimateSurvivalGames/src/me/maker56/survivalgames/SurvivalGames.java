@@ -41,7 +41,7 @@ public class SurvivalGames extends JavaPlugin {
 	
 	public static Economy econ;
 	
-	public static String version = Bukkit.getPluginManager().getPlugin("SurvivalGames").getDescription().getVersion();
+	public static String version;
 	
 	private static PluginManager pm = Bukkit.getPluginManager();
 	
@@ -60,18 +60,18 @@ public class SurvivalGames extends JavaPlugin {
 	
 	public void onEnable() {
 		if (!Bukkit.getPluginManager().isPluginEnabled("FastAsyncWorldEdit") && !Bukkit.getPluginManager().isPluginEnabled("AsyncWorldEdit")) {
-			Util.Error("[SurvivalGames] ##########################################################");
-			Util.Error("[SurvivalGames] ############  FastAsyncWorldEdit NOT FOUND! ##############");
-			Util.Error("[SurvivalGames] ############    AsyncWorldEdit NOT FOUND!   ##############");
-			Util.Error("[SurvivalGames] ############    It is highly recommended    ##############");
-			Util.Error("[SurvivalGames] ############     To install one of them     ##############");
-			Util.Error("[SurvivalGames] ##########################################################");
+			System.err.println("[SurvivalGames] ##########################################################");
+			System.err.println("[SurvivalGames] ############  FastAsyncWorldEdit NOT FOUND! ##############");
+			System.err.println("[SurvivalGames] ############    AsyncWorldEdit NOT FOUND!   ##############");
+			System.err.println("[SurvivalGames] ############    It is highly recommended    ##############");
+			System.err.println("[SurvivalGames] ############     To install one of them     ##############");
+			System.err.println("[SurvivalGames] ##########################################################");
 		}
 		if (Bukkit.getPluginManager().isPluginEnabled("WorldEdit")) {
-			Util.Error("[SurvivalGames] WorldEdit Found!");
+			System.err.println("[SurvivalGames] WorldEdit Found!");
 		}
 		if (Bukkit.getPluginManager().isPluginEnabled("AsyncWorldEdit")) {
-			Util.Error("[SurvivalGames] AsyncWorldEdit Found!");
+			System.err.println("[SurvivalGames] AsyncWorldEdit Found!");
 		}
 		instance = this;
 		version += getDescription().getVersion();
