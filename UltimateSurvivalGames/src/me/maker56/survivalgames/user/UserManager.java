@@ -166,13 +166,17 @@ public class UserManager {
             p.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
         }
 
-
-        if (p.isDead()) {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(SurvivalGames.instance, new Runnable() {
+        if (p.isOnline()) {
+            while(p.isDead()) {
+                int i = 1;
+            }
+            if (p.isDead()) {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(SurvivalGames.instance, new Runnable() {
                 public void run() {
                     setState(p, user);
                 }
             }, 1);
+        }
         } else {
             setState(p, user);
         }

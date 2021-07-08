@@ -175,7 +175,7 @@ public class CommandSG implements CommandExecutor {
 					}
 					
 					
-					int mapid = 0;
+					int mapid;
 					
 					try {
 						mapid = Integer.parseInt(args[1]);

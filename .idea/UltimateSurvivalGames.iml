@@ -12,5 +12,6 @@
     <orderEntry type="library" name="Vault (2)" level="project" />
     <orderEntry type="library" name="worldedit-bukkit-7.3.0-SNAPSHOT-dist (1)" level="project" />
     <orderEntry type="library" name="spigot-1.17" level="project" />
+    <orderEntry type="library" name="spigot-api-1.17-R0.1-SNAPSHOT-shaded" level="project" />
   </component>
 </module>

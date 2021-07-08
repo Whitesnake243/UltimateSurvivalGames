@@ -342,7 +342,7 @@ public class Util {
 		return null;
 	}
 
-	public static void debug(Object object) {
+	public static void debug1(Object object) {
 		if(debug) {
 			System.out.println("[SurvivalGames] [Debug] " + object.toString());
 			for(Player p : Bukkit.getOnlinePlayers()) {
@@ -350,6 +350,9 @@ public class Util {
 					p.sendMessage("&7[Debug] " + object.toString());
 			}
 		}
+	}
+	public static void debug(String e) {
+		System.out.println("[SurvivalGames] " + e);
 	}
 	public static void Error(String e) {
 		SurvivalGames.instance.getLogger().severe("[SurvivalGames] " + e);

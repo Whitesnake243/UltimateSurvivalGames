@@ -41,7 +41,7 @@ public class SurvivalGames extends JavaPlugin {
 	
 	public static Economy econ;
 	
-	public static String version = "SurvivalGames - Version ";
+	public static String version = Bukkit.getPluginManager().getPlugin("SurvivalGames").getDescription().getVersion();
 	
 	private static PluginManager pm = Bukkit.getPluginManager();
 	
@@ -54,41 +54,41 @@ public class SurvivalGames extends JavaPlugin {
 		try {
 			DatabaseManager.close();
 		} catch (NoClassDefFoundError T) {
-			System.out.println("Database Not in Use");
+			Util.debug("Database Not in Use");
 		}
 	}
 	
 	public void onEnable() {
-		if(!Bukkit.getPluginManager().isPluginEnabled("FastAsyncWorldEdit") && !Bukkit.getPluginManager().isPluginEnabled("AsyncWorldEdit")) {
-			System.err.println("[SurvivalGames] ##########################################################");
-			System.err.println("[SurvivalGames] ############  FastAsyncWorldEdit NOT FOUND! ##############");
-			System.err.println("[SurvivalGames] ############    AsyncWorldEdit NOT FOUND!   ##############");
-			System.err.println("[SurvivalGames] ############    It is highly recommended    ##############");
-			System.err.println("[SurvivalGames] ############     To install one of them     ##############");
-			System.err.println("[SurvivalGames] ##########################################################");
+		if (!Bukkit.getPluginManager().isPluginEnabled("FastAsyncWorldEdit") && !Bukkit.getPluginManager().isPluginEnabled("AsyncWorldEdit")) {
+			Util.Error("[SurvivalGames] ##########################################################");
+			Util.Error("[SurvivalGames] ############  FastAsyncWorldEdit NOT FOUND! ##############");
+			Util.Error("[SurvivalGames] ############    AsyncWorldEdit NOT FOUND!   ##############");
+			Util.Error("[SurvivalGames] ############    It is highly recommended    ##############");
+			Util.Error("[SurvivalGames] ############     To install one of them     ##############");
+			Util.Error("[SurvivalGames] ##########################################################");
 		}
-		if(Bukkit.getPluginManager().isPluginEnabled("WorldEdit")) {
-			System.err.println("[SurvivalGames] WorldEdit Found!");
+		if (Bukkit.getPluginManager().isPluginEnabled("WorldEdit")) {
+			Util.Error("[SurvivalGames] WorldEdit Found!");
 		}
-		if(Bukkit.getPluginManager().isPluginEnabled("AsyncWorldEdit")) {
-			System.err.println("[SurvivalGames] AsyncWorldEdit Found!");
+		if (Bukkit.getPluginManager().isPluginEnabled("AsyncWorldEdit")) {
+			Util.Error("[SurvivalGames] AsyncWorldEdit Found!");
 		}
 		instance = this;
 		version += getDescription().getVersion();
-		
+
 		new ConfigLoader().load();
 		DatabaseManager.open();
 		DatabaseManager.load();
 
 		// Hate update notifcations with a passion
 		//startUpdateChecker();
-		
+
 		PermissionHandler.reinitializeDatabase();
 		Game.reinitializeDatabase();
 		MessageHandler.reload();
-		
-		if(setupEconomy())
-			System.out.println("[SurvivalGames] Vault found!");
+
+		if (setupEconomy())
+			Util.debug("[SurvivalGames] Vault found!");
 
 		chestManager = new ChestManager();
 		scoreBoardManager = new ScoreBoardManager();
@@ -96,7 +96,7 @@ public class SurvivalGames extends JavaPlugin {
 		gameManager = new GameManager();
 		userManger = new UserManager();
 		signManager = new SignManager();
-		
+
 		getCommand("sg").setExecutor(new CommandSG());
 
 		//pm.registerEvents(new SelectionListener(), this);
@@ -107,29 +107,34 @@ public class SurvivalGames extends JavaPlugin {
 		pm.registerEvents(new UpdateListener(), this);
 		pm.registerEvents(new SpectatorListener(), this);
 		pm.registerEvents(new ChatListener(), this);
-		
+
 		try {
 			new Metrics(this).start();
 		} catch (IOException e) {
-			System.err.println("[SurvivalGames] Cannot load metrics: " + e.getMessage());
+			Util.debug("[SurvivalGames] Cannot load metrics: " + e.getMessage());
 		}
-		
-		if(getWorldEdit() != null) {
-			System.out.println("[SurvivalGames] Plugin enabled. WorldEdit found!");
+
+		if (getWorldEdit() != null) {
+			Util.debug("[SurvivalGames] Plugin enabled. WorldEdit found!");
 		} else {
-			System.out.println("[SurvivalGames] Plugin disabled.");
+			Util.debug("[SurvivalGames] Plugin disabled.");
 			Bukkit.getPluginManager().disablePlugin(SurvivalGames.instance);
 		}
-		
+
 		signManager.updateSigns();
+
+
+		// UPDATE CHECKING
+		new UpdateChecker(this, 81702).getVersion(version -> {
+			if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
+				Util.debug("There is not a new update available.");
+			} else {
+				Util.debug("A newer version of survivalgames is available. (" + version + ") You can download it here: https://www.spigotmc.org/resources/ultimatesurvivalgames-mc-1-16-1-17.81702 You're using " + SurvivalGames.version);
+
+			}
+		});
+		// VAULT
 	}
-	
-	// UPDATE CHECKING
-    
-    // Removed due to bukkit it only works with bukkit
-	
-	// VAULT
-	
 	private boolean setupEconomy() {
 		if(Bukkit.getPluginManager().isPluginEnabled("Vault")) {
 			RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);

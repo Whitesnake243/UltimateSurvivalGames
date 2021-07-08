@@ -395,7 +395,6 @@ public class PlayerListener implements Listener {
 			
 			if(game.getState() != GameState.INGAME && game.getState() != GameState.DEATHMATCH) {
 				um.leaveGame(p);
-				return;
 			} else {
 				IngamePhase ip = game.getIngamePhrase();
 				ip.killUser(user, null, true, false);
@@ -563,6 +562,9 @@ public class PlayerListener implements Listener {
 				p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("forbidden-command")));
 			}
 		}
+	}
+	public  void onPlayerJoin(PlayerJoinEvent e) {
+
 	}
 
 }
