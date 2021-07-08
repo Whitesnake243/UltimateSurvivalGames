@@ -115,7 +115,7 @@ public class SurvivalGames extends JavaPlugin {
 		}
 
 		if (getWorldEdit() != null) {
-			Util.debug("[SurvivalGames] Plugin enabled. WorldEdit found!");
+			Util.debug("[SurvivalGames] Plugin enabled. WorldEdit Hooked");
 		} else {
 			Util.debug("[SurvivalGames] Plugin disabled.");
 			Bukkit.getPluginManager().disablePlugin(SurvivalGames.instance);
