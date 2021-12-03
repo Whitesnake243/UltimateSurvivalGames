@@ -145,11 +145,47 @@ public class ConfigLoader {
 	public static void reloadKits() {
 		FileConfiguration c = new YMLLoader("plugins/SurvivalGames", "kits.yml").getFileConfiguration();
 		SurvivalGames.kits = c;
-		
-		c.options().header("##### UltimateSurvivalGames Kit Configuration ####\n\nComing soon...");
-		
 		c.addDefault("Enabled", true);
-		
+
+		ArrayList<String> k1 = new ArrayList<>();
+		k1.add(Material.POTION + " effect:regeneration,10,1 name:&cRegeneration");
+		k1.add(Material.STONE_SWORD + " name:&eSword_of_Herobrine enchant:KNOCKBACK,1 enchant:DAMAGE_ALL,1");
+		k1.add(Material.POTION + " effect:jump,18,1 effect:speed,18,2 name:&ePotion_of_a_rabbit lore:&7Give_you_the//&7abilities_of_a_rabbit!");
+		c.addDefault("Kits.Kit1", k1);
+		c.addDefault("Kits.Kit2", k1);
+		c.addDefault("Kits.Kit3", k1);
+		c.addDefault("Kits.Kit4", k1);
+		c.addDefault("Kits.Kit5", k1);
+		c.options().header(
+				"##### UltimateSurvivalGames Kit Configuration #####\n" +
+						"\n" +
+						"## How does this work? ##\n" +
+						"Just like with the chestloot config, Items stored in this file will be show up in the kits in game\n" +
+						"\n" +
+						"Can i add more Kits?\n" +
+						"Atm it only supports 5 kits and wont reconize any others added\n" +
+						"i plan on adding in support for more kits in the future\n"+
+						"\n" +
+						"## How can I modify the items? ##\n" +
+						"You can add or remove items from all of the kits. But Users wont be able to use said kits unless\n" +
+						"you give them the permission for the kit (sg.kit1, sg.kit2, etc" +
+						"\n" +
+						"## How do I format the items? ##\n" +
+						"MATERIAL/ITEMID[:SUBID] [AMOUNT] [SPECIAL THINGS]\n" +
+						"Here are some examples:\n" +
+						"\n" +
+						"# Normal Item:\n" +
+						"\"BREAD\" - is the same like \"BREAD 1\", \"BREAD:0 1\" or \"297:0 1\"\n" +
+						"\n" +
+						"# If you want to set a predefined durability-level, just change the subid:\n" +
+						"\"STONE_SWORD:10\" - This tool has already 10 uses lost.\n" +
+						"\n" +
+						"# You can also add enchantments to an item:\n" +
+						"\"STONE_SWORD enchant:KNOCKBACK,2 enchant:DAMAGE_ALL,3\" - This item has knockback 2 and sharpness 3! Note: Only the vanilla level of an enchantment can be used!\n" +
+						"\n" +
+						"# You can also set a custom name and lore for an item:\n" +
+						"\"EGG name:&eEaster_Egg lore:&7Throw//&7me!\" - This is an egg with a displayname \"Easter Egg\" and the lore \"Throw me\"! Note: Spaces are \"_\" and line breaks in lore the charakters \"//\"\n");
+
 		SurvivalGames.saveKits();
 	}
 	
@@ -268,7 +304,7 @@ public class ConfigLoader {
 		c.options().copyDefaults(true);
 		SurvivalGames.saveReset();
 	}
-	
+
 	public static void reloadConfig() {
 		SurvivalGames.instance.reloadConfig();
 		FileConfiguration c = SurvivalGames.instance.getConfig();
@@ -312,13 +348,13 @@ public class ConfigLoader {
 		
 		allowedBlocks.add("oak_leaves");
 		allowedBlocks.add("dead_bush");
-		allowedBlocks.add("cake");
-		allowedBlocks.add("melon");
-		allowedBlocks.add("brown_mushroom");
-		allowedBlocks.add("red_mushroom");
-		allowedBlocks.add("pumpkin");
-		allowedBlocks.add("tnt");
-		allowedBlocks.add("dirt");
+		allowedBlocks.add("CAKE");
+		allowedBlocks.add("MELON");
+		allowedBlocks.add("BROWN_MUSHROOM");
+		allowedBlocks.add("TNT");
+		allowedBlocks.add("PUMPKIN");
+		allowedBlocks.add("TNT");
+		allowedBlocks.add("DIRT");
 		
 		c.addDefault("Default.Arena.Allowed-Blocks", allowedBlocks);
 		
@@ -333,9 +369,21 @@ public class ConfigLoader {
 		allowedCmds.add("/hungergames");
 		allowedCmds.add("/survivalgames");
 		c.addDefault("Allowed-Commands", allowedCmds);
-		
-		
+
+
+		c.addDefault("Kit.Item", Material.ARMOR_STAND + " name:&eKits lore:&7Rightclick_to_open//&7the_Kits_menu!");
+		c.addDefault("Kit.InventoryTitle", "Pick your Kit!");
+		c.addDefault("Kit.ItemInvLoc", 1);
+		ArrayList<String> k = new ArrayList<>();
+		k.add("Kit1");
+		k.add("Kit2");
+		k.add("Kit3");
+		k.add("Kit4");
+		k.add("kit5");
+		c.addDefault("Kit.Enabled.Names", k);
+
 		c.addDefault("Voting.Item", Material.CHEST + " name:&eVote_for_an_arena lore:&7Rightclick_to_open//&7the_voting_menu!");
+		c.addDefault("Voting.ItemInvLoc",2);
 		c.addDefault("Voting.InventoryTitle", "Vote for an arena!");
 		c.addDefault("Voting.ArenaItem", Material.MAP + " 0 lore:&7Click_to_vote//&7for_this_arena!");
 		c.addDefault("Leave-Item", Material.MAGMA_CREAM + " name:&eLeave_the_lobby lore:&7Rightclick_to_leave//&7the_lobby!");
@@ -374,7 +422,7 @@ public class ConfigLoader {
 		SurvivalGames.instance.saveConfig();
 		
 		if(!c.getBoolean("Enable-Arena-Reset")) {
-			System.out.println("[SurvivalGames] Warning: Arena map reset ist disabled.");
+			System.out.println("[SurvivalGames] Warning: Arena map reset is disabled.");
 		}
 	}
 	
@@ -431,6 +479,7 @@ public class ConfigLoader {
 		c.addDefault("game-no-vote", "&cYou can only vote in the voting phase of the game!");
 		c.addDefault("game-bad-vote", "&cThis isn't a valid vote ID!");
 		c.addDefault("game-already-vote", "&cYou've already voted for an arena!");
+		c.addDefault("game-already-kit", "&cYou've already chosen a kit for this arena!");
 		c.addDefault("game-no-voting-enabled", "&cSorry, voting isn't enabled! The arena will choosed random!");
 		c.addDefault("game-success-vote", "You've voted successfully for arena &b%0%&6!");
 		c.addDefault("game-extra-vote", "You've voted with &b%0% &6votes!");

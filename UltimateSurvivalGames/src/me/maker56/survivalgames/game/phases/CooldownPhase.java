@@ -46,7 +46,7 @@ public class CooldownPhase {
 				user.getPlayer().teleport(arena.getSpawns().get(i));
 				
 				for(User ouser : game.getUsers()) {
-					user.getPlayer().showPlayer(ouser.getPlayer());
+					user.getPlayer().showPlayer(SurvivalGames.getInstance(),ouser.getPlayer());
 				}
 			}
 		}

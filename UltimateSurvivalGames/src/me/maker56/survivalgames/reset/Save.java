@@ -93,7 +93,7 @@ public class Save extends Thread {
             BlockVector3 Max;
             BlockVector3 Min;
             String k;
-            int minX = 0,minZ = 0,maxX = 0,maxZ = 0,chunkX,chunkZ;
+            int minX = 0,minZ = 0,minY = 0,maxX = 0,maxZ = 0,maxY = 0,chunkX,chunkZ,chunkY;
             for (int i = 0; i <= l.size()-1; i++) {
                 String o = l.get(i);
                 if (i >= l.size()-1) {
@@ -101,14 +101,22 @@ public class Save extends Thread {
                 } else {
                     k = o.substring(1,l.get(i).length());
                 }
+                //
                 //String k = "-3, 4";
                 String[] split = k.split(", ");
                 chunkX = Integer.parseInt(split[0]);
-                chunkZ = Integer.parseInt(split[1]);
+                chunkY = Integer.parseInt(split[1]);
+                chunkZ = Integer.parseInt(split[2]);
                 if(chunkX >= 0){
 
                     minX = chunkX*16;
                     maxX = minX+15;
+
+                }
+                if(chunkY >= 0){
+
+                    minY = chunkY*16;
+                    maxY = minY+15;
 
                 }
                 if(chunkZ >= 0){
@@ -123,15 +131,21 @@ public class Save extends Thread {
                     maxX = minX+15;
 
                 }
+                if(chunkY < 0){
+
+                    minY = chunkY*16;
+                    maxY = minY+15;
+
+                }
                 if(chunkZ < 0){
 
                     minZ = chunkZ*16;
                     maxZ = minZ+15;
 
                 }
-                Max = BlockVector3.at(maxX,255, maxZ);
-                Min = BlockVector3.at(minX,0, minZ);
-                file = new File("plugins/SurvivalGames/reset/" + lobby + arena + "/" + split[0] +","+ split[1] + ".schematic");
+                Max = BlockVector3.at(maxX, maxY, maxZ);
+                Min = BlockVector3.at(minX, minY, minZ);
+                file = new File("plugins/SurvivalGames/reset/" + lobby + arena + "/" + split[0] +","+ split[1] + "," + split[2] + ".schematic");
                 file.mkdirs();
                 if(file.exists()) {
                     file.delete();

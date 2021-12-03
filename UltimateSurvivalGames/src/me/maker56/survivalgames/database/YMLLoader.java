@@ -11,13 +11,7 @@ public class YMLLoader {
 	
 	private File rawFile;
 	private String path, fileName;
-	
-	@Deprecated
-	public YMLLoader(String path, String target, String res) {
-		this.path = path;
-		this.fileName = target;
-	}
-	
+
 	public YMLLoader(String path, String target) {
 		this.path = path;
 		this.fileName = target;

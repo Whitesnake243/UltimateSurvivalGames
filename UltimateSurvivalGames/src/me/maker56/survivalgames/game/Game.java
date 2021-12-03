@@ -2,9 +2,6 @@ package me.maker56.survivalgames.game;
 
 import java.util.*;
 
-import com.sk89q.worldedit.math.BlockVector2;
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.world.chunk.Chunk;
 import me.maker56.survivalgames.SurvivalGames;
 import me.maker56.survivalgames.Util;
 import me.maker56.survivalgames.arena.Arena;
@@ -18,6 +15,7 @@ import me.maker56.survivalgames.game.phases.FinishPhase;
 import me.maker56.survivalgames.game.phases.IngamePhase;
 import me.maker56.survivalgames.game.phases.ResetPhase;
 import me.maker56.survivalgames.game.phases.VotingPhase;
+import me.maker56.survivalgames.kits.Kit;
 import me.maker56.survivalgames.scoreboard.CustomScore;
 import me.maker56.survivalgames.scoreboard.ScoreboardPhase;
 import me.maker56.survivalgames.user.SpectatorUser;
@@ -26,6 +24,7 @@ import me.maker56.survivalgames.user.UserState;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.ChatColor;
 
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -33,6 +32,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -56,9 +56,10 @@ public class Game {
 	
 	private String name;
 	private Location lobby;
-	private boolean voting, reset;
+	private boolean voting, reset, kit;
 	private int maxVotingArenas;
 	private List<Arena> arenas;
+	private List<String> KitList;
 	private int reqplayers, maxplayers;
 	private GameState state;
 	private int lobbytime, cooldown = 30;
@@ -74,12 +75,13 @@ public class Game {
 	private List<User> users = new ArrayList<>();
 	private List<Chest> chests = new ArrayList<>();
 	private List<String> rChunks = new ArrayList<>();
-	public ArrayList<String> voted = new ArrayList<>();
+	public ArrayList<String> voted = new ArrayList<>(),Kited = new ArrayList<>();
 	
-	public Game(String name, Location lobby, boolean voting, int lobbytime, int maxVotingArenas, int reqplayers, List<Arena> arenas, boolean reset) {
+	public Game(String name, Location lobby, boolean voting, boolean kit, int lobbytime, int maxVotingArenas, int reqplayers, List<Arena> arenas, boolean reset) {
 		this.name = name;
 		this.lobby = lobby;
 		this.voting = voting;
+		this.kit = kit;
 		this.lobbytime = lobbytime;
 		this.maxVotingArenas = maxVotingArenas;
 		this.arenas = arenas;
@@ -99,6 +101,9 @@ public class Game {
 	
 	public List<String> getVotedUsers() {
 		return voted;
+	}
+	public List<String> getKitedUsers() {
+		return Kited;
 	}
 	
 	// START SPECTATOR
@@ -140,8 +145,8 @@ public class Game {
 			
 			playerNavigatorInventory = Bukkit.createInventory(null, inv, inventoryTitle);
 			
-			ItemStack head = new ItemStack(Material.PLAYER_HEAD, 0);
-			head.setDurability((short) 3);
+			ItemStack head = new ItemStack(Material.PLAYER_HEAD, 1);
+			SkullMeta skull = (SkullMeta) head.getItemMeta();
 			ItemMeta im = head.getItemMeta();
 			List<String> lore = new ArrayList<>();
 			lore.add(org.bukkit.ChatColor.translateAlternateColorCodes('&',"&7Click to spectate!"));
@@ -149,8 +154,9 @@ public class Game {
 				if(i >= inv)
 					break;
 				User u = users.get(i);
-				im.setDisplayName("&e" + u.getName());
-				head.setItemMeta(im);
+				skull.setDisplayName("&e" + u.getPlayer().getName());
+				skull.setOwningPlayer(u.getPlayer());
+				head.setItemMeta(skull);
 				playerNavigatorInventory.setItem(i, head);
 			}
 		}
@@ -166,7 +172,7 @@ public class Game {
 		}
 		
 		for(User u : users) {
-			u.getPlayer().hidePlayer(user.getPlayer());
+			u.getPlayer().hidePlayer(SurvivalGames.getInstance(), user.getPlayer());
 		}
 		user.clear();
 		user.getPlayer().setAllowFlight(true);
@@ -197,7 +203,7 @@ public class Game {
 		}
 	}
 	
-	public void sendSpectators(BaseComponent[] msg) {
+	public void sendSpectators(TextComponent msg) {
 		for(SpectatorUser su : spectators) {
 			su.sendMessage(msg);
 		}
@@ -493,7 +499,9 @@ public class Game {
 	public boolean isVotingEnabled() {
 		return voting;
 	}
-	
+	public boolean isKitsEnabled() {
+		return kit;
+	}
 	public int getMaxVotingArenas() {
 		return maxVotingArenas;
 	}
@@ -519,7 +527,7 @@ public class Game {
 		}
 	}
 	
-	public void sendMessage(BaseComponent[] message) {
+	public void sendMessage(TextComponent message) {
 		for(User user : users) {
 			user.sendMessage(message);
 		}

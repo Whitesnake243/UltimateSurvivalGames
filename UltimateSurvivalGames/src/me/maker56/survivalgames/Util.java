@@ -143,7 +143,7 @@ public class Util {
 	// ENCHANTMENT
 	public static Enchantment getEnchantment(String enc) {
 		enc = enc.toUpperCase();
-		Enchantment en = Enchantment.getByName(enc);
+		Enchantment en = Enchantment.getByKey(NamespacedKey.minecraft(enc));
 		
 		if(en == null) {
 			switch (enc) {

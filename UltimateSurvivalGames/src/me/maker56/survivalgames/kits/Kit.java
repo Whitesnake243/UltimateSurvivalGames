@@ -3,6 +3,7 @@ package me.maker56.survivalgames.kits;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class Kit {
@@ -11,18 +12,18 @@ public class Kit {
 	private double costMoney;
 	private int costPoints;
 	private PayType type;
-	private ItemStack itemstack;
+	private Inventory inventory;
 	
-	protected int slot = -1;
+	private int slot = 0;
 	
-	public Kit(String name, String description, ItemStack itemstack, String permission, double money, int points, PayType type) {
+	public Kit(String name, String description, Inventory Inventory, String permission, double money, int points, PayType type) {
 		this.name = name;
 		this.description = description;
 		this.permission = permission;
 		this.costMoney = money;
 		this.costPoints = points;
 		this.type = type;
-		this.itemstack = itemstack;
+		this.inventory = inventory;
 	}
 	
 	public String getName() {
@@ -37,10 +38,13 @@ public class Kit {
 		return permission;
 	}
 	
-	public ItemStack getItemStack() {
-		return itemstack;
+	public Inventory getItemStack() {
+		return inventory;
 	}
-	
+
+	public void setKits(int kits) {
+		this.slot = kits;
+	}
 	public PayType getPayType() {
 		return type;
 	}

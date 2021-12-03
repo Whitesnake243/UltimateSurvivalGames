@@ -4,6 +4,7 @@ import java.util.List;
 
 
 import com.sk89q.worldedit.math.BlockVector2;
+import com.sk89q.worldedit.math.BlockVector3;
 import me.maker56.survivalgames.SurvivalGames;
 import me.maker56.survivalgames.arena.Arena;
 import me.maker56.survivalgames.commands.messages.MessageHandler;
@@ -134,7 +135,8 @@ public class ResetListener implements Listener {
 			if(game.getState() == GameState.INGAME || game.getState() == GameState.DEATHMATCH) {
 				Arena a = game.getCurrentArena();
 				if(a.containsBlock(loc)) {
-					BlockVector2 chunkKey = BlockVector2.at(loc.getChunk().getX(), loc.getChunk().getZ());
+					int Y = (int) loc.getY()/16;
+					BlockVector3 chunkKey = BlockVector3.at(loc.getChunk().getX(), Y, loc.getChunk().getZ());
 					if(!game.getChunksToReset().contains(chunkKey)) {
 						game.getChunksToReset().add(chunkKey.toString());
 						List<String> reset = SurvivalGames.reset.getStringList("Startup-Reset." + game.getName() + "." + a.getName());

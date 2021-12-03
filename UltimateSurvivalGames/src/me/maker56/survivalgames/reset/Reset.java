@@ -88,16 +88,23 @@ public class Reset extends Thread {
                 SurvivalGames.saveDataBase();
             }
             BlockVector3 Min;
-            int minX = 0,minZ = 0,maxX = 0,maxZ = 0,chunkX,chunkZ;
+            int minX = 0,minY = 0,minZ = 0,maxX = 0,maxY= 0,maxZ = 0,chunkX,chunkZ,chunkY;
         for (int i = 0; i <= chunks.size()-1; i++) {
             if (!chunks.isEmpty()) {
                 String k = chunks.get(i).substring(1, chunks.get(i).length() - 1);
                 String[] split = k.split(", ");
                 chunkX = Integer.parseInt(split[0]);
-                chunkZ = Integer.parseInt(split[1]);
+                chunkY = Integer.parseInt(split[1]);
+                chunkZ = Integer.parseInt(split[2]);
                 if(chunkX >= 0){
 
                     minX = chunkX*16;
+                    //maxX = minX+15;
+
+                }
+                if(chunkY >= 0){
+
+                    minY = chunkY*16;
                     //maxX = minX+15;
 
                 }
@@ -113,16 +120,29 @@ public class Reset extends Thread {
                     //maxX = minX+15;
 
                 }
+                if(chunkY < 0){
+
+                    minY = chunkY*16;
+                    //maxX = minX+15;
+
+                }
+                if(chunkY < 0){
+
+                    minX = chunkX*16;
+                    //maxX = minX+15;
+
+                }
                 if(chunkZ < 0){
 
                     minZ = chunkZ*16;
                     //maxZ = minZ+15;
 
                 }
-                Min = BlockVector3.at(minX,0, minZ);
-                File file = new File("plugins/SurvivalGames/reset/" + lobby + arena + "/" + split[0] +","+ split[1] + ".schematic");
+                Min = BlockVector3.at(minX, minY, minZ);
+                File file = new File("plugins/SurvivalGames/reset/" + lobby + arena + "/" + split[0] +","+ split[1] + ","+ split[2] + ".schematic");
                 if (!file.exists()) {
-                    Util.Error("Cant find chunk a schem for Arena:"+ arena +" In Lobby:"+ lobby +" Missing File:"+split[0]+","+split[1]+".schematic");
+                    Util.Error("Cant find a chunk schem for Arena:"+ arena +" In Lobby:"+ lobby +" Missing File:"+split[0]+","+split[1]+ ","+ split[2] + ".schematic");
+                    Util.Error("Save the arena again in order to fix this!!!");
                     return;
                 }
                 try {

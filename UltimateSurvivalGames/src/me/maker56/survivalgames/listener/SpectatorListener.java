@@ -9,10 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -43,8 +40,8 @@ public class SpectatorListener implements Listener {
 
 
 	@EventHandler
-	public void onItemPickup(PlayerPickupItemEvent event) {
-		if(um.isSpectator(event.getPlayer().getName()))
+	public void onItemPickup(EntityPickupItemEvent event) {
+		if(um.isSpectator(event.getEntity().getName()))
 			event.setCancelled(true);
 	}
 

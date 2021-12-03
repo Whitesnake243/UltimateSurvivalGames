@@ -83,7 +83,7 @@ public class ArenaManager {
 			Selection sel = new Selection(s.getMinimumPoint(), s.getMaximumPoint());
 			p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "Saving arena... This may take a while. Laggs can occure. You'll get a message, when the save is completed."));
 			BlockVector3 g;
-			Set<BlockVector2> h = s.getChunks();
+			Set<BlockVector3> h = s.getChunkCubes();
 			String j = h.toString();
 			//Remove first []'s
 			j = j.substring(1, j.length() - 1);

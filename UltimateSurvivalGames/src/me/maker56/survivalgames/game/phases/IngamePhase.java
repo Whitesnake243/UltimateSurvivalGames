@@ -49,7 +49,7 @@ public class IngamePhase {
 	private int players;
 	// GAME STATISTIC END
 	
-	private BukkitTask deathmatch, chestrefill, gracetask;
+	private BukkitTask deathmatch, chestrefill, gracetask, KitTask;
 	
 	public IngamePhase(Game game) {
 		this.game = game;
@@ -95,6 +95,7 @@ public class IngamePhase {
 				public void run() {
 					game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-grace-period-ended")));
 					grace = false;
+
 					startTask();
 				}
 			}, period * 20);
@@ -104,9 +105,9 @@ public class IngamePhase {
 	}
 	
 	private void startTask() {
-		if(lightningFP) {
-			startLightningTask();
-		}
+		//if(lightningFP) {
+			//startLightningTask();
+		//}
 		task = Bukkit.getScheduler().runTaskTimer(SurvivalGames.instance, new Runnable() {
 			public void run() {
 				
@@ -151,7 +152,7 @@ public class IngamePhase {
 				game.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-player-die-killer").replace("%0%", user.getName()).replace("%1%", killer.getName())));
 				double killMoney = game.getCurrentArena().getMoneyOnKill();
 				if(killMoney > 0 && SurvivalGames.econ != null) {
-					SurvivalGames.econ.depositPlayer(killer.getName(), killMoney);
+					SurvivalGames.econ.depositPlayer(killer.getPlayer(), killMoney);
 					killer.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("arena-money-kill").replace("%0%", Double.valueOf(killMoney).toString()).replace("%1%", user.getName())));
 				}
 				
@@ -200,7 +201,7 @@ public class IngamePhase {
 			winner.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-win-winner-message").replace("%0%", game.getCurrentArena().getName())));
 			double winMoney = game.getCurrentArena().getMoneyOnWin();
 			if(winMoney > 0 && SurvivalGames.econ != null) {
-				SurvivalGames.econ.depositPlayer(winner.getName(), winMoney);
+				SurvivalGames.econ.depositPlayer(winner.getPlayer(), winMoney);
 				winner.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("arena-money-win").replace("%0%", Double.valueOf(winMoney).toString())));
 			}
 			

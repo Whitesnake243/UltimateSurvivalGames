@@ -16,16 +16,17 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class UpdateListener implements Listener {
-	private static String updateInfo = null, versiona = SurvivalGames.version;
+	private static String updateInfo = null, version = Bukkit.getPluginManager().getPlugin("SurvivalGames").getDescription().getVersion();
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player p = event.getPlayer();
 		if(PermissionHandler.hasPermission(p, Permission.LOBBY) || PermissionHandler.hasPermission(p, Permission.ARENA)) {
 			new UpdateChecker(Bukkit.getPluginManager().getPlugin("SurvivalGames"), 81702).getVersion(version -> {
-				if (!SurvivalGames.version.equalsIgnoreCase(version)) {
+				if (!version.equalsIgnoreCase(SurvivalGames.instance.getDescription().getVersion())) {
 					Util.debug("A newer version of survivalgames is available. (" + version + ") You can download it here: https://www.spigotmc.org/resources/ultimatesurvivalgames-mc-1-16-1-17.81702 You're using " + SurvivalGames.version);
 					updateInfo = MessageHandler.getMessage("prefix") + "§eA newer version of SurvivalGames is available. §7(§b" + version + "§7) §eYou can download it here: §bhttps://www.spigotmc.org/resources/ultimatesurvivalgames-mc-1-16-1-17.81702 §7You're using §o" + SurvivalGames.version;
+					p.sendMessage(updateInfo);
 				}
 			});
 		}

@@ -12,6 +12,7 @@ import me.maker56.survivalgames.commands.arguments.StatsArgument;
 import me.maker56.survivalgames.commands.messages.MessageHandler;
 import me.maker56.survivalgames.commands.permission.Permission;
 import me.maker56.survivalgames.commands.permission.PermissionHandler;
+import me.maker56.survivalgames.database.ConfigReloader;
 import me.maker56.survivalgames.game.Game;
 import me.maker56.survivalgames.game.GameState;
 import me.maker56.survivalgames.game.phases.IngamePhase;
@@ -92,12 +93,6 @@ public class CommandSG implements CommandExecutor {
 					return new StatsArgument(sender, args).execute();
 				} else if(args[0].equalsIgnoreCase("config")) {
 					return new ConfigArgument(sender, args).execute();
-				} else if(args[0].equalsIgnoreCase("Worldedit")) {
-					Player p = (Player)sender;
-					p.sendMessage(String.valueOf(WorldeditVer));
-					return true;
-				} else if (args[0].equalsIgnoreCase("Reload")) {
-					Bukkit.getPluginManager().disablePlugin(Bukkit.getPluginManager().getPlugin("SurvivalGames"));
 				}
 				
 				// JOIN

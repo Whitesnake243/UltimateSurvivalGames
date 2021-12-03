@@ -4,12 +4,15 @@ import me.maker56.survivalgames.game.Game;
 import me.maker56.survivalgames.statistics.StatisticData;
 import me.maker56.survivalgames.statistics.StatisticLoader;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 public abstract class UserState {
@@ -22,7 +25,8 @@ public abstract class UserState {
 	private boolean allowFlying, flying;
 	private float fall;
 	private ItemStack[] Inventory;
-	
+	private Collection<PotionEffect> PotionEffect;
+
 	private long joinTime = System.currentTimeMillis();
 	private Game game;
 	
@@ -39,9 +43,11 @@ public abstract class UserState {
 		this.flying = p.isFlying();
 		this.fireticks = p.getFireTicks();
 		this.Inventory = p.getInventory().getContents();
+		this.PotionEffect = p.getActivePotionEffects();
 		
 		StatisticLoader.load(this);
 	}
+
 	
 	
 	public Game getGame() {
@@ -91,13 +97,15 @@ public abstract class UserState {
 
 	public ItemStack[] getInventory() { return this.Inventory; }
 
+	public Collection<PotionEffect> getPotionEffects() {return this.PotionEffect; }
+
 	public void clear() {
 		for (Iterator<PotionEffect> i = player.getActivePotionEffects().iterator(); i.hasNext();) {
 			player.removePotionEffect(i.next().getType());
 		}
 		player.setWalkSpeed(0.2F);
 		player.setFlySpeed(0.1F);
-		player.setMaxHealth(20D);
+		player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue());
 		player.setHealth(20D);
 		player.setFoodLevel(20);
 		player.setLevel(0);
@@ -133,7 +141,7 @@ public abstract class UserState {
 		return player.getName();
 	}
 	
-	public void sendMessage(BaseComponent[] message) {
+	public void sendMessage(TextComponent message) {
 		player.spigot().sendMessage(message);
 	}
 	

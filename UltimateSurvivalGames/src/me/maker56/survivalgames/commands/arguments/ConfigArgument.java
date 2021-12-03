@@ -37,12 +37,7 @@ public class ConfigArgument {
 		} else {
 			if(args[1].equalsIgnoreCase("reload")) {
 				if(args.length == 2) {
-					ConfigReloader.reloadMessage();
-					ConfigReloader.reloadConfig();
-					ConfigReloader.reloadDatabase();
-					ConfigReloader.reloadSigns();
-					ConfigReloader.reloadChestloot();
-					ConfigReloader.reloadScoreboard();
+					ConfigReloader.reloadall();
 					p.sendMessage(MessageHandler.getMessage("prefix") + "You've reloaded all configuration files successfully!");
 					return true;
 				}

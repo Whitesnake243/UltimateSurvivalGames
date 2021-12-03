@@ -108,8 +108,8 @@ public class PlayerListener implements Listener {
 	public void onPlayerInteractEvent(PlayerInteractEvent event) {
 		if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Player p = event.getPlayer();
-			ItemStack hand = p.getItemInHand();
-			if(hand == null || hand.getType() == Material.AIR)
+			ItemStack hand = p.getInventory().getItemInMainHand();
+			if(hand.getType() == Material.AIR)
 				return;
 			
 			if(!um.isPlaying(p.getName()) && !um.isSpectator(p.getName()))
@@ -144,6 +144,17 @@ public class PlayerListener implements Listener {
 					}
 					event.setCancelled(true);
 					p.openInventory(g.getVotingPhrase().getVotingInventory());
+				} else  if (hand.equals(VotingPhase.getKitOpenItemStack())) {
+					if(g.getState() != GameState.VOTING) {
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("prefix") + "&cKits aren't active right now!"));
+						return;
+					}
+					if(!g.getVotingPhrase().canVote(p.getName())) {
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', MessageHandler.getMessage("game-already-Kit")));
+						return;
+					}
+					event.setCancelled(true);
+					p.openInventory(g.getVotingPhrase().getKitInventroy());
 				}
 			} else  {
 				SpectatorUser su = um.getSpectator(p.getName());

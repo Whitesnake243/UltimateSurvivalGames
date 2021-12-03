@@ -12,6 +12,7 @@ import me.maker56.survivalgames.database.ConfigLoader;
 import me.maker56.survivalgames.database.sql.DatabaseManager;
 import me.maker56.survivalgames.game.Game;
 import me.maker56.survivalgames.game.GameManager;
+import me.maker56.survivalgames.kits.KitManager;
 import me.maker56.survivalgames.listener.*;
 import me.maker56.survivalgames.metrics.Metrics;
 import me.maker56.survivalgames.scoreboard.ScoreBoardManager;
@@ -36,12 +37,13 @@ public class SurvivalGames extends JavaPlugin {
 	public static UserManager userManger;
 	public static SignManager signManager;
 	public static ScoreBoardManager scoreBoardManager;
+	public static KitManager kitManager;
 	public static Region s;
 	public static int WorldeditVer;
 	
 	public static Economy econ;
 	
-	public static String version;
+	public static String version = "";
 	
 	private static PluginManager pm = Bukkit.getPluginManager();
 	
@@ -74,14 +76,13 @@ public class SurvivalGames extends JavaPlugin {
 			System.err.println("[SurvivalGames] AsyncWorldEdit Found!");
 		}
 		instance = this;
-		version += getDescription().getVersion();
+		version = this.getDescription().getVersion();
 
 		new ConfigLoader().load();
 		DatabaseManager.open();
 		DatabaseManager.load();
-
+		instance.getConfig();
 		// Hate update notifcations with a passion
-		//startUpdateChecker();
 
 		PermissionHandler.reinitializeDatabase();
 		Game.reinitializeDatabase();
@@ -126,7 +127,8 @@ public class SurvivalGames extends JavaPlugin {
 
 		// UPDATE CHECKING
 		new UpdateChecker(this, 81702).getVersion(version -> {
-			if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
+			String k= this.getDescription().getVersion();
+			if (k.equalsIgnoreCase(version)) {
 				Util.debug("There is not a new update available.");
 			} else {
 				Util.debug("A newer version of survivalgames is available. (" + version + ") You can download it here: https://www.spigotmc.org/resources/ultimatesurvivalgames-mc-1-16-1-17.81702 You're using " + SurvivalGames.version);

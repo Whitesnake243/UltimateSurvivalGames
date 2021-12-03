@@ -7,12 +7,15 @@ import me.maker56.survivalgames.commands.messages.MessageHandler;
 import me.maker56.survivalgames.commands.permission.PermissionHandler;
 import me.maker56.survivalgames.game.Game;
 import me.maker56.survivalgames.game.GameState;
+import me.maker56.survivalgames.kits.Kit;
 import me.maker56.survivalgames.user.User;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ClickEvent.Action;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -28,11 +31,16 @@ import java.util.List;
 public class VotingPhase {
 	
 	// STATIC VARIABLES
-	private static ItemStack voteItem, arenaItem;
-	private static String title;
+	private static ItemStack Kititem, voteItem, arenaItem;
+	private static String title, Ktitle;
+	private static int VI, KI;
 	
 	public static ItemStack getVotingOpenItemStack() {
 		return voteItem;
+	}
+
+	public static ItemStack getKitOpenItemStack() {
+		return Kititem;
 	}
 	
 	public static String getVotingInventoryTitle() {
@@ -40,13 +48,21 @@ public class VotingPhase {
 	}
 	
 	public static void reinitializeDatabase() {
+		Kititem = Util.parseItemStack(SurvivalGames.instance.getConfig().getString("Kit.Item"));
+		KI = SurvivalGames.instance.getConfig().getInt("Kit.ItemInvLoc");
+		VI = SurvivalGames.instance.getConfig().getInt("Voting.ItemInvLoc");
 		voteItem = Util.parseItemStack(SurvivalGames.instance.getConfig().getString("Voting.Item"));
 		arenaItem = Util.parseItemStack(SurvivalGames.instance.getConfig().getString("Voting.ArenaItem"));
+		Ktitle = SurvivalGames.instance.getConfig().getString("Kit.InventoryTitle");
 		title = SurvivalGames.instance.getConfig().getString("Voting.InventoryTitle");
 		if(title.length() > 32) {
 			title = title.substring(0, 32);
 		}
+		if(Ktitle.length() > 32) {
+			Ktitle = Ktitle.substring(0, 32);
+		}
 		title = ChatColor.translateAlternateColorCodes('&', title);
+		Ktitle = ChatColor.translateAlternateColorCodes('&', Ktitle);
 	}
 	
 	private Game game;
@@ -55,7 +71,8 @@ public class VotingPhase {
 	private int time;
 	
 	public ArrayList<Arena> voteArenas = new ArrayList<Arena>();
-	private Inventory voteInventory;
+	public ArrayList<Kit> kits = new ArrayList<Kit>();
+	private Inventory voteInventory, KitInventroy;
 	
 	
 	public VotingPhase(Game game) {
@@ -83,6 +100,14 @@ public class VotingPhase {
 				}
 			}
 		}
+		if(game.isKitsEnabled()) {
+			if(Kititem != null) {
+				generateKitInventory();
+				for(User user : game.getUsers()) {
+					equipPlayer(user);
+				}
+			}
+		}
 		
 		task = Bukkit.getScheduler().runTaskTimer(SurvivalGames.instance, new Runnable() {
 			public void run() {
@@ -103,6 +128,7 @@ public class VotingPhase {
 				} else if(time == 0) {
 					for(User user : game.getUsers()) {
 						user.getPlayer().getInventory().setItem(1, null);
+						user.getPlayer().getInventory().setItem(2, null);
 						user.getPlayer().updateInventory();
 					}
 					
@@ -132,14 +158,66 @@ public class VotingPhase {
 	public Inventory getVotingInventory() {
 		return voteInventory;
 	}
+
+	public Inventory getKitInventroy() {
+		return KitInventroy;
+	}
 	
 	public void equipPlayer(User user) {
-		user.getPlayer().getInventory().setItem(1, voteItem);
+		user.getPlayer().getInventory().setItem(VI, voteItem);
+		user.getPlayer().getInventory().setItem(KI, Kititem);
 		user.getPlayer().updateInventory();
 	}
 	
 	public List<Arena> getArenas() {
 		return voteArenas;
+	}
+
+	public List<Kit> getKits() {
+		return kits;
+	}
+
+	public void generateKitInventory() {
+		int kits = getKits().size();
+		int size = 9;
+
+		if (kits >= 9) {
+			size = 9;
+		} else if (kits >= 18) {
+			size = 18;
+		} else if (kits >= 27) {
+			size = 27;
+		} else if (kits >= 36) {
+			size = 36;
+		} else if (kits >= 45) {
+			size = 45;
+		} else if (kits >= 54) {
+			size = 54;
+		}
+		KitInventroy = Bukkit.createInventory(null, size, title);
+
+		int place = size / kits;
+		int c = 0;
+
+		for(int i = 0; i < size; i++) {
+			Kit a;
+			try {
+				a = getKits().get(i);
+			} catch(IndexOutOfBoundsException e) {
+				break;
+			}
+
+			if(a == null)
+				break;
+
+			ItemStack is = new ItemStack(Material.getMaterial(Kititem.getType().name()));
+			ItemMeta im = is.getItemMeta();
+			im.setDisplayName((i + 1) + ". §e§l" + a.getName());
+			is.setItemMeta(im);
+
+			KitInventroy.setItem(c, is);
+			c += place;
+		}
 	}
 	
 	public void generateInventory() {
@@ -234,7 +312,7 @@ public class VotingPhase {
 			return null;
 		}
 	}
-	
+
 	private void sendVoteMessage() {
 		if(game.isVotingEnabled()) {
 			if(voteItem == null) {
@@ -243,9 +321,10 @@ public class VotingPhase {
 			
 			int i = 1;
 			for(Arena arena : voteArenas) {
-				game.sendMessage(new ComponentBuilder(ChatColor.translateAlternateColorCodes('&',"&3" + i + "&7. &6" + arena.getName() + " &7(&e" + arena.getVotes() + "&7)"))
-				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to vote for arena " + arena.getName()).create()))
-				.event(new ClickEvent(Action.RUN_COMMAND, "/sg vote " + i)).create());
+				TextComponent Mes = new TextComponent(ChatColor.translateAlternateColorCodes('&',"&3" + i + "&7. &6" + arena.getName() + " &7(&e" + arena.getVotes() + "&7)"));
+				Mes.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to vote for arena " + arena.getName())));
+				Mes.setClickEvent(new ClickEvent(Action.RUN_COMMAND, "/sg vote " + i));
+				game.sendMessage(Mes);
 				i++;
 			}
 		}

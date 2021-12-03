@@ -11,6 +11,8 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +26,14 @@ public class UserManager {
     public void leaveGame(SpectatorUser su) {
         Game g = su.getGame();
         for(User u : g.getUsers()) {
-            u.getPlayer().showPlayer(su.getPlayer());
+            u.getPlayer().showPlayer(SurvivalGames.getInstance(),su.getPlayer());
         }
         g.leaveSpectator(su);
         if(g.getScoreboardPhase() != null) {
             su.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
         }
         setState(su.getPlayer(), su);
+        su.getPlayer().removePotionEffect(PotionEffectType.INVISIBILITY);
 
     }
 
@@ -143,9 +146,11 @@ public class UserManager {
         }
 
         if (p.getVehicle() != null)
-            p.getVehicle().setPassenger(null);
-        if (p.getPassenger() != null) {
-            p.setPassenger(null);
+            p.getVehicle().eject();
+        if (p.getPassengers().size() <= 1) {
+            for(p.getPassengers(); p.getPassengers().size()==0;) {
+                p.getPassengers().get(0).eject();
+            }
         }
 
         final User user = getUser(p.getName());
@@ -154,7 +159,7 @@ public class UserManager {
         Game game = user.getGame();
 
         for (SpectatorUser su : game.getSpecators()) {
-            p.showPlayer(su.getPlayer());
+            p.showPlayer(SurvivalGames.instance,su.getPlayer());
         }
 
 
@@ -166,17 +171,12 @@ public class UserManager {
             p.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
         }
 
-        if (p.isOnline()) {
-            while(p.isDead()) {
-                int i = 1;
-            }
-            if (p.isDead()) {
-                Bukkit.getScheduler().scheduleSyncDelayedTask(SurvivalGames.instance, new Runnable() {
+        if (p.isDead()) {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(SurvivalGames.instance, new Runnable() {
                 public void run() {
                     setState(p, user);
                 }
-            }, 1);
-        }
+            }, 500);
         } else {
             setState(p, user);
         }
@@ -193,6 +193,7 @@ public class UserManager {
         p.setExp(state.getExp());
         p.setFallDistance(state.getFallDistance());
         p.setFireTicks(state.getFireTicks());
+        p.addPotionEffects(state.getPotionEffects());
         if (SurvivalGames.instance.getConfig().getBoolean("Command-On-Leave")) {
             String a = SurvivalGames.instance.getConfig().getString("Command");
             p.performCommand(a);

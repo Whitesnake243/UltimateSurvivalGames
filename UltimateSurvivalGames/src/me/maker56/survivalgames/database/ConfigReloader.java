@@ -8,6 +8,7 @@ import me.maker56.survivalgames.commands.permission.PermissionHandler;
 import me.maker56.survivalgames.game.Game;
 import me.maker56.survivalgames.game.GameManager;
 import me.maker56.survivalgames.game.phases.VotingPhase;
+import me.maker56.survivalgames.kits.KitManager;
 import me.maker56.survivalgames.listener.ChatListener;
 import me.maker56.survivalgames.listener.PlayerListener;
 import me.maker56.survivalgames.scoreboard.ScoreBoardManager;
@@ -28,6 +29,7 @@ public class ConfigReloader {
 		ConfigLoader.reloadDatabase();
 		GameManager.reinitializeDatabase();
 		ArenaManager.reinitializeDatabase();
+		KitManager.reinitializeDatabase();
 	}
 	
 	public static void reloadSigns() {
@@ -49,6 +51,14 @@ public class ConfigReloader {
 	public static void reloadScoreboard() {
 		ConfigLoader.reloadScoreboard();
 		ScoreBoardManager.reinitializeDatabase();
+	}
+	public static void reloadall() {
+		reloadChestloot();
+		reloadConfig();
+		reloadMessage();
+		reloadDatabase();
+		reloadScoreboard();
+		reloadScoreboard();
 	}
 
 }
