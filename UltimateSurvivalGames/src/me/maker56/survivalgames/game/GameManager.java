@@ -8,7 +8,7 @@ import me.maker56.survivalgames.game.phases.CooldownPhase;
 import me.maker56.survivalgames.game.phases.DeathmatchPhase;
 import me.maker56.survivalgames.game.phases.IngamePhase;
 import me.maker56.survivalgames.game.phases.VotingPhase;
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;

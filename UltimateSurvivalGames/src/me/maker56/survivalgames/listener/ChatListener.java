@@ -65,9 +65,9 @@ public class ChatListener implements Listener {
 				Game g = u.getGame();
 				
 				if(u.isSpectator()) {
-					g.sendSpectators(bc);
+					g.sendSpectators(bc.getText());
 				} else {
-					g.sendMessage(bc);
+					g.sendMessage(bc.getText());
 				}
 			} else {
 				event.getRecipients().removeIf(p -> um.isPlaying(p.getName()) || um.isSpectator(p.getName()));

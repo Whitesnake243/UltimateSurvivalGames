@@ -11,8 +11,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Vault (2)" level="project" />
     <orderEntry type="library" name="spigot-1.17" level="project" />
-    <orderEntry type="library" name="spigot-api-1.18-R0.1-SNAPSHOT-shaded" level="project" />
-    <orderEntry type="library" name="worldedit-bukkit-7.2.8-SNAPSHOT-dist" level="project" />
     <orderEntry type="library" name="UltimateSurvivalGames (2)" level="project" />
+    <orderEntry type="library" name="worldedit-bukkit-7.2.8-SNAPSHOT-dist (2)" level="project" />
+    <orderEntry type="library" name="spigot-api-1.18-R0.1-SNAPSHOT-shaded" level="project" />
   </component>
 </module>

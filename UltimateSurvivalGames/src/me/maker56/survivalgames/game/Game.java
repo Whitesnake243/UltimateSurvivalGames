@@ -21,11 +21,9 @@ import me.maker56.survivalgames.scoreboard.ScoreboardPhase;
 import me.maker56.survivalgames.user.SpectatorUser;
 import me.maker56.survivalgames.user.User;
 import me.maker56.survivalgames.user.UserState;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.ChatColor;
-
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -529,10 +527,10 @@ public class Game {
 	
 	public void sendMessage(TextComponent message) {
 		for(User user : users) {
-			user.sendMessage(message);
+			user.sendMessage(message.getText());
 		}
 		for(SpectatorUser su : spectators) {
-			su.sendMessage(message);
+			su.sendMessage(message.getText());
 		}
 	}
 	

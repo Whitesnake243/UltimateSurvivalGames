@@ -15,11 +15,7 @@ import me.maker56.survivalgames.game.Game;
 import me.maker56.survivalgames.listener.DomeListener;
 import me.maker56.survivalgames.reset.Save;
 import me.maker56.survivalgames.reset.Selection;
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
