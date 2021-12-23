@@ -8,6 +8,7 @@ This is being updated on my free time  any and all help is welcome
 
 Releases
 =====================
+[![CircleCI](https://circleci.com/gh/jerzean/UltimateSurvivalGames/tree/master.svg?style=svg)](https://circleci.com/gh/jerzean/UltimateSurvivalGames/tree/master)
 https://github.com/jerzean/UltimateSurvivalGames/releases
 
  Warning!!
