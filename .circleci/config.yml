@@ -21,11 +21,11 @@ jobs:
       # Use mvn clean and package as the standard maven build phase
       - run:
           name: Build
-          command: mvn clean install
+          command: mvn -B -DskipTests clean install
       # Then run your tests!
       - run:
           name: test
-          command: 
+          command: mvn test 
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -33,3 +33,4 @@ workflows:
   sample: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
     jobs:
+      - build-and-test
