@@ -1,4 +1,5 @@
-UltimateSurvivalGames (1.16.1)
+UltimateSurvivalGames (1.18.1)
+
 =====================
 UltimateSurvivalGames - Customizable SurvivalGames in minecraft for craftbukkit. 
 More infos on the official DevBukkit site: http://dev.bukkit.org/bukkit-plugins/ultimatesurvivalgames/
